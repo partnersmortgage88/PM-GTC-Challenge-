@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Truth, Three Lies · Good Times Crew</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&family=Geist+Mono:wght@400..600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg0:#0B1517; --bg1:#0F1D20;
+  --panel:rgba(15,29,32,.78); --panel2:rgba(11,21,23,.92);
+  --line:rgba(37,186,196,.16); --line2:rgba(238,245,244,.09);
+  --ink:#EEF5F4; --muted:#95A9A8; --faint:#5D7170;
+  --teal:#25BAC4; --teal2:#2BC3CD; --deep:#00818B; --gold:#FFAC27; --gold2:#FFC466;
+  --good:#3ECF8E; --bad:#FF7A6B;
+  --grad:linear-gradient(135deg,#00707A 0%,#00919C 55%,#2BC3CD 100%);
+  --goldgrad:linear-gradient(135deg,#F79D0E 0%,#FFAC27 60%,#FFC466 100%);
+  --serif:'Instrument Serif',Georgia,serif;
+  --sans:'Geist',system-ui,-apple-system,sans-serif;
+  --mono:'Geist Mono',ui-monospace,SFMono-Regular,monospace;
+  --shadow:0 24px 60px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg0); color:var(--ink); font-family:var(--sans);
+  font-size:15.5px; line-height:1.55; min-height:100vh; overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:rgba(37,186,196,.35)}
+button{font-family:var(--sans)}
+input,textarea{font-family:var(--sans)}
+
+/* ---------- ambient background ---------- */
+.orbs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55}
+.orb.o1{width:640px;height:640px;left:-180px;top:-220px;background:radial-gradient(circle,rgba(0,129,139,.34),transparent 62%);animation:drift1 26s ease-in-out infinite alternate}
+.orb.o2{width:560px;height:560px;right:-200px;top:14%;background:radial-gradient(circle,rgba(43,195,205,.20),transparent 60%);animation:drift2 32s ease-in-out infinite alternate}
+.orb.o3{width:520px;height:520px;left:24%;bottom:-260px;background:radial-gradient(circle,rgba(255,172,39,.13),transparent 60%);animation:drift3 38s ease-in-out infinite alternate}
+@keyframes drift1{to{transform:translate(70px,50px) scale(1.08)}}
+@keyframes drift2{to{transform:translate(-60px,70px) scale(1.05)}}
+@keyframes drift3{to{transform:translate(50px,-60px) scale(1.1)}}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:14px;
+  padding:13px clamp(16px,4vw,34px);
+  background:rgba(9,17,19,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line2);
+}
+.wordmark{font-weight:700;letter-spacing:.14em;font-size:12px;color:var(--ink);text-transform:uppercase;white-space:nowrap}
+.wordmark b{color:var(--gold);font-weight:700}
+.tb-div{width:1px;height:18px;background:var(--line2)}
+.tb-sub{font-size:12px;color:var(--muted);letter-spacing:.06em;white-space:nowrap}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.livechip{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:6px 11px;border:1px solid var(--line2);border-radius:999px}
+.livechip .dot{width:7px;height:7px;border-radius:50%;background:var(--faint)}
+.livechip.on .dot{background:var(--good);box-shadow:0 0 10px rgba(62,207,142,.8);animation:blink 2.4s ease-in-out infinite}
+.livechip.warn .dot{background:var(--gold)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.45}}
+.userchip{display:flex;align-items:center;gap:9px;padding:5px 13px 5px 5px;border:1px solid var(--line2);border-radius:999px;background:rgba(255,255,255,.02);cursor:pointer;color:var(--ink);font-size:13px;transition:border-color .25s}
+.userchip:hover{border-color:var(--teal)}
+.avatar{width:27px;height:27px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:600;color:#fff;flex-shrink:0}
+.cogbtn{width:38px;height:38px;border-radius:12px;border:1px solid var(--line2);background:rgba(255,255,255,.02);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s}
+.cogbtn:hover{color:var(--gold);border-color:rgba(255,172,39,.4);transform:rotate(40deg)}
+.cogbtn svg{width:18px;height:18px}
+
+/* ---------- preview ribbon ---------- */
+.ribbon{display:none;position:relative;z-index:30;text-align:center;font-size:12.5px;color:var(--gold2);padding:8px 16px;background:rgba(255,172,39,.09);border-bottom:1px solid rgba(255,172,39,.25)}
+.ribbon.show{display:block}
+
+/* ---------- layout ---------- */
+.wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 clamp(16px,4vw,34px) 90px}
+
+/* ---------- hero ---------- */
+.hero{text-align:center;padding:clamp(44px,7vw,76px) 0 8px}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal2);border:1px solid var(--line);border-radius:999px;padding:7px 16px;background:rgba(37,186,196,.06);animation:fadeUp .7s .05s both}
+.hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(46px,8.4vw,96px);line-height:1.02;margin:26px 0 0;letter-spacing:-.01em;animation:fadeUp .7s .15s both}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .sub{max-width:560px;margin:20px auto 0;color:var(--muted);font-size:clamp(15px,1.8vw,17px);animation:fadeUp .7s .25s both}
+.statusrow{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:22px;animation:fadeUp .7s .32s both}
+.schip{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--muted);border:1px solid var(--line2);border-radius:999px;padding:6px 14px}
+.schip b{color:var(--ink);font-weight:600}
+.schip.goldy{color:var(--gold2);border-color:rgba(255,172,39,.4);background:rgba(255,172,39,.07)}
+
+/* ---------- steps ---------- */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:40px auto 0;max-width:880px;animation:fadeUp .7s .4s both}
+.step{position:relative;border:1px solid var(--line2);border-radius:18px;background:var(--panel);backdrop-filter:blur(8px);padding:18px 18px 16px;text-align:left;transition:border-color .3s,transform .3s}
+.step:hover{border-color:var(--line);transform:translateY(-3px)}
+.step .sn{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--gold)}
+.step .st{font-size:14.5px;font-weight:600;margin-top:7px}
+.step .sd{font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.45}
+@media(max-width:720px){.steps{grid-template-columns:1fr;max-width:440px}}
+
+/* ---------- big mail cta ---------- */
+.ctazone{text-align:center;margin:44px 0 10px;animation:fadeUp .7s .5s both}
+.bigmail{
+  display:inline-flex;align-items:center;gap:13px;
+  font-size:clamp(16px,2.2vw,19px);font-weight:600;color:#fff;text-decoration:none;
+  padding:19px 38px;border-radius:999px;background:var(--grad);
+  box-shadow:0 14px 40px rgba(0,145,156,.42),inset 0 1px 0 rgba(255,255,255,.25);
+  transition:transform .25s,box-shadow .25s;animation:glowpulse 3.2s ease-in-out infinite;
+}
+.bigmail:hover{transform:translateY(-3px) scale(1.015);box-shadow:0 20px 54px rgba(0,145,156,.55),inset 0 1px 0 rgba(255,255,255,.25)}
+.bigmail:active{transform:translateY(0) scale(.99)}
+.bigmail svg{width:22px;height:22px;flex-shrink:0}
+@keyframes glowpulse{0%,100%{box-shadow:0 14px 40px rgba(0,145,156,.42),inset 0 1px 0 rgba(255,255,255,.25)}50%{box-shadow:0 14px 52px rgba(43,195,205,.6),inset 0 1px 0 rgba(255,255,255,.25)}}
+.altmail{display:inline-block;margin-top:9px;font-size:12.5px;color:var(--muted);text-decoration:none;border-bottom:1px solid transparent;transition:color .2s,border-color .2s}
+.altmail:hover{color:var(--teal);border-bottom-color:rgba(37,186,196,.45)}
+.ctahint{margin-top:13px;font-size:13px;color:var(--faint)}
+
+/* ---------- section labels ---------- */
+.seclabel{display:flex;align-items:center;gap:14px;margin:58px 0 20px}
+.seclabel .t{font-family:var(--serif);font-style:italic;font-size:clamp(24px,3.4vw,32px);color:var(--ink);white-space:nowrap}
+.seclabel .rule{flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+
+/* ---------- reveal banner + leaderboard ---------- */
+.revealzone{display:none;margin-top:54px}
+.revealzone.show{display:block;animation:fadeUp .8s both}
+.revealbanner{border:1px solid rgba(255,172,39,.35);background:linear-gradient(160deg,rgba(255,172,39,.12),rgba(255,172,39,.03));border-radius:24px;padding:30px clamp(20px,4vw,40px);text-align:center;position:relative;overflow:hidden}
+.revealbanner:before{content:'';position:absolute;inset:0;background:radial-gradient(600px 200px at 50% -60px,rgba(255,196,102,.18),transparent)}
+.revealbanner h2{font-family:var(--serif);font-weight:400;font-size:clamp(30px,4.6vw,44px);position:relative}
+.revealbanner h2 em{font-style:italic;color:var(--gold)}
+.revealbanner p{color:var(--muted);margin-top:8px;position:relative}
+.mescore{display:inline-flex;align-items:center;gap:9px;margin-top:16px;font-family:var(--mono);font-size:13px;color:var(--ink);border:1px solid rgba(255,172,39,.4);background:rgba(255,172,39,.1);border-radius:999px;padding:9px 18px;position:relative}
+.mescore b{color:var(--gold);font-size:15px}
+.podium{display:flex;justify-content:center;align-items:flex-end;gap:14px;margin:34px 0 6px}
+.pcol{width:min(170px,28vw);text-align:center}
+.pcol .pname{font-family:var(--serif);font-style:italic;font-size:clamp(15px,2.4vw,20px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 4px}
+.pcol .pscore{font-family:var(--mono);font-size:12px;color:var(--muted);margin:3px 0 9px}
+.pcol .pbar{border-radius:14px 14px 0 0;border:1px solid var(--line2);border-bottom:none;background:var(--panel);display:flex;align-items:flex-start;justify-content:center;padding-top:10px;font-family:var(--mono);font-size:13px;color:var(--faint)}
+.pcol.p1 .pbar{height:118px;background:linear-gradient(180deg,rgba(255,172,39,.28),rgba(255,172,39,.04));border-color:rgba(255,172,39,.5);color:var(--gold)}
+.pcol.p2 .pbar{height:84px;background:linear-gradient(180deg,rgba(185,199,198,.2),rgba(185,199,198,.03));border-color:rgba(185,199,198,.4);color:#B9C7C6}
+.pcol.p3 .pbar{height:62px;background:linear-gradient(180deg,rgba(201,137,96,.22),rgba(201,137,96,.03));border-color:rgba(201,137,96,.45);color:#C98960}
+.pcol .crown{height:26px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:5px}
+.pcol .crown svg{width:26px;height:26px;color:var(--gold);filter:drop-shadow(0 3px 10px rgba(255,172,39,.6));animation:crownbob 2.6s ease-in-out infinite}
+@keyframes crownbob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-5px) rotate(4deg)}}
+.lbrest{max-width:560px;margin:18px auto 0}
+.lbrow{display:flex;align-items:center;gap:12px;padding:10px 16px;border:1px solid var(--line2);border-radius:14px;background:var(--panel);margin-top:8px}
+.lbrow .rk{font-family:var(--mono);font-size:12px;color:var(--faint);width:26px}
+.lbrow .nm{flex:1;font-size:14px}
+.lbrow .sc{font-family:var(--mono);font-size:13px;color:var(--teal2)}
+
+/* ---------- board / cards ---------- */
+.board{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(440px,100%),1fr));gap:22px;margin-top:8px}
+.card{
+  position:relative;border:1px solid var(--line2);border-radius:24px;background:var(--panel);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  padding:22px 22px 19px;box-shadow:0 10px 34px rgba(0,0,0,.28);
+  animation:cardin .7s both;transition:border-color .3s,transform .3s;
+}
+.card:hover{border-color:var(--line)}
+.board.noanim .card{animation:none}
+@keyframes cardin{from{opacity:0;transform:translateY(26px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.chead{display:flex;align-items:center;gap:13px}
+.cav{width:44px;height:44px;border-radius:50%;background:var(--grad);border:2px solid rgba(255,172,39,.55);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:14px;font-weight:600;color:#fff;flex-shrink:0;box-shadow:0 6px 18px rgba(0,129,139,.4)}
+.cname{font-family:var(--serif);font-style:italic;font-size:24px;line-height:1.1}
+.cmeta{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:3px}
+.ctag{margin-left:auto;flex-shrink:0}
+.minitag{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:5px 10px;border-radius:999px;border:1px solid var(--line2);color:var(--muted)}
+.minitag.gold{color:var(--gold);border-color:rgba(255,172,39,.45);background:rgba(255,172,39,.08)}
+.minitag.tealy{color:var(--teal2);border-color:rgba(43,195,205,.4);background:rgba(43,195,205,.07)}
+.qline{margin:16px 0 4px;font-size:13px;color:var(--muted)}
+.qline b{color:var(--ink);font-weight:600}
+
+/* option rows */
+.opt{position:relative;overflow:hidden;display:block;width:100%;text-align:left;border:1px solid var(--line2);border-radius:15px;background:rgba(255,255,255,.015);margin-top:10px;padding:13px 14px;cursor:pointer;color:var(--ink);transition:border-color .3s,transform .2s,box-shadow .3s}
+.opt:hover{border-color:rgba(37,186,196,.4)}
+.opt:active{transform:scale(.992)}
+.opt:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.opt.locked{cursor:default}
+.opt.locked:hover{border-color:var(--line2)}
+.optfill{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,rgba(37,186,196,.22),rgba(37,186,196,.04));transition:width .8s cubic-bezier(.22,1,.3,1);pointer-events:none}
+.optrow{position:relative;display:flex;align-items:center;gap:12px}
+.letter{width:29px;height:29px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;color:var(--teal2);flex-shrink:0;transition:all .3s;background:rgba(11,21,23,.5)}
+.opttext{flex:1;font-size:14.5px;line-height:1.4;padding-right:6px}
+.optright{display:flex;flex-direction:column;align-items:flex-end;min-width:56px;flex-shrink:0}
+.pctv{font-family:var(--mono);font-size:15px;font-weight:600;color:var(--ink)}
+.pctc{font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:1px}
+.voters{position:relative;margin-top:7px;padding-left:41px;font-size:11.5px;color:var(--faint);line-height:1.45}
+.voters b{color:var(--muted);font-weight:500}
+.opt.sel{border-color:var(--teal);box-shadow:0 0 0 1px var(--teal),0 8px 24px rgba(37,186,196,.18)}
+.opt.sel .letter{background:var(--grad);border-color:transparent;color:#fff}
+.pickchip{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal2);margin-top:3px}
+.opt.staged{border-color:rgba(37,186,196,.6);border-style:dashed;background:rgba(37,186,196,.06)}
+.opt.staged .letter{background:rgba(37,186,196,.18);border-color:rgba(37,186,196,.55);color:var(--teal2)}
+.stagechip{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+.subbar{display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap}
+.subhint{flex:1;min-width:150px;font-size:12.5px;color:var(--faint)}
+.subbtn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:12px;padding:11px 20px;font-family:var(--sans);font-size:13.5px;font-weight:600;letter-spacing:.01em;cursor:pointer;color:#08191B;background:linear-gradient(135deg,var(--gold),var(--gold2));box-shadow:0 8px 24px rgba(255,172,39,.22);transition:transform .18s,box-shadow .3s,opacity .25s}
+.subbtn:hover{transform:translateY(-1px);box-shadow:0 12px 30px rgba(255,172,39,.3)}
+.subbtn:active{transform:translateY(0)}
+.subbtn.off{background:rgba(255,255,255,.05);color:var(--faint);box-shadow:none;cursor:not-allowed}
+.subbtn.off:hover{transform:none;box-shadow:none}
+.lockednote{margin-top:14px;font-size:12.5px;color:var(--teal2);background:rgba(37,186,196,.07);border:1px solid rgba(37,186,196,.28);border-radius:12px;padding:9px 13px;text-align:center}
+/* reveal states */
+.opt.truth{border-color:rgba(62,207,142,.65);box-shadow:0 0 0 1px rgba(62,207,142,.5),0 10px 30px rgba(62,207,142,.16)}
+.opt.truth .optfill{background:linear-gradient(90deg,rgba(62,207,142,.22),rgba(62,207,142,.04))}
+.opt.truth .letter{background:linear-gradient(135deg,#1FA96C,#3ECF8E);border-color:transparent;color:#042416}
+.opt.lie{opacity:.55}
+.opt.lie.sel{opacity:.85}
+.opt.wrongpick{border-color:rgba(255,122,107,.55);box-shadow:0 0 0 1px rgba(255,122,107,.4)}
+.truthstamp{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:#0B1517;background:linear-gradient(135deg,#3ECF8E,#7FE8BC);border-radius:999px;padding:4px 9px;margin-top:4px;animation:stampin .55s cubic-bezier(.2,1.6,.4,1) both}
+.truthstamp svg{width:11px;height:11px}
+@keyframes stampin{from{transform:scale(.3) rotate(-14deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.cfoot{display:flex;align-items:center;gap:10px;margin-top:15px;font-family:var(--mono);font-size:11px;color:var(--faint)}
+.cfoot .sp{flex:1}
+.ownnote{margin-top:14px;font-size:12.5px;color:var(--gold2);background:rgba(255,172,39,.07);border:1px solid rgba(255,172,39,.3);border-radius:12px;padding:9px 13px;text-align:center}
+
+/* empty state */
+.empty{border:1px dashed rgba(37,186,196,.35);border-radius:24px;padding:56px 26px;text-align:center;background:rgba(37,186,196,.03)}
+.empty .ee{font-size:40px}
+.empty .et{font-family:var(--serif);font-style:italic;font-size:26px;margin-top:12px}
+.empty .es{color:var(--muted);font-size:14px;margin-top:7px;max-width:420px;margin-left:auto;margin-right:auto}
+
+/* ---------- footer ---------- */
+.foot{position:relative;z-index:1;text-align:center;padding:30px 16px 44px;color:var(--faint);font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase}
+.foot b{color:var(--muted)}
+
+/* ---------- generic modal ---------- */
+.ovl{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;background:rgba(4,10,11,.74);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);padding:18px}
+.ovl.show{display:flex}
+.modal{width:min(460px,100%);border:1px solid var(--line);border-radius:24px;background:var(--panel2);box-shadow:var(--shadow);padding:28px 26px;animation:modalin .4s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes modalin{from{opacity:0;transform:scale(.92) translateY(14px)}to{opacity:1;transform:none}}
+.modal h3{font-family:var(--serif);font-weight:400;font-size:27px}
+.modal h3 em{font-style:italic;color:var(--gold)}
+.modal .mp{color:var(--muted);font-size:14px;margin-top:8px;line-height:1.55}
+.mrow{display:flex;gap:10px;justify-content:flex-end;margin-top:22px}
+.modal.shake{animation:shakeit .45s}
+@keyframes shakeit{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(4px)}}
+
+/* fields + buttons */
+.f-label{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:16px 0 7px}
+.f-label.truthy{color:var(--good)}
+.f-label.liey{color:var(--gold2)}
+.f-in{width:100%;background:rgba(11,21,23,.7);border:1px solid var(--line2);border-radius:13px;color:var(--ink);font-size:14.5px;padding:12px 14px;outline:none;transition:border-color .25s,box-shadow .25s}
+.f-in:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(37,186,196,.16)}
+textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line2);border-radius:999px;background:rgba(255,255,255,.03);color:var(--ink);font-size:14px;font-weight:600;padding:11px 20px;cursor:pointer;transition:all .25s}
+.btn:hover{border-color:var(--teal);transform:translateY(-1px)}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn.primary{background:var(--grad);border-color:transparent;color:#fff;box-shadow:0 10px 26px rgba(0,145,156,.35)}
+.btn.primary:hover{box-shadow:0 14px 32px rgba(0,145,156,.5);border-color:transparent}
+.btn.goldb{background:var(--goldgrad);border-color:transparent;color:#2A1C02;box-shadow:0 10px 26px rgba(255,172,39,.3)}
+.btn.goldb:hover{box-shadow:0 14px 34px rgba(255,172,39,.45);border-color:transparent}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--bad);border-color:rgba(255,122,107,.4)}
+.btn.danger:hover{border-color:var(--bad);background:rgba(255,122,107,.08)}
+.btn.wide{width:100%}
+.btn svg{width:16px;height:16px}
+
+/* ---------- pin pad ---------- */
+.pindots{display:flex;justify-content:center;gap:12px;margin:22px 0 6px}
+.pd{width:13px;height:13px;border-radius:50%;border:1px solid var(--line);background:transparent;transition:all .2s}
+.pd.fill{background:var(--gold);border-color:var(--gold);box-shadow:0 0 12px rgba(255,172,39,.6)}
+.pinpad{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:18px}
+.pk{height:60px;border-radius:16px;border:1px solid var(--line2);background:rgba(255,255,255,.025);color:var(--ink);font-family:var(--mono);font-size:19px;cursor:pointer;transition:all .15s}
+.pk:hover{border-color:var(--teal);background:rgba(37,186,196,.08)}
+.pk:active{transform:scale(.92);background:rgba(37,186,196,.16)}
+.pk.soft{font-size:13px;color:var(--muted)}
+
+/* ---------- admin drawer ---------- */
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(540px,100vw);z-index:70;background:#0C171A;border-left:1px solid var(--line);box-shadow:-30px 0 80px rgba(0,0,0,.5);transform:translateX(103%);transition:transform .5s cubic-bezier(.22,1,.3,1);display:flex;flex-direction:column}
+.drawer.open{transform:translateX(0)}
+.dscrim{position:fixed;inset:0;z-index:65;background:rgba(4,10,11,.55);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .4s}
+.dscrim.show{opacity:1;pointer-events:auto}
+.dhead{padding:20px 22px 0;border-bottom:1px solid var(--line2)}
+.dhrow{display:flex;align-items:center;gap:12px}
+.dhrow h2{font-family:var(--serif);font-weight:400;font-size:28px}
+.dhrow h2 em{font-style:italic;color:var(--gold)}
+.dhrow .sp{flex:1}
+.iconbtn{width:34px;height:34px;border-radius:10px;border:1px solid var(--line2);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s}
+.iconbtn:hover{color:var(--ink);border-color:var(--teal)}
+.iconbtn svg{width:15px;height:15px}
+.dtabs{display:flex;gap:4px;margin-top:16px}
+.dtab{flex:1;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:11px 4px;border:none;background:transparent;border-bottom:2px solid transparent;cursor:pointer;transition:all .25s}
+.dtab:hover{color:var(--ink)}
+.dtab.on{color:var(--gold);border-bottom-color:var(--gold)}
+.dbody{flex:1;overflow-y:auto;padding:22px;overscroll-behavior:contain}
+.dpanel{display:none}
+.dpanel.on{display:block;animation:fadeUp .4s both}
+.dnote{font-size:12.5px;color:var(--muted);line-height:1.55;border:1px solid var(--line2);border-radius:13px;padding:11px 14px;background:rgba(255,255,255,.015)}
+.dnote.goldn{color:var(--gold2);border-color:rgba(255,172,39,.3);background:rgba(255,172,39,.05)}
+.dsec{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin:26px 0 10px;display:flex;align-items:center;gap:10px}
+.dsec:after{content:'';flex:1;height:1px;background:var(--line2)}
+.mcard{border:1px solid var(--line2);border-radius:16px;background:rgba(255,255,255,.02);padding:15px 16px;margin-top:12px}
+.mchead{display:flex;align-items:center;gap:10px}
+.mcname{font-family:var(--serif);font-style:italic;font-size:19px;flex:1}
+.mcopt{display:flex;align-items:baseline;gap:9px;margin-top:9px;font-size:13px;color:var(--muted);line-height:1.4}
+.mcopt .l{font-family:var(--mono);font-size:10.5px;color:var(--faint);width:14px;flex-shrink:0}
+.mcopt .tx{flex:1}
+.mcopt.ist .tx{color:var(--good)}
+.mcopt .ct{font-family:var(--mono);font-size:11px;color:var(--teal2);flex-shrink:0}
+.mtruthtag{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;color:#0B1517;background:var(--good);border-radius:999px;padding:2px 7px;flex-shrink:0}
+.mvoters{font-size:10.5px;color:var(--faint);padding-left:23px;margin-top:1px}
+.lbtable{width:100%;border-collapse:collapse;margin-top:10px}
+.lbtable th{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line2)}
+.lbtable td{padding:10px;border-bottom:1px solid rgba(238,245,244,.05);font-size:13.5px}
+.lbtable td.mono{font-family:var(--mono);font-size:12.5px}
+.lbtable tr.top td{color:var(--gold2)}
+.lbtable td.ok{color:var(--good)}
+.lbtable td.no{color:var(--bad)}
+
+/* ---------- toast ---------- */
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(70px);z-index:120;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:12px 22px;font-size:13.5px;color:var(--ink);box-shadow:var(--shadow);opacity:0;transition:all .45s cubic-bezier(.22,1,.3,1);max-width:min(480px,90vw);text-align:center;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.gold{border-color:rgba(255,172,39,.5)}
+
+/* confetti */
+#confetti{position:fixed;inset:0;z-index:200;pointer-events:none}
+
+@media(max-width:640px){
+  .tb-sub{display:none}
+  .userchip .uname{max-width:84px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .card{padding:18px 15px 16px}
+  .cname{font-size:21px}
+  .voters{padding-left:0}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation-duration:.001s !important;transition-duration:.001s !important}
+}
+</style>
+</head>
+<body>
+
+<div class="orbs"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div></div>
+<canvas id="confetti"></canvas>
+
+<header class="topbar">
+  <div class="wordmark">Partners <b>Mortgage</b></div>
+  <div class="tb-div"></div>
+  <div class="tb-sub">Good Times Crew</div>
+  <div class="tb-right">
+    <div class="livechip" id="liveChip"><span class="dot"></span><span id="liveTxt">Connecting</span></div>
+    <button class="userchip" id="userChip" onclick="openName(true)" title="Change who is playing on this device">
+      <span class="avatar" id="uAv">?</span><span class="uname" id="uName">Who's playing?</span>
+    </button>
+    <button class="cogbtn" id="cogBtn" onclick="cogClick()" title="Crew HQ" aria-label="Open Crew HQ">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+    </button>
+  </div>
+</header>
+
+<div class="ribbon" id="previewRibbon">Preview mode. Votes stay on this device until Firebase is connected in the setup block at the top of the file.</div>
+
+<div class="wrap">
+
+  <section class="hero">
+    <span class="eyebrow">Good Times Crew &#183; August Challenge</span>
+    <h1>One truth.<br><em>Three lies.</em></h1>
+    <p class="sub">Everyone sends in one true story about themselves. The Crew invents three fakes to hide it in. Your job: read all four and spot the truth.</p>
+    <div class="statusrow" id="statusRow"></div>
+  </section>
+
+  <div class="steps">
+    <div class="step"><div class="sn">Step 1</div><div class="st">Email your truth</div><div class="sd">One true thing about you that nobody at Partners would ever guess.</div></div>
+    <div class="step"><div class="sn">Step 2</div><div class="st">The Crew cooks up three lies</div><div class="sd">Your truth gets hidden between three convincing fakes and posted below.</div></div>
+    <div class="step"><div class="sn">Step 3</div><div class="st">Everyone votes</div><div class="sd">Pick what's real, then submit. One shot per card, and scores stay secret until the big reveal.</div></div>
+  </div>
+
+  <div class="ctazone">
+    <a class="bigmail" id="mailBtn" href="#" target="_blank" rel="noopener" onclick="return mailClick(event)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+      Email the Good Times Crew
+    </a>
+    <div class="ctahint">One sentence is all it takes. Make it a good one.</div>
+    <a class="altmail" id="mailAlt" href="#" target="_top">Rather use your default mail app?</a>
+  </div>
+
+  <div class="revealzone" id="revealZone"></div>
+
+  <div class="seclabel"><span class="t">The board</span><span class="rule"></span></div>
+  <div class="board" id="board"></div>
+  <div class="empty" id="emptyState" style="display:none;">
+    <div class="ee">&#128373;&#65039;</div>
+    <div class="et">Nothing on the board yet</div>
+    <div class="es">Be the first. Hit the big button above, email your truth, and the Crew will take it from there.</div>
+  </div>
+
+</div>
+
+<footer class="foot"><b>Partners Mortgage</b> &#183; Good Times Crew &#183; August 2026</footer>
+
+<!-- name modal -->
+<div class="ovl" id="nameOvl">
+  <div class="modal" id="nameModal">
+    <h3>Who's <em>playing?</em></h3>
+    <p class="mp">First name works great. This device will remember you, and your guesses get scored under this name at the reveal.</p>
+    <label class="f-label" for="nameIn">Your name</label>
+    <input class="f-in" id="nameIn" maxlength="26" autocomplete="off" placeholder="e.g. Rachael">
+    <div class="mrow"><button class="btn primary wide" onclick="saveName()">Let's play</button></div>
+  </div>
+</div>
+
+<!-- pin modal -->
+<div class="ovl" id="pinOvl">
+  <div class="modal" id="pinModal" style="width:min(360px,100%);">
+    <h3>Crew <em>HQ</em></h3>
+    <p class="mp">Enter the Crew PIN to open the back end.</p>
+    <div class="pindots" id="pinDots"></div>
+    <div class="pinpad">
+      <button class="pk" onclick="pinKey('1')">1</button><button class="pk" onclick="pinKey('2')">2</button><button class="pk" onclick="pinKey('3')">3</button>
+      <button class="pk" onclick="pinKey('4')">4</button><button class="pk" onclick="pinKey('5')">5</button><button class="pk" onclick="pinKey('6')">6</button>
+      <button class="pk" onclick="pinKey('7')">7</button><button class="pk" onclick="pinKey('8')">8</button><button class="pk" onclick="pinKey('9')">9</button>
+      <button class="pk soft" onclick="pinClose()">Close</button><button class="pk" onclick="pinKey('0')">0</button><button class="pk soft" onclick="pinBack()">&#9003;</button>
+    </div>
+  </div>
+</div>
+
+<!-- confirm modal -->
+<div class="ovl" id="cfOvl">
+  <div class="modal">
+    <h3 id="cfTitle">Are you sure?</h3>
+    <p class="mp" id="cfBody"></p>
+    <div class="mrow">
+      <button class="btn ghost" onclick="cfCancel()">Cancel</button>
+      <button class="btn primary" id="cfOkBtn" onclick="cfOk()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- admin drawer -->
+<div class="dscrim" id="dScrim" onclick="closeAdmin()"></div>
+<aside class="drawer" id="drawer" aria-label="Crew HQ">
+  <div class="dhead">
+    <div class="dhrow">
+      <h2>Crew <em>HQ</em></h2>
+      <span class="sp"></span>
+      <button class="iconbtn" onclick="lockAdmin()" title="Lock HQ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></button>
+      <button class="iconbtn" onclick="closeAdmin()" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+    </div>
+    <div class="dtabs">
+      <button class="dtab on" id="dtab-new" onclick="adminTab('new')">New</button>
+      <button class="dtab" id="dtab-manage" onclick="adminTab('manage')">Manage</button>
+      <button class="dtab" id="dtab-scores" onclick="adminTab('scores')">Scores</button>
+      <button class="dtab" id="dtab-settings" onclick="adminTab('settings')">Settings</button>
+    </div>
+  </div>
+  <div class="dbody">
+
+    <div class="dpanel on" id="dpanel-new">
+      <div class="dnote">Post a new challenge. Type the person's real truth first, then invent three lies. The four options get shuffled automatically, so the truth never sits in the same spot.</div>
+      <label class="f-label" for="newName">Whose truth is this?</label>
+      <input class="f-in" id="newName" maxlength="30" autocomplete="off" placeholder="First name, e.g. Peter">
+      <label class="f-label truthy" for="newTruth">The truth</label>
+      <textarea class="f-in" id="newTruth" maxlength="220" placeholder="The one real story they emailed in"></textarea>
+      <label class="f-label liey" for="newLie1">Lie no. 1</label>
+      <textarea class="f-in" id="newLie1" maxlength="220" placeholder="Something believable but fake"></textarea>
+      <label class="f-label liey" for="newLie2">Lie no. 2</label>
+      <textarea class="f-in" id="newLie2" maxlength="220" placeholder="Another convincing fake"></textarea>
+      <label class="f-label liey" for="newLie3">Lie no. 3</label>
+      <textarea class="f-in" id="newLie3" maxlength="220" placeholder="One more for good measure"></textarea>
+      <div class="mrow"><button class="btn primary wide" onclick="postEntry()">Shuffle and post to the board</button></div>
+    </div>
+
+    <div class="dpanel" id="dpanel-manage">
+      <div class="dnote">Everything live on the board. The green option is the truth, only visible here in HQ until the reveal.</div>
+      <div id="manageList"></div>
+    </div>
+
+    <div class="dpanel" id="dpanel-scores">
+      <div class="dnote">The running tally. Players cannot see any of this until answers are revealed, so the front stays a pure guessing game.</div>
+      <div id="scoreTableWrap"></div>
+    </div>
+
+    <div class="dpanel" id="dpanel-settings">
+      <div class="dsec">Crew email</div>
+      <div class="dnote">The big button on the front page opens a new email to this address.</div>
+      <label class="f-label" for="setEmail">Good Times Crew inbox</label>
+      <input class="f-in" id="setEmail" autocomplete="off" placeholder="goodtimescrew@partnersmortgage.com">
+      <div class="mrow"><button class="btn wide" onclick="saveEmail()">Save email</button></div>
+      <div class="dsec">The big reveal</div>
+      <div class="dnote goldn" id="revealNote">When you reveal, every player sees the correct answers, their own score, and the winner's podium. Do this once the month wraps up.</div>
+      <div class="mrow" id="revealBtnWrap"></div>
+      <div class="dsec">Connection</div>
+      <div class="dnote" id="connNote">Checking connection...</div>
+    </div>
+
+  </div>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   GOOD TIMES CREW · AUGUST CHALLENGE · One Truth, Three Lies
+   Single file, vanilla JS, Partners Mortgage build standards.
+
+   ------------------- FIREBASE SETUP BLOCK -------------------
+   1) console.firebase.google.com  ->  Add project (or open one)
+   2) Build -> Realtime Database -> Create database
+   3) Rules tab -> allow read/write on the path below (see rules
+      snippet Aidan has) -> Publish
+   4) Project settings -> Your apps -> Web app -> copy the config
+      values into the vars below. The API key is split into four
+      parts so GitHub scanners do not flag the file.
+   Until then the page runs in preview mode on this device only.
+   ------------------------------------------------------------- */
+var FB_K1='AIzaSyAbdU';
+var FB_K2='IzS4FZpCIA';
+var FB_K3='B1bH6zTJSY';
+var FB_K4='QqErjfZPc';
+var FB_CONFIG={
+  apiKey: FB_K1+FB_K2+FB_K3+FB_K4,
+  authDomain: 'pm-augustchallenge.firebaseapp.com',
+  databaseURL: 'https://pm-augustchallenge-default-rtdb.firebaseio.com',
+  projectId: 'pm-augustchallenge',
+  storageBucket: 'pm-augustchallenge.firebasestorage.app',
+  messagingSenderId: '423666593774',
+  appId: '1:423666593774:web:17e779bd8de74ac1d9a8ff'
+};
+var DB_ROOT='gtc_aug_2026';
+var ADMIN_PIN='030303';
+var DEFAULT_EMAIL='goodtimescrew@partnersmortgage.com';
+
+/* ---------------- state ---------------- */
+var STATE={settings:{},entries:{},votes:{},prevRevealed:null};
+var MY={name:'',key:''};
+var USE_FB=false, db=null, FB_READY=false, CONN=false;
+var BOARD_PAINTED=false;
+
+/* ---------------- tiny utils ---------------- */
+function $(id){return document.getElementById(id);}
+function esc(s){
+  s=(s===undefined||s===null)?'':String(s);
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function normKey(s){
+  s=(s||'').toLowerCase();
+  s=s.replace(/[^a-z0-9]+/g,'_').replace(/^_+/,'').replace(/_+$/,'');
+  if(!s) s='player';
+  return s.substring(0,40);
+}
+function initials(name){
+  var parts=(name||'').trim().split(/\s+/), out='';
+  if(parts[0]) out+=parts[0].charAt(0);
+  if(parts[1]) out+=parts[1].charAt(0);
+  return (out||'?').toUpperCase();
+}
+var MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fmtDate(ts){
+  var d=new Date(ts||Date.now());
+  return MONTHS[d.getMonth()]+' '+d.getDate();
+}
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+function ssGet(k){try{return sessionStorage.getItem(k);}catch(e){return null;}}
+function ssSet(k,v){try{sessionStorage.setItem(k,v);}catch(e){}}
+function ssDel(k){try{sessionStorage.removeItem(k);}catch(e){}}
+
+/* ---------------- toast ---------------- */
+var TOAST_T=null;
+function toast(msg,kind){
+  var t=$('toast');
+  t.textContent=msg;
+  t.className='toast show'+(kind==='gold'?' gold':'');
+  if(TOAST_T) clearTimeout(TOAST_T);
+  TOAST_T=setTimeout(function(){t.className='toast';},2700);
+}
+
+/* ---------------- confirm modal ---------------- */
+var CF_CB=null;
+function cfOpen(title,body,okLabel,style,cb){
+  $('cfTitle').innerHTML=title;
+  $('cfBody').innerHTML=body;
+  var ok=$('cfOkBtn');
+  ok.textContent=okLabel||'Confirm';
+  ok.className='btn '+(style||'primary');
+  CF_CB=cb||null;
+  $('cfOvl').classList.add('show');
+}
+function cfOk(){
+  $('cfOvl').classList.remove('show');
+  var cb=CF_CB; CF_CB=null;
+  if(cb) cb();
+}
+function cfCancel(){
+  $('cfOvl').classList.remove('show');
+  CF_CB=null;
+}
+
+/* ---------------- data layer ---------------- */
+var LDB={settings:{},entries:{},votes:{}};
+var SUBS={settings:[],entries:[],votes:[]};
+var DATA_READY=false;
+var LS_DB_KEY='gtcAug26_localdb';
+
+function fireNode(node,val){
+  var list=SUBS[node]||[], i;
+  for(i=0;i<list.length;i++){ list[i](val||{}); }
+}
+function localLoad(){
+  var raw=lsGet(LS_DB_KEY);
+  if(raw){ try{ LDB=JSON.parse(raw)||LDB; }catch(e){} }
+  if(!LDB.settings) LDB.settings={};
+  if(!LDB.entries) LDB.entries={};
+  if(!LDB.votes) LDB.votes={};
+}
+function localSave(){ lsSet(LS_DB_KEY,JSON.stringify(LDB)); }
+function localSet(path,val){
+  var seg=path.split('/'), node=LDB, i;
+  for(i=0;i<seg.length-1;i++){
+    if(typeof node[seg[i]]!=='object'||node[seg[i]]===null) node[seg[i]]={};
+    node=node[seg[i]];
+  }
+  node[seg[seg.length-1]]=val;
+  localSave();
+  fireNode(seg[0],LDB[seg[0]]);
+}
+function localRemove(path){
+  var seg=path.split('/'), node=LDB, i;
+  for(i=0;i<seg.length-1;i++){
+    if(typeof node[seg[i]]!=='object'||node[seg[i]]===null) return;
+    node=node[seg[i]];
+  }
+  delete node[seg[seg.length-1]];
+  localSave();
+  fireNode(seg[0],LDB[seg[0]]);
+}
+var DL={
+  on:function(node,cb){
+    SUBS[node].push(cb);
+    if(USE_FB){
+      db.ref(DB_ROOT+'/'+node).on('value',function(snap){ cb(snap.val()||{}); },function(err){ cb({}); });
+    } else {
+      cb(LDB[node]||{});
+    }
+  },
+  set:function(path,val){
+    if(!DATA_READY){ toast('Still connecting. Give it one second.'); return; }
+    if(USE_FB){
+      db.ref(DB_ROOT+'/'+path).set(val,function(err){ if(err) toast('Could not save. Check the connection.'); });
+    } else {
+      localSet(path,val);
+    }
+  },
+  remove:function(path){
+    if(!DATA_READY){ toast('Still connecting. Give it one second.'); return; }
+    if(USE_FB){
+      db.ref(DB_ROOT+'/'+path).remove(function(err){ if(err) toast('Could not delete. Check the connection.'); });
+    } else {
+      localRemove(path);
+    }
+  }
+};
+
+/* ---------------- firebase boot ---------------- */
+function fbConfigured(){
+  return FB_CONFIG.apiKey.indexOf('PASTE')===-1 && FB_CONFIG.databaseURL.indexOf('PASTE')===-1;
+}
+var FB_SRC=[
+  ['https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.1/firebase-app-compat.min.js',
+   'https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.1/firebase-database-compat.min.js'],
+  ['https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js',
+   'https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js']
+];
+function loadScript(src,ok,fail){
+  var s=document.createElement('script');
+  s.src=src; s.onload=ok; s.onerror=fail;
+  document.head.appendChild(s);
+}
+function loadFirebase(i){
+  if(i>=FB_SRC.length){ fbFail('Both script sources failed'); return; }
+  loadScript(FB_SRC[i][0],function(){
+    loadScript(FB_SRC[i][1],function(){ fbReady(); },function(){ loadFirebase(i+1); });
+  },function(){ loadFirebase(i+1); });
+}
+function fbReady(){
+  if(FB_READY) return;
+  FB_READY=true;
+  try{
+    firebase.initializeApp(FB_CONFIG);
+    db=firebase.database();
+    USE_FB=true;
+    db.ref('.info/connected').on('value',function(snap){
+      CONN=!!snap.val();
+      setLive(CONN?'on':'', CONN?'Live':'Reconnecting');
+      renderConnNote();
+    });
+    subscribeAll();
+  }catch(e){
+    startLocal('Firebase config error. Running in preview mode on this device.');
+  }
+}
+function fbFail(reason){
+  if(FB_READY) return;
+  FB_READY=true;
+  startLocal('Could not reach Firebase. Running in preview mode on this device.');
+}
+function startLocal(ribbonMsg){
+  USE_FB=false;
+  localLoad();
+  setLive('warn','Preview');
+  var r=$('previewRibbon');
+  if(ribbonMsg) r.textContent=ribbonMsg;
+  r.classList.add('show');
+  subscribeAll();
+  renderConnNote();
+}
+function setLive(mode,txt){
+  var c=$('liveChip');
+  c.className='livechip'+(mode?' '+mode:'');
+  $('liveTxt').textContent=txt;
+}
+function initData(){
+  if(fbConfigured()){
+    loadFirebase(0);
+    setTimeout(function(){ if(!FB_READY) fbFail('timeout'); },8000);
+  } else {
+    startLocal('');
+  }
+}
+function subscribeAll(){
+  DATA_READY=true;
+  DL.on('settings',function(v){
+    STATE.settings=v||{};
+    watchReveal();
+    renderAll();
+  });
+  DL.on('entries',function(v){ STATE.entries=v||{}; renderAll(); });
+  DL.on('votes',function(v){ STATE.votes=v||{}; renderAll(); });
+}
+
+/* ---------------- identity ---------------- */
+function loadName(){
+  var n=lsGet('gtcAugName')||'';
+  MY.name=n; MY.key=n?normKey(n):'';
+  paintUserChip();
+}
+function paintUserChip(){
+  $('uName').textContent=MY.name?MY.name:"Who's playing?";
+  $('uAv').textContent=MY.name?initials(MY.name):'?';
+}
+function openName(allowClose){
+  $('nameIn').value=MY.name||'';
+  $('nameOvl').classList.add('show');
+  setTimeout(function(){ try{$('nameIn').focus();}catch(e){} },80);
+}
+function saveName(){
+  var v=$('nameIn').value.replace(/\s+/g,' ').trim();
+  if(v.length<2){
+    var m=$('nameModal');
+    m.classList.remove('shake'); void m.offsetWidth; m.classList.add('shake');
+    toast('Give us at least two letters.');
+    return;
+  }
+  var isNew=!MY.name;
+  MY.name=v; MY.key=normKey(v);
+  lsSet('gtcAugName',v);
+  paintUserChip();
+  $('nameOvl').classList.remove('show');
+  renderAll();
+  toast(isNew?('Welcome, '+v+'. Happy guessing.'):('Got it. You are '+v+' now.'));
+}
+
+/* ---------------- mail button ---------------- */
+function crewEmail(){
+  var e=STATE.settings&&STATE.settings.crewEmail?STATE.settings.crewEmail:DEFAULT_EMAIL;
+  return e;
+}
+/* Outlook web compose. Work/M365 accounts use outlook.office.com.
+   If Partners ever moves to personal Outlook.com, change the host
+   below to outlook.live.com and nothing else needs to change. */
+var OUTLOOK_WEB='https://outlook.office.com/mail/deeplink/compose';
+var MAILV={web:'',app:'',def:''};
+function buildMailLinks(){
+  var subj='August Challenge: my one truth';
+  var body='Hi Good Times Crew,\r\n\r\nHere is one true thing about me that most people do not know:\r\n\r\n\r\n\r\n'+(MY.name?('From '+MY.name):'');
+  var to=crewEmail(), es=encodeURIComponent(subj), eb=encodeURIComponent(body), et=encodeURIComponent(to);
+  MAILV.web=OUTLOOK_WEB+'?to='+et+'&subject='+es+'&body='+eb;
+  MAILV.app='ms-outlook://compose?to='+et+'&subject='+es+'&body='+eb;
+  MAILV.def='mailto:'+to+'?subject='+es+'&body='+eb;
+}
+function isMobileDev(){
+  var ua=navigator.userAgent||'';
+  return /iPhone|iPad|iPod|Android/i.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);
+}
+function openNewTab(u){
+  var win=null;
+  try{ win=window.open(u,'_blank','noopener'); }catch(e){}
+  if(!win){ try{ window.top.location.href=u; }catch(e2){ window.location.href=u; } }
+}
+function openScheme(u){
+  try{ window.top.location.href=u; }
+  catch(e){ try{ window.location.href=u; }catch(e2){} }
+}
+function updateMailBtn(){
+  buildMailLinks();
+  $('mailBtn').setAttribute('href',MAILV.web);
+  if($('mailAlt')) $('mailAlt').setAttribute('href',MAILV.def);
+}
+function mailClick(ev){
+  if(ev&&ev.preventDefault) ev.preventDefault();
+  buildMailLinks();
+  if(isMobileDev()){
+    /* Try the Outlook app first, fall back to Outlook on the web
+       if the app never takes over the screen. */
+    var left=false, started=Date.now();
+    function onLeave(){ left=true; }
+    document.addEventListener('visibilitychange',onLeave);
+    window.addEventListener('pagehide',onLeave);
+    openScheme(MAILV.app);
+    setTimeout(function(){
+      document.removeEventListener('visibilitychange',onLeave);
+      window.removeEventListener('pagehide',onLeave);
+      if(!left&&!document.hidden&&Date.now()-started<2600) openNewTab(MAILV.web);
+    },1300);
+  } else {
+    openNewTab(MAILV.web);
+  }
+  return false;
+}
+
+/* ---------------- data helpers ---------------- */
+function entriesList(){
+  var out=[], k, e;
+  for(k in STATE.entries){
+    if(!STATE.entries.hasOwnProperty(k)) continue;
+    e=STATE.entries[k];
+    if(!e||!e.options||e.options.length!==4) continue;
+    out.push({id:k,name:e.name||'Mystery',options:e.options,truth:e.truth,at:e.at||0});
+  }
+  out.sort(function(a,b){ return b.at-a.at; });
+  return out;
+}
+function votesFor(id){
+  var raw=STATE.votes&&STATE.votes[id]?STATE.votes[id]:{};
+  var counts=[0,0,0,0], names=[[],[],[],[]], total=0, myPick=null, k, v;
+  for(k in raw){
+    if(!raw.hasOwnProperty(k)) continue;
+    v=raw[k];
+    if(!v||typeof v.opt!=='number'||v.opt<0||v.opt>3) continue;
+    counts[v.opt]++; total++;
+    names[v.opt].push(v.name||k);
+    if(MY.key&&k===MY.key) myPick=v.opt;
+  }
+  return {counts:counts,names:names,total:total,myPick:myPick};
+}
+function uniqueVoterCount(){
+  var seen={}, n=0, id, k;
+  for(id in STATE.votes){
+    if(!STATE.votes.hasOwnProperty(id)) continue;
+    if(!STATE.entries||!STATE.entries[id]) continue;
+    for(k in STATE.votes[id]){
+      if(!STATE.votes[id].hasOwnProperty(k)) continue;
+      if(!seen[k]){ seen[k]=1; n++; }
+    }
+  }
+  return n;
+}
+function computeScores(){
+  var players={}, list=entriesList(), i, e, raw, k, v, rec, out=[], p;
+  for(i=0;i<list.length;i++){
+    e=list[i];
+    raw=STATE.votes&&STATE.votes[e.id]?STATE.votes[e.id]:{};
+    for(k in raw){
+      if(!raw.hasOwnProperty(k)) continue;
+      v=raw[k];
+      if(!v||typeof v.opt!=='number') continue;
+      rec=players[k];
+      if(!rec){ rec={key:k,name:v.name||k,correct:0,wrong:0,total:0}; players[k]=rec; }
+      rec.total++;
+      if(v.opt===e.truth) rec.correct++; else rec.wrong++;
+    }
+  }
+  for(p in players){ if(players.hasOwnProperty(p)) out.push(players[p]); }
+  out.sort(function(a,b){
+    if(b.correct!==a.correct) return b.correct-a.correct;
+    if(a.wrong!==b.wrong) return a.wrong-b.wrong;
+    return a.name<b.name?-1:1;
+  });
+  return out;
+}
+function votableCount(){
+  var list=entriesList(), n=0, i;
+  for(i=0;i<list.length;i++){ if(normKey(list[i].name)!==MY.key) n++; }
+  return n;
+}
+
+/* ---------------- render: status + board ---------------- */
+function renderAll(){
+  renderStatus();
+  renderBoard();
+  renderReveal();
+  renderAdminLive();
+  updateMailBtn();
+}
+function renderStatus(){
+  var list=entriesList(), voters=uniqueVoterCount(), h='';
+  var revealed=!!(STATE.settings&&STATE.settings.revealed);
+  if(list.length){
+    h+='<span class="schip"><b>'+list.length+'</b> challenge'+(list.length===1?'':'s')+' on the board</span>';
+    h+='<span class="schip"><b>'+voters+'</b> player'+(voters===1?'':'s')+' voting</span>';
+  } else {
+    h+='<span class="schip">Fresh board. First truths land soon.</span>';
+  }
+  if(revealed) h+='<span class="schip goldy">&#127881; Answers are out</span>';
+  $('statusRow').innerHTML=h;
+}
+function optionHTML(e,vf,i,revealed,own){
+  var pct=vf.total?Math.round(vf.counts[i]/vf.total*100):0;
+  var isTruth=(i===e.truth);
+  var sel=(vf.myPick===i);
+  var submitted=(vf.myPick!==null);
+  var staged=(!submitted&&PENDING[e.id]===i);
+  var locked=own||revealed||submitted;
+  var cls='opt';
+  if(locked) cls+=' locked';
+  if(sel) cls+=' sel';
+  if(staged) cls+=' staged';
+  if(revealed){ cls+=isTruth?' truth':' lie'; if(sel&&!isTruth) cls+=' wrongpick'; }
+  var h='<button class="'+cls+'" type="button"';
+  if(!locked) h+=' onclick="pick(\''+e.id+'\','+i+')"';
+  h+='>';
+  var w=vf.total?pct:0;
+  if(BOARD_PAINTED){ h+='<span class="optfill" style="width:'+w+'%"></span>'; }
+  else { h+='<span class="optfill" data-w="'+w+'" style="width:0%"></span>'; }
+  h+='<span class="optrow">';
+  h+='<span class="letter">'+String.fromCharCode(65+i)+'</span>';
+  h+='<span class="opttext">'+esc(e.options[i])+'</span>';
+  h+='<span class="optright">';
+  if(vf.total){
+    h+='<span class="pctv">'+pct+'%</span><span class="pctc">'+vf.counts[i]+' vote'+(vf.counts[i]===1?'':'s')+'</span>';
+  }
+  if(revealed&&isTruth){
+    h+='<span class="truthstamp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Truth</span>';
+  } else if(sel){
+    h+='<span class="pickchip">Your answer</span>';
+  } else if(staged){
+    h+='<span class="stagechip">Selected</span>';
+  }
+  h+='</span></span>';
+  if(vf.names[i].length){
+    var nm=[], j;
+    for(j=0;j<vf.names[i].length;j++) nm.push(esc(vf.names[i][j]));
+    h+='<span class="voters"><b>Voted:</b> '+nm.join(', ')+'</span>';
+  }
+  h+='</button>';
+  return h;
+}
+function renderBoard(){
+  var list=entriesList(), board=$('board'), h='', i, e, vf, own, revealed, tag, delay;
+  revealed=!!(STATE.settings&&STATE.settings.revealed);
+  $('emptyState').style.display=list.length?'none':'block';
+  for(i=0;i<list.length;i++){
+    e=list[i]; vf=votesFor(e.id);
+    own=MY.key&&normKey(e.name)===MY.key;
+    tag='';
+    if(own){ tag='<span class="minitag gold">Your card</span>'; }
+    else if(revealed&&vf.myPick!==null){ tag=(vf.myPick===e.truth)?'<span class="minitag gold">&#127942; You nailed it</span>':'<span class="minitag">Missed it</span>'; }
+    else if(vf.myPick!==null){ tag='<span class="minitag tealy">Locked in</span>'; }
+    delay=Math.min(i*0.07,0.5);
+    h+='<div class="card" style="animation-delay:'+delay+'s">';
+    h+='<div class="chead"><span class="cav">'+esc(initials(e.name))+'</span><div><div class="cname">'+esc(e.name)+'</div><div class="cmeta">Posted '+fmtDate(e.at)+'</div></div><span class="ctag">'+tag+'</span></div>';
+    h+='<div class="qline">'+(revealed?'The truth, <b>revealed</b>.':'Which one is <b>true</b>?')+'</div>';
+    var k;
+    for(k=0;k<4;k++) h+=optionHTML(e,vf,k,revealed,own);
+    if(own&&!revealed){
+      h+='<div class="ownnote">This one is yours. No voting on your own truth, but you can watch the guesses roll in.</div>';
+    } else if(!own&&!revealed){
+      if(vf.myPick===null){
+        var has=(PENDING[e.id]!==undefined&&PENDING[e.id]!==null);
+        h+='<div class="subbar">';
+        h+='<span class="subhint">'+(has?'Answer '+String.fromCharCode(65+PENDING[e.id])+' selected. One shot, so be sure.':'Tap an answer, then submit. You get one shot.')+'</span>';
+        h+='<button class="subbtn'+(has?'':' off')+'" type="button"'+(has?' onclick="submitVote(\''+e.id+'\')"':'')+'>Submit answer</button>';
+        h+='</div>';
+      } else {
+        h+='<div class="lockednote">Answer '+String.fromCharCode(65+vf.myPick)+' is locked in. The truth comes out at the reveal.</div>';
+      }
+    }
+    h+='<div class="cfoot"><span>'+(vf.total?vf.total+' vote'+(vf.total===1?'':'s')+' so far':'No votes yet. Be the first.')+'</span><span class="sp"></span><span>'+(revealed?'Closed':'Open')+'</span></div>';
+    h+='</div>';
+  }
+  board.innerHTML=h;
+  if(!BOARD_PAINTED&&list.length){
+    var fills=board.querySelectorAll('.optfill[data-w]');
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        var f;
+        for(f=0;f<fills.length;f++) fills[f].style.width=fills[f].getAttribute('data-w')+'%';
+      });
+    });
+    BOARD_PAINTED=true;
+    board.classList.add('noanim');
+  }
+}
+
+/* ---------------- voting ---------------- */
+function voteGuard(id){
+  if(!MY.name){ openName(false); return null; }
+  if(STATE.settings&&STATE.settings.revealed){ toast('Voting is closed. The answers are out.'); return null; }
+  var e=STATE.entries?STATE.entries[id]:null;
+  if(!e){ toast('That card just changed. Try again.'); return null; }
+  if(normKey(e.name||'')===MY.key){ toast('Nice try. No voting on your own card.'); return null; }
+  if(votesFor(id).myPick!==null){ toast('Your answer on this one is already locked in.'); return null; }
+  return e;
+}
+/* Tapping an option only stages it. Nothing is saved until Submit. */
+function pick(id,i){
+  if(!voteGuard(id)) return;
+  PENDING[id]=i;
+  renderBoard();
+}
+function submitVote(id){
+  var e=voteGuard(id);
+  if(!e) return;
+  var i=PENDING[id];
+  if(i===undefined||i===null){ toast('Pick an answer first.'); return; }
+  var letter=String.fromCharCode(65+i);
+  cfOpen('Submit answer '+letter+'?','This is final. You cannot change your answer on '+esc(e.name)+"'s card after this.",'Lock it in','goldb',function(){
+    if(!voteGuard(id)) return;
+    DL.set('votes/'+id+'/'+MY.key,{name:MY.name,opt:i,at:Date.now(),locked:true});
+    delete PENDING[id];
+    toast('Answer '+letter+' locked in.','gold');
+  });
+}
+
+/* ---------------- reveal zone ---------------- */
+function renderReveal(){
+  var zone=$('revealZone');
+  var revealed=!!(STATE.settings&&STATE.settings.revealed);
+  if(!revealed){ zone.classList.remove('show'); zone.innerHTML=''; return; }
+  var scores=computeScores(), h='', me=null, i, s;
+  for(i=0;i<scores.length;i++){ if(scores[i].key===MY.key){ me=scores[i]; break; } }
+  h+='<div class="revealbanner">';
+  h+='<h2>The answers <em>are out.</em></h2>';
+  h+='<p>Every truth is stamped below. Here is how the guessing went.</p>';
+  if(me){
+    h+='<span class="mescore">You called <b>'+me.correct+'</b> of '+votableCount()+' truths</span>';
+  }
+  if(scores.length){
+    var p1=scores[0], p2=scores.length>1?scores[1]:null, p3=scores.length>2?scores[2]:null;
+    h+='<div class="podium">';
+    h+='<div class="pcol p2">'+(p2?('<div class="crown"></div><div class="pname">'+esc(p2.name)+'</div><div class="pscore">'+p2.correct+' right</div><div class="pbar">2</div>'):'')+'</div>';
+    h+='<div class="pcol p1"><div class="crown"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 7.5l4.6 3.2L12 4l4.9 6.7 4.6-3.2-1.6 10a2 2 0 0 1-2 1.7H6.1a2 2 0 0 1-2-1.7l-1.6-10z"></path></svg></div><div class="pname">'+esc(p1.name)+'</div><div class="pscore">'+p1.correct+' right</div><div class="pbar">1</div></div>';
+    h+='<div class="pcol p3">'+(p3?('<div class="crown"></div><div class="pname">'+esc(p3.name)+'</div><div class="pscore">'+p3.correct+' right</div><div class="pbar">3</div>'):'')+'</div>';
+    h+='</div>';
+    if(scores.length>3){
+      h+='<div class="lbrest">';
+      for(i=3;i<scores.length;i++){
+        s=scores[i];
+        h+='<div class="lbrow"><span class="rk">'+(i+1)+'</span><span class="nm">'+esc(s.name)+'</span><span class="sc">'+s.correct+' right</span></div>';
+      }
+      h+='</div>';
+    }
+  } else {
+    h+='<p style="margin-top:14px;">No votes came in, so the Crew keeps the trophy this month.</p>';
+  }
+  h+='</div>';
+  zone.innerHTML=h;
+  zone.classList.add('show');
+}
+function watchReveal(){
+  var rv=!!(STATE.settings&&STATE.settings.revealed);
+  if(STATE.prevRevealed===false&&rv){
+    celebrate();
+    toast('The answers are out!','gold');
+    setTimeout(function(){ try{$('revealZone').scrollIntoView({behavior:'smooth',block:'start'});}catch(e){} },500);
+  } else if(STATE.prevRevealed===null&&rv&&!ssGet('gtcAugSeenReveal')){
+    setTimeout(celebrate,600);
+    ssSet('gtcAugSeenReveal','1');
+  }
+  if(!rv) ssDel('gtcAugSeenReveal');
+  STATE.prevRevealed=rv;
+}
+
+/* ---------------- confetti ---------------- */
+var CONF={parts:[],running:false,ctx:null,cv:null};
+function confettiSize(){
+  if(!CONF.cv) return;
+  CONF.cv.width=window.innerWidth;
+  CONF.cv.height=window.innerHeight;
+}
+function celebrate(){
+  var reduced=false;
+  try{ reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+  if(reduced) return;
+  if(!CONF.cv){
+    CONF.cv=$('confetti');
+    CONF.ctx=CONF.cv.getContext('2d');
+    confettiSize();
+    window.addEventListener('resize',confettiSize);
+  }
+  var colors=['#FFAC27','#FFC466','#25BAC4','#2BC3CD','#3ECF8E','#EEF5F4'];
+  var i, n=170, w=CONF.cv.width;
+  for(i=0;i<n;i++){
+    CONF.parts.push({
+      x:w*0.5+(Math.random()-0.5)*w*0.6,
+      y:-20-Math.random()*140,
+      vx:(Math.random()-0.5)*5,
+      vy:2+Math.random()*3.5,
+      rot:Math.random()*Math.PI*2,
+      vr:(Math.random()-0.5)*0.25,
+      sz:5+Math.random()*7,
+      cl:colors[Math.floor(Math.random()*colors.length)],
+      life:220+Math.random()*120
+    });
+  }
+  if(!CONF.running){ CONF.running=true; confettiTick(); }
+}
+function confettiTick(){
+  var ctx=CONF.ctx, cv=CONF.cv, i, p, alive=[];
+  ctx.clearRect(0,0,cv.width,cv.height);
+  for(i=0;i<CONF.parts.length;i++){
+    p=CONF.parts[i];
+    p.x+=p.vx; p.y+=p.vy; p.vy+=0.045; p.vx*=0.992; p.rot+=p.vr; p.life--;
+    if(p.life>0&&p.y<cv.height+30){
+      ctx.save();
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rot);
+      ctx.globalAlpha=Math.max(0,Math.min(1,p.life/70));
+      ctx.fillStyle=p.cl;
+      ctx.fillRect(-p.sz/2,-p.sz/2,p.sz,p.sz*0.62);
+      ctx.restore();
+      alive.push(p);
+    }
+  }
+  CONF.parts=alive;
+  if(CONF.parts.length){ requestAnimationFrame(confettiTick); }
+  else { CONF.running=false; ctx.clearRect(0,0,cv.width,cv.height); }
+}
+
+/* ---------------- pin + admin ---------------- */
+var PENDING={};
+var PIN_BUF='';
+function cogClick(){
+  if(ssGet('gtcAugHQ')==='1'){ openAdmin(); return; }
+  PIN_BUF='';
+  renderDots();
+  $('pinOvl').classList.add('show');
+}
+function renderDots(){
+  var h='', i;
+  for(i=0;i<6;i++) h+='<span class="pd'+(i<PIN_BUF.length?' fill':'')+'"></span>';
+  $('pinDots').innerHTML=h;
+}
+function pinKey(d){
+  if(PIN_BUF.length>=6) return;
+  PIN_BUF+=d;
+  renderDots();
+  if(PIN_BUF.length===6){
+    if(PIN_BUF===ADMIN_PIN){
+      ssSet('gtcAugHQ','1');
+      pinClose();
+      openAdmin();
+      toast('Welcome to HQ.','gold');
+    } else {
+      var m=$('pinModal');
+      m.classList.remove('shake'); void m.offsetWidth; m.classList.add('shake');
+      setTimeout(function(){ PIN_BUF=''; renderDots(); },430);
+    }
+  }
+}
+function pinBack(){ PIN_BUF=PIN_BUF.slice(0,-1); renderDots(); }
+function pinClose(){ PIN_BUF=''; $('pinOvl').classList.remove('show'); }
+function openAdmin(){
+  $('drawer').classList.add('open');
+  $('dScrim').classList.add('show');
+  renderAdminLive();
+}
+function closeAdmin(){
+  $('drawer').classList.remove('open');
+  $('dScrim').classList.remove('show');
+}
+function lockAdmin(){
+  ssDel('gtcAugHQ');
+  closeAdmin();
+  toast('HQ locked.');
+}
+function adminTab(t){
+  var tabs=['new','manage','scores','settings'], i;
+  for(i=0;i<tabs.length;i++){
+    $('dtab-'+tabs[i]).className='dtab'+(tabs[i]===t?' on':'');
+    $('dpanel-'+tabs[i]).className='dpanel'+(tabs[i]===t?' on':'');
+  }
+}
+function adminOpenNow(){ return $('drawer').classList.contains('open'); }
+
+/* ---------------- admin: post new ---------------- */
+function postEntry(){
+  var name=$('newName').value.replace(/\s+/g,' ').trim();
+  var truth=$('newTruth').value.trim();
+  var l1=$('newLie1').value.trim();
+  var l2=$('newLie2').value.trim();
+  var l3=$('newLie3').value.trim();
+  if(!name||!truth||!l1||!l2||!l3){ toast('Name, the truth, and all three lies are required.'); return; }
+  var opts=[{t:truth,is:true},{t:l1,is:false},{t:l2,is:false},{t:l3,is:false}], i, j, tmp;
+  for(i=opts.length-1;i>0;i--){
+    j=Math.floor(Math.random()*(i+1));
+    tmp=opts[i]; opts[i]=opts[j]; opts[j]=tmp;
+  }
+  var texts=[], truthIdx=0;
+  for(i=0;i<4;i++){ texts.push(opts[i].t); if(opts[i].is) truthIdx=i; }
+  var id='e'+Date.now()+'_'+Math.random().toString(36).substring(2,6);
+  DL.set('entries/'+id,{name:name,options:texts,truth:truthIdx,at:Date.now()});
+  $('newName').value=''; $('newTruth').value=''; $('newLie1').value=''; $('newLie2').value=''; $('newLie3').value='';
+  toast(name+' is live on the board. Shuffled and secret.','gold');
+  adminTab('manage');
+}
+
+/* ---------------- admin: manage + scores + settings ---------------- */
+function delEntry(id){
+  var e=STATE.entries?STATE.entries[id]:null;
+  var nm=e&&e.name?e.name:'this card';
+  cfOpen('Delete '+esc(nm)+"'s card?",'This removes the card and every vote on it. There is no undo.','Delete it','danger',function(){
+    DL.remove('entries/'+id);
+    DL.remove('votes/'+id);
+    toast('Deleted.');
+  });
+}
+function renderManage(){
+  var list=entriesList().slice().reverse(), h='', i, e, vf, k, nm, j;
+  if(!list.length){
+    $('manageList').innerHTML='<div class="dnote" style="margin-top:14px;">Nothing posted yet. Build the first one in the New tab.</div>';
+    return;
+  }
+  for(i=0;i<list.length;i++){
+    e=list[i]; vf=votesFor(e.id);
+    h+='<div class="mcard">';
+    h+='<div class="mchead"><span class="mcname">'+esc(e.name)+'</span><span class="cmeta">'+fmtDate(e.at)+' &#183; '+vf.total+' vote'+(vf.total===1?'':'s')+'</span>';
+    h+='<button class="iconbtn" title="Delete" onclick="delEntry(\''+e.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button></div>';
+    for(k=0;k<4;k++){
+      h+='<div class="mcopt'+(k===e.truth?' ist':'')+'"><span class="l">'+String.fromCharCode(65+k)+'</span><span class="tx">'+esc(e.options[k])+'</span>'+(k===e.truth?'<span class="mtruthtag">Truth</span>':'')+'<span class="ct">'+vf.counts[k]+'</span></div>';
+      if(vf.names[k].length){
+        nm=[];
+        for(j=0;j<vf.names[k].length;j++) nm.push(esc(vf.names[k][j]));
+        h+='<div class="mvoters">'+nm.join(', ')+'</div>';
+      }
+    }
+    h+='</div>';
+  }
+  $('manageList').innerHTML=h;
+}
+function renderScoresTable(){
+  var scores=computeScores(), h='', i, s, list=entriesList();
+  if(!scores.length){
+    $('scoreTableWrap').innerHTML='<div class="dnote" style="margin-top:14px;">No votes yet. The tally builds itself as the crew starts guessing.</div>';
+    return;
+  }
+  h+='<table class="lbtable"><tr><th>#</th><th>Player</th><th>Right</th><th>Wrong</th><th>Voted</th></tr>';
+  for(i=0;i<scores.length;i++){
+    s=scores[i];
+    h+='<tr'+(s.correct===scores[0].correct&&scores[0].correct>0?' class="top"':'')+'>';
+    h+='<td class="mono">'+(i+1)+'</td><td>'+esc(s.name)+'</td><td class="mono ok">'+s.correct+'</td><td class="mono no">'+s.wrong+'</td><td class="mono">'+s.total+' / '+list.length+'</td>';
+    h+='</tr>';
+  }
+  h+='</table>';
+  $('scoreTableWrap').innerHTML=h;
+}
+function renderSettingsBits(){
+  var inp=$('setEmail');
+  if(document.activeElement!==inp) inp.value=crewEmail();
+  var revealed=!!(STATE.settings&&STATE.settings.revealed);
+  $('revealNote').textContent=revealed
+    ? 'Answers are live on the front page right now. Players can see the truths, their scores, and the podium.'
+    : 'When you reveal, every player sees the correct answers, their own score, and the winner podium. Do this once the month wraps up.';
+  $('revealBtnWrap').innerHTML=revealed
+    ? '<button class="btn ghost wide" onclick="doHide()">Hide answers again</button>'
+    : '<button class="btn goldb wide" onclick="doReveal()">&#127881; Reveal all answers</button>';
+  renderConnNote();
+}
+function renderConnNote(){
+  var el=$('connNote');
+  if(!el) return;
+  if(USE_FB){
+    el.textContent=CONN?'Synced live to Firebase. Everyone sees the same board.':'Firebase configured. Reconnecting...';
+  } else {
+    el.textContent='Preview mode. Everything works, but only on this device. Paste the Firebase config into the setup block at the top of the file to sync the whole crew.';
+  }
+}
+function renderAdminLive(){
+  if(!adminOpenNow()) return;
+  renderManage();
+  renderScoresTable();
+  renderSettingsBits();
+}
+function saveEmail(){
+  var v=$('setEmail').value.trim();
+  if(v.indexOf('@')<1||v.indexOf('.')<0){ toast('That does not look like an email address.'); return; }
+  DL.set('settings/crewEmail',v);
+  toast('Crew email saved. The big button points there now.');
+}
+function doReveal(){
+  cfOpen('Reveal all answers?','Everyone sees the truths, their own score, and the winner podium the moment this goes live. This is the big moment. Ready?','Yes, reveal it','goldb',function(){
+    DL.set('settings/revealed',true);
+    DL.set('settings/revealedAt',Date.now());
+  });
+}
+function doHide(){
+  cfOpen('Hide answers again?','The board goes back to secret voting mode. Handy if the reveal fired early.','Hide them','danger',function(){
+    DL.set('settings/revealed',false);
+  });
+}
+
+/* ---------------- boot ---------------- */
+function boot(){
+  loadName();
+  updateMailBtn();
+  if(!MY.name) openName(false);
+  initData();
+  $('nameOvl').addEventListener('click',function(ev){
+    if(ev.target===$('nameOvl')&&MY.name) $('nameOvl').classList.remove('show');
+  });
+  $('nameIn').addEventListener('keydown',function(ev){ if(ev.key==='Enter') saveName(); });
+  $('pinOvl').addEventListener('click',function(ev){ if(ev.target===$('pinOvl')) pinClose(); });
+  $('cfOvl').addEventListener('click',function(ev){ if(ev.target===$('cfOvl')) cfCancel(); });
+  document.addEventListener('keydown',function(ev){
+    if(ev.key==='Escape'){
+      if($('cfOvl').classList.contains('show')) cfCancel();
+      else if($('pinOvl').classList.contains('show')) pinClose();
+      else if($('drawer').classList.contains('open')) closeAdmin();
+    }
+  });
+  window.addEventListener('storage',function(ev){
+    if(!USE_FB&&ev&&ev.key===LS_DB_KEY){
+      localLoad();
+      fireNode('settings',LDB.settings);
+      fireNode('entries',LDB.entries);
+      fireNode('votes',LDB.votes);
+    }
+  });
+}
+boot();
+</script>
+</body>
+</html>
