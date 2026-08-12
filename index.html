@@ -62,7 +62,34 @@ input,textarea{font-family:var(--sans)}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.45}}
 .userchip{display:flex;align-items:center;gap:9px;padding:5px 13px 5px 5px;border:1px solid var(--line2);border-radius:999px;background:rgba(255,255,255,.02);cursor:pointer;color:var(--ink);font-size:13px;transition:border-color .25s}
 .userchip:hover{border-color:var(--teal)}
-.avatar{width:27px;height:27px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:600;color:#fff;flex-shrink:0}
+.avatar{width:27px;height:27px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:600;color:#fff;flex-shrink:0;overflow:hidden}
+.avatar img,.cav img,.pav img,.vav img,.mav img,.lbav img{width:100%;height:100%;object-fit:cover;display:block}
+/* roster picker */
+.psearch{position:relative;margin-bottom:12px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;max-height:46vh;overflow-y:auto;padding:3px 2px 6px;margin:0 -2px}
+.pgrid::-webkit-scrollbar{width:8px}
+.pgrid::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:8px}
+.ptile{border:1px solid var(--line2);border-radius:16px;background:var(--panel);padding:12px 8px 10px;cursor:pointer;text-align:center;transition:border-color .2s,transform .2s,background .2s;color:var(--ink);font-family:var(--sans)}
+.ptile:hover{border-color:var(--teal);transform:translateY(-2px);background:rgba(37,186,196,.06)}
+.ptile.on{border-color:var(--gold);background:rgba(255,172,39,.08)}
+.pav{width:54px;height:54px;border-radius:50%;margin:0 auto 8px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:15px;font-weight:600;color:#fff;overflow:hidden;box-shadow:0 6px 16px rgba(0,129,139,.35)}
+.ptname{font-size:11.5px;line-height:1.25;color:var(--ink);word-break:break-word}
+.pnone{padding:26px 10px;text-align:center;color:var(--faint);font-size:13px;grid-column:1/-1}
+.plink{display:inline-block;margin-top:12px;font-size:12.5px;color:var(--muted);text-decoration:none;border-bottom:1px solid transparent;cursor:pointer}
+.plink:hover{color:var(--teal);border-bottom-color:rgba(37,186,196,.45)}
+.pmanual{display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.pmanual.show{display:block}
+/* voter avatars */
+.vav{width:20px;height:20px;border-radius:50%;background:var(--grad);display:inline-flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:8.5px;font-weight:600;color:#fff;overflow:hidden;vertical-align:middle;flex-shrink:0}
+.vpill{display:inline-flex;align-items:center;gap:5px;margin:3px 7px 0 0;font-size:11.5px;color:var(--muted)}
+.mav{width:18px;height:18px;border-radius:50%;background:var(--grad);display:inline-flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:8px;font-weight:600;color:#fff;overflow:hidden;vertical-align:middle;flex-shrink:0}
+.mvpill{display:inline-flex;align-items:center;gap:4px;margin:2px 6px 0 0;font-size:10.5px;color:var(--faint)}
+.lbav{width:28px;height:28px;border-radius:50%;background:var(--grad);display:inline-flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:600;color:#fff;overflow:hidden;flex-shrink:0}
+.pcol .ppic{width:min(76px,15vw);height:min(76px,15vw);border-radius:50%;margin:0 auto 8px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:18px;font-weight:600;color:#fff;overflow:hidden;border:2px solid var(--line2)}
+.pcol.p1 .ppic{border-color:rgba(255,172,39,.65);box-shadow:0 8px 26px rgba(255,172,39,.3);width:min(92px,18vw);height:min(92px,18vw)}
+.pcol.p2 .ppic{border-color:rgba(185,199,198,.5)}
+.pcol.p3 .ppic{border-color:rgba(201,137,96,.5)}
+.rosterchip{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-left:8px}
 .cogbtn{width:38px;height:38px;border-radius:12px;border:1px solid var(--line2);background:rgba(255,255,255,.02);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s}
 .cogbtn:hover{color:var(--gold);border-color:rgba(255,172,39,.4);transform:rotate(40deg)}
 .cogbtn svg{width:18px;height:18px}
@@ -358,7 +385,7 @@ textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
   <div class="steps">
     <div class="step"><div class="sn">Step 1</div><div class="st">Email your truth</div><div class="sd">One true thing about you that nobody at Partners would ever guess.</div></div>
     <div class="step"><div class="sn">Step 2</div><div class="st">The Crew cooks up three lies</div><div class="sd">Your truth gets hidden between three convincing fakes and posted below.</div></div>
-    <div class="step"><div class="sn">Step 3</div><div class="st">Everyone votes</div><div class="sd">Pick what's real, then submit. One shot per card, and scores stay secret until the big reveal.</div></div>
+    <div class="step"><div class="sn">Step 3</div><div class="st">Everyone votes</div><div class="sd">Pick what's real, then submit. One shot per card, and you only see how everyone else voted after you answer.</div></div>
   </div>
 
   <div class="ctazone">
@@ -386,12 +413,17 @@ textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
 
 <!-- name modal -->
 <div class="ovl" id="nameOvl">
-  <div class="modal" id="nameModal">
+  <div class="modal" id="nameModal" style="width:min(560px,100%);">
     <h3>Who's <em>playing?</em></h3>
-    <p class="mp">First name works great. This device will remember you, and your guesses get scored under this name at the reveal.</p>
-    <label class="f-label" for="nameIn">Your name</label>
-    <input class="f-in" id="nameIn" maxlength="26" autocomplete="off" placeholder="e.g. Rachael">
-    <div class="mrow"><button class="btn primary wide" onclick="saveName()">Let's play</button></div>
+    <p class="mp">Find yourself in the roster. Your guesses and your score are tied to your name and photo.</p>
+    <div class="psearch"><input class="f-in" id="pSearch" autocomplete="off" placeholder="Search the roster" oninput="renderPicker()"></div>
+    <div class="pgrid" id="pGrid"></div>
+    <a class="plink" id="pManualLink" onclick="toggleManual()">Not on the list? Enter your name instead</a>
+    <div class="pmanual" id="pManual">
+      <label class="f-label" for="nameIn">Your name</label>
+      <input class="f-in" id="nameIn" maxlength="26" autocomplete="off" placeholder="e.g. Rachael">
+      <div class="mrow"><button class="btn primary wide" onclick="saveName()">Let's play</button></div>
+    </div>
   </div>
 </div>
 
@@ -444,7 +476,9 @@ textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
     <div class="dpanel on" id="dpanel-new">
       <div class="dnote">Post a new challenge. Type the person's real truth first, then invent three lies. The four options get shuffled automatically, so the truth never sits in the same spot.</div>
       <label class="f-label" for="newName">Whose truth is this?</label>
-      <input class="f-in" id="newName" maxlength="30" autocomplete="off" placeholder="First name, e.g. Peter">
+      <input class="f-in" id="newName" list="rosterList" maxlength="40" autocomplete="off" placeholder="Start typing a name from the roster" oninput="onNewNameInput()">
+      <datalist id="rosterList"></datalist>
+      <div class="dnote" id="newNameNote" style="margin-top:7px;">Pick someone from the roster so their photo shows on the card. A name that is not in the roster still works, it just uses initials.</div>
       <label class="f-label truthy" for="newTruth">The truth</label>
       <textarea class="f-in" id="newTruth" maxlength="220" placeholder="The one real story they emailed in"></textarea>
       <label class="f-label liey" for="newLie1">Lie no. 1</label>
@@ -475,6 +509,9 @@ textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
       <div class="dsec">The big reveal</div>
       <div class="dnote goldn" id="revealNote">When you reveal, every player sees the correct answers, their own score, and the winner's podium. Do this once the month wraps up.</div>
       <div class="mrow" id="revealBtnWrap"></div>
+      <div class="dsec">Reset answers</div>
+      <div class="dnote" id="resetNote">Wipes every answer and starts the guessing over. The cards, the truths, and the lies all stay exactly where they are.</div>
+      <div class="mrow" id="resetBtnWrap"></div>
       <div class="dsec">Connection</div>
       <div class="dnote" id="connNote">Checking connection...</div>
     </div>
@@ -512,13 +549,25 @@ var FB_CONFIG={
   messagingSenderId: '423666593774',
   appId: '1:423666593774:web:17e779bd8de74ac1d9a8ff'
 };
+/* ---- Roster source: the Funding Floor project's Firebase, read only.
+   Same roster of LOs and Branch Managers, so names and photos stay
+   in one place. Managed over in Funding Floor, never written here. ---- */
+var RS_K1='AIzaSyDgIx';
+var RS_K2='9ZleMVvKpR';
+var RS_K3='LTS53z_AwC';
+var RS_K4='rFYtdCNiQ';
+var ROSTER_FB={
+  apiKey: RS_K1+RS_K2+RS_K3+RS_K4,
+  databaseURL: 'https://fundinghypeboard-default-rtdb.firebaseio.com'
+};
+var ROSTER_PATH='roster';
 var DB_ROOT='gtc_aug_2026';
 var ADMIN_PIN='030303';
 var DEFAULT_EMAIL='goodtimescrew@partnersmortgage.com';
 
 /* ---------------- state ---------------- */
 var STATE={settings:{},entries:{},votes:{},prevRevealed:null};
-var MY={name:'',key:''};
+var MY={id:'',name:'',photo:'',key:''};
 var USE_FB=false, db=null, FB_READY=false, CONN=false;
 var BOARD_PAINTED=false;
 
@@ -586,6 +635,7 @@ function cfCancel(){
 var LDB={settings:{},entries:{},votes:{}};
 var SUBS={settings:[],entries:[],votes:[]};
 var DATA_READY=false;
+var ROSTER={}, ROSTER_STATE='loading', rsDb=null;
 var LS_DB_KEY='gtcAug26_localdb';
 
 function fireNode(node,val){
@@ -681,6 +731,7 @@ function fbReady(){
       renderConnNote();
     });
     subscribeAll();
+    connectRoster();
   }catch(e){
     startLocal('Firebase config error. Running in preview mode on this device.');
   }
@@ -699,6 +750,7 @@ function startLocal(ribbonMsg){
   r.classList.add('show');
   subscribeAll();
   renderConnNote();
+  connectRoster();
 }
 function setLive(mode,txt){
   var c=$('liveChip');
@@ -725,19 +777,95 @@ function subscribeAll(){
 }
 
 /* ---------------- identity ---------------- */
+function avatarHTML(cls,photo,name){
+  if(photo) return '<span class="'+cls+'"><img src="'+esc(photo)+'" alt="'+esc(name||'')+'" loading="lazy" onerror="this.parentNode.innerHTML=\''+esc(initials(name||'?'))+'\'"></span>';
+  return '<span class="'+cls+'">'+esc(initials(name||'?'))+'</span>';
+}
 function loadName(){
-  var n=lsGet('gtcAugName')||'';
-  MY.name=n; MY.key=n?normKey(n):'';
+  var raw=lsGet('gtcAugPerson'), p=null;
+  if(raw){ try{ p=JSON.parse(raw); }catch(e){ p=null; } }
+  if(p&&p.name){
+    MY.id=p.id||''; MY.name=p.name; MY.photo=p.photo||'';
+    MY.key=p.id?p.id:normKey(p.name);
+  } else {
+    MY.id=''; MY.name=''; MY.photo=''; MY.key='';
+  }
   paintUserChip();
+}
+function savePerson(id,name,photo,quiet){
+  var isNew=!MY.name;
+  MY.id=id||''; MY.name=name; MY.photo=photo||'';
+  MY.key=id?id:normKey(name);
+  lsSet('gtcAugPerson',JSON.stringify({id:MY.id,name:MY.name,photo:MY.photo}));
+  paintUserChip();
+  $('nameOvl').classList.remove('show');
+  renderAll();
+  if(!quiet) toast(isNew?('Welcome, '+name.split(' ')[0]+'. Happy guessing.'):('Got it. You are '+name+' now.'));
 }
 function paintUserChip(){
   $('uName').textContent=MY.name?MY.name:"Who's playing?";
-  $('uAv').textContent=MY.name?initials(MY.name):'?';
+  var av=$('uAv');
+  if(MY.photo){
+    av.innerHTML='<img src="'+esc(MY.photo)+'" alt="'+esc(MY.name)+'" onerror="this.parentNode.textContent=\''+esc(initials(MY.name))+'\'">';
+  } else {
+    av.textContent=MY.name?initials(MY.name):'?';
+  }
+}
+function rosterList(){
+  var out=[], k;
+  for(k in ROSTER){
+    if(!ROSTER.hasOwnProperty(k)) continue;
+    if(!ROSTER[k]||!ROSTER[k].name) continue;
+    out.push({id:k,name:ROSTER[k].name,photo:ROSTER[k].photo||''});
+  }
+  out.sort(function(a,b){ return a.name.toLowerCase()<b.name.toLowerCase()?-1:1; });
+  return out;
+}
+function renderPicker(){
+  var grid=$('pGrid');
+  if(!grid) return;
+  if(ROSTER_STATE==='loading'){ grid.innerHTML='<div class="pnone">Loading the roster...</div>'; return; }
+  if(ROSTER_STATE==='error'){
+    grid.innerHTML='<div class="pnone">The roster could not load. Use the name option below and you are good to go.</div>';
+    showManual(true);
+    return;
+  }
+  var list=rosterList(), q=($('pSearch')?$('pSearch').value:'').toLowerCase().trim(), h='', i, p, shown=0;
+  for(i=0;i<list.length;i++){
+    p=list[i];
+    if(q&&p.name.toLowerCase().indexOf(q)===-1) continue;
+    shown++;
+    h+='<button class="ptile'+(p.id===MY.id?' on':'')+'" type="button" onclick="choosePerson(\''+p.id+'\')">';
+    h+=avatarHTML('pav',p.photo,p.name);
+    h+='<span class="ptname">'+esc(p.name)+'</span></button>';
+  }
+  if(!shown) h='<div class="pnone">Nobody matches that. Try less of the name, or use the option below.</div>';
+  grid.innerHTML=h;
+}
+function choosePerson(id){
+  var p=ROSTER[id];
+  if(!p||!p.name){ toast('That name is not in the roster anymore.'); return; }
+  savePerson(id,p.name,p.photo||'');
+}
+function showManual(on){
+  var m=$('pManual'), l=$('pManualLink');
+  if(!m) return;
+  if(on){ m.classList.add('show'); if(l) l.style.display='none'; }
+  else { m.classList.remove('show'); if(l) l.style.display='inline-block'; }
+}
+function toggleManual(){
+  showManual(!$('pManual').classList.contains('show'));
+  if($('pManual').classList.contains('show')){
+    $('nameIn').value=MY.id?'':(MY.name||'');
+    setTimeout(function(){ try{$('nameIn').focus();}catch(e){} },60);
+  }
 }
 function openName(allowClose){
-  $('nameIn').value=MY.name||'';
+  if($('pSearch')) $('pSearch').value='';
+  showManual(false);
+  renderPicker();
   $('nameOvl').classList.add('show');
-  setTimeout(function(){ try{$('nameIn').focus();}catch(e){} },80);
+  setTimeout(function(){ try{ if(ROSTER_STATE==='ready') $('pSearch').focus(); }catch(e){} },80);
 }
 function saveName(){
   var v=$('nameIn').value.replace(/\s+/g,' ').trim();
@@ -747,13 +875,42 @@ function saveName(){
     toast('Give us at least two letters.');
     return;
   }
-  var isNew=!MY.name;
-  MY.name=v; MY.key=normKey(v);
-  lsSet('gtcAugName',v);
-  paintUserChip();
-  $('nameOvl').classList.remove('show');
-  renderAll();
-  toast(isNew?('Welcome, '+v+'. Happy guessing.'):('Got it. You are '+v+' now.'));
+  savePerson('',v,'');
+}
+/* Roster lives in another project, so it gets its own Firebase app. */
+function connectRoster(){
+  if(!window.firebase||!firebase.database){ ROSTER_STATE='error'; renderPicker(); return; }
+  try{
+    var app=firebase.initializeApp(ROSTER_FB,'gtc-roster-'+Date.now());
+    rsDb=app.database();
+    rsDb.ref(ROSTER_PATH).on('value',function(snap){
+      ROSTER=snap.val()||{};
+      ROSTER_STATE='ready';
+      refreshMyPerson();
+      renderPicker();
+      renderAll();
+    },function(){
+      ROSTER_STATE='error';
+      renderPicker();
+    });
+  }catch(e){
+    ROSTER_STATE='error';
+    renderPicker();
+  }
+}
+/* Keep the saved photo and spelling in step with the roster. */
+function refreshMyPerson(){
+  if(!MY.id||!ROSTER[MY.id]) return;
+  var p=ROSTER[MY.id];
+  if(p.name!==MY.name||(p.photo||'')!==MY.photo){
+    MY.name=p.name; MY.photo=p.photo||'';
+    lsSet('gtcAugPerson',JSON.stringify({id:MY.id,name:MY.name,photo:MY.photo}));
+    paintUserChip();
+  }
+}
+function personPhoto(id,fallbackPhoto){
+  if(id&&ROSTER[id]&&ROSTER[id].photo) return ROSTER[id].photo;
+  return fallbackPhoto||'';
 }
 
 /* ---------------- mail button ---------------- */
@@ -821,23 +978,23 @@ function entriesList(){
     if(!STATE.entries.hasOwnProperty(k)) continue;
     e=STATE.entries[k];
     if(!e||!e.options||e.options.length!==4) continue;
-    out.push({id:k,name:e.name||'Mystery',options:e.options,truth:e.truth,at:e.at||0});
+    out.push({id:k,personId:e.personId||'',photo:e.photo||'',name:e.name||'Mystery',options:e.options,truth:e.truth,at:e.at||0});
   }
   out.sort(function(a,b){ return b.at-a.at; });
   return out;
 }
 function votesFor(id){
   var raw=STATE.votes&&STATE.votes[id]?STATE.votes[id]:{};
-  var counts=[0,0,0,0], names=[[],[],[],[]], total=0, myPick=null, k, v;
+  var counts=[0,0,0,0], people=[[],[],[],[]], total=0, myPick=null, k, v;
   for(k in raw){
     if(!raw.hasOwnProperty(k)) continue;
     v=raw[k];
     if(!v||typeof v.opt!=='number'||v.opt<0||v.opt>3) continue;
     counts[v.opt]++; total++;
-    names[v.opt].push(v.name||k);
+    people[v.opt].push({id:v.personId||'',name:v.name||k,photo:personPhoto(v.personId,v.photo)});
     if(MY.key&&k===MY.key) myPick=v.opt;
   }
-  return {counts:counts,names:names,total:total,myPick:myPick};
+  return {counts:counts,people:people,total:total,myPick:myPick};
 }
 function uniqueVoterCount(){
   var seen={}, n=0, id, k;
@@ -861,7 +1018,7 @@ function computeScores(){
       v=raw[k];
       if(!v||typeof v.opt!=='number') continue;
       rec=players[k];
-      if(!rec){ rec={key:k,name:v.name||k,correct:0,wrong:0,total:0}; players[k]=rec; }
+      if(!rec){ rec={key:k,id:v.personId||'',name:v.name||k,photo:personPhoto(v.personId,v.photo),correct:0,wrong:0,total:0}; players[k]=rec; }
       rec.total++;
       if(v.opt===e.truth) rec.correct++; else rec.wrong++;
     }
@@ -874,9 +1031,14 @@ function computeScores(){
   });
   return out;
 }
+function isMine(e){
+  if(!e||!MY.key) return false;
+  if(e.personId&&MY.id) return e.personId===MY.id;
+  return normKey(e.name||'')===normKey(MY.name||'');
+}
 function votableCount(){
   var list=entriesList(), n=0, i;
-  for(i=0;i<list.length;i++){ if(normKey(list[i].name)!==MY.key) n++; }
+  for(i=0;i<list.length;i++){ if(!isMine(list[i])) n++; }
   return n;
 }
 
@@ -907,6 +1069,7 @@ function optionHTML(e,vf,i,revealed,own){
   var submitted=(vf.myPick!==null);
   var staged=(!submitted&&PENDING[e.id]===i);
   var locked=own||revealed||submitted;
+  var showRes=own||revealed||submitted;
   var cls='opt';
   if(locked) cls+=' locked';
   if(sel) cls+=' sel';
@@ -915,14 +1078,14 @@ function optionHTML(e,vf,i,revealed,own){
   var h='<button class="'+cls+'" type="button"';
   if(!locked) h+=' onclick="pick(\''+e.id+'\','+i+')"';
   h+='>';
-  var w=vf.total?pct:0;
+  var w=(showRes&&vf.total)?pct:0;
   if(BOARD_PAINTED){ h+='<span class="optfill" style="width:'+w+'%"></span>'; }
   else { h+='<span class="optfill" data-w="'+w+'" style="width:0%"></span>'; }
   h+='<span class="optrow">';
   h+='<span class="letter">'+String.fromCharCode(65+i)+'</span>';
   h+='<span class="opttext">'+esc(e.options[i])+'</span>';
   h+='<span class="optright">';
-  if(vf.total){
+  if(showRes&&vf.total){
     h+='<span class="pctv">'+pct+'%</span><span class="pctc">'+vf.counts[i]+' vote'+(vf.counts[i]===1?'':'s')+'</span>';
   }
   if(revealed&&isTruth){
@@ -933,10 +1096,13 @@ function optionHTML(e,vf,i,revealed,own){
     h+='<span class="stagechip">Selected</span>';
   }
   h+='</span></span>';
-  if(vf.names[i].length){
-    var nm=[], j;
-    for(j=0;j<vf.names[i].length;j++) nm.push(esc(vf.names[i][j]));
-    h+='<span class="voters"><b>Voted:</b> '+nm.join(', ')+'</span>';
+  if(showRes&&vf.people[i].length){
+    var nm='', j, pv;
+    for(j=0;j<vf.people[i].length;j++){
+      pv=vf.people[i][j];
+      nm+='<span class="vpill">'+avatarHTML('vav',pv.photo,pv.name)+esc(pv.name)+'</span>';
+    }
+    h+='<span class="voters">'+nm+'</span>';
   }
   h+='</button>';
   return h;
@@ -947,14 +1113,14 @@ function renderBoard(){
   $('emptyState').style.display=list.length?'none':'block';
   for(i=0;i<list.length;i++){
     e=list[i]; vf=votesFor(e.id);
-    own=MY.key&&normKey(e.name)===MY.key;
+    own=isMine(e);
     tag='';
     if(own){ tag='<span class="minitag gold">Your card</span>'; }
     else if(revealed&&vf.myPick!==null){ tag=(vf.myPick===e.truth)?'<span class="minitag gold">&#127942; You nailed it</span>':'<span class="minitag">Missed it</span>'; }
     else if(vf.myPick!==null){ tag='<span class="minitag tealy">Locked in</span>'; }
     delay=Math.min(i*0.07,0.5);
     h+='<div class="card" style="animation-delay:'+delay+'s">';
-    h+='<div class="chead"><span class="cav">'+esc(initials(e.name))+'</span><div><div class="cname">'+esc(e.name)+'</div><div class="cmeta">Posted '+fmtDate(e.at)+'</div></div><span class="ctag">'+tag+'</span></div>';
+    h+='<div class="chead">'+avatarHTML('cav',personPhoto(e.personId,e.photo),e.name)+'<div><div class="cname">'+esc(e.name)+'</div><div class="cmeta">Posted '+fmtDate(e.at)+'</div></div><span class="ctag">'+tag+'</span></div>';
     h+='<div class="qline">'+(revealed?'The truth, <b>revealed</b>.':'Which one is <b>true</b>?')+'</div>';
     var k;
     for(k=0;k<4;k++) h+=optionHTML(e,vf,k,revealed,own);
@@ -964,14 +1130,15 @@ function renderBoard(){
       if(vf.myPick===null){
         var has=(PENDING[e.id]!==undefined&&PENDING[e.id]!==null);
         h+='<div class="subbar">';
-        h+='<span class="subhint">'+(has?'Answer '+String.fromCharCode(65+PENDING[e.id])+' selected. One shot, so be sure.':'Tap an answer, then submit. You get one shot.')+'</span>';
+        h+='<span class="subhint">'+(has?'Answer '+String.fromCharCode(65+PENDING[e.id])+' selected. Submit to lock it in and see the votes.':'Tap an answer, then submit. You get one shot, and the votes unlock after.')+'</span>';
         h+='<button class="subbtn'+(has?'':' off')+'" type="button"'+(has?' onclick="submitVote(\''+e.id+'\')"':'')+'>Submit answer</button>';
         h+='</div>';
       } else {
         h+='<div class="lockednote">Answer '+String.fromCharCode(65+vf.myPick)+' is locked in. The truth comes out at the reveal.</div>';
       }
     }
-    h+='<div class="cfoot"><span>'+(vf.total?vf.total+' vote'+(vf.total===1?'':'s')+' so far':'No votes yet. Be the first.')+'</span><span class="sp"></span><span>'+(revealed?'Closed':'Open')+'</span></div>';
+    var seeRes=own||revealed||(vf.myPick!==null);
+    h+='<div class="cfoot"><span>'+(vf.total?vf.total+' vote'+(vf.total===1?'':'s')+' so far':'No votes yet. Be the first.')+'</span><span class="sp"></span><span>'+(revealed?'Closed':(seeRes?'Open':'Results hidden'))+'</span></div>';
     h+='</div>';
   }
   board.innerHTML=h;
@@ -994,7 +1161,7 @@ function voteGuard(id){
   if(STATE.settings&&STATE.settings.revealed){ toast('Voting is closed. The answers are out.'); return null; }
   var e=STATE.entries?STATE.entries[id]:null;
   if(!e){ toast('That card just changed. Try again.'); return null; }
-  if(normKey(e.name||'')===MY.key){ toast('Nice try. No voting on your own card.'); return null; }
+  if(isMine(e)){ toast('Nice try. No voting on your own card.'); return null; }
   if(votesFor(id).myPick!==null){ toast('Your answer on this one is already locked in.'); return null; }
   return e;
 }
@@ -1012,7 +1179,7 @@ function submitVote(id){
   var letter=String.fromCharCode(65+i);
   cfOpen('Submit answer '+letter+'?','This is final. You cannot change your answer on '+esc(e.name)+"'s card after this.",'Lock it in','goldb',function(){
     if(!voteGuard(id)) return;
-    DL.set('votes/'+id+'/'+MY.key,{name:MY.name,opt:i,at:Date.now(),locked:true});
+    DL.set('votes/'+id+'/'+MY.key,{personId:MY.id,name:MY.name,photo:MY.photo,opt:i,at:Date.now(),locked:true});
     delete PENDING[id];
     toast('Answer '+letter+' locked in.','gold');
   });
@@ -1034,15 +1201,15 @@ function renderReveal(){
   if(scores.length){
     var p1=scores[0], p2=scores.length>1?scores[1]:null, p3=scores.length>2?scores[2]:null;
     h+='<div class="podium">';
-    h+='<div class="pcol p2">'+(p2?('<div class="crown"></div><div class="pname">'+esc(p2.name)+'</div><div class="pscore">'+p2.correct+' right</div><div class="pbar">2</div>'):'')+'</div>';
-    h+='<div class="pcol p1"><div class="crown"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 7.5l4.6 3.2L12 4l4.9 6.7 4.6-3.2-1.6 10a2 2 0 0 1-2 1.7H6.1a2 2 0 0 1-2-1.7l-1.6-10z"></path></svg></div><div class="pname">'+esc(p1.name)+'</div><div class="pscore">'+p1.correct+' right</div><div class="pbar">1</div></div>';
-    h+='<div class="pcol p3">'+(p3?('<div class="crown"></div><div class="pname">'+esc(p3.name)+'</div><div class="pscore">'+p3.correct+' right</div><div class="pbar">3</div>'):'')+'</div>';
+    h+='<div class="pcol p2">'+(p2?('<div class="crown"></div>'+avatarHTML('ppic',p2.photo,p2.name)+'<div class="pname">'+esc(p2.name)+'</div><div class="pscore">'+p2.correct+' right</div><div class="pbar">2</div>'):'')+'</div>';
+    h+='<div class="pcol p1"><div class="crown"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 7.5l4.6 3.2L12 4l4.9 6.7 4.6-3.2-1.6 10a2 2 0 0 1-2 1.7H6.1a2 2 0 0 1-2-1.7l-1.6-10z"></path></svg></div>'+avatarHTML('ppic',p1.photo,p1.name)+'<div class="pname">'+esc(p1.name)+'</div><div class="pscore">'+p1.correct+' right</div><div class="pbar">1</div></div>';
+    h+='<div class="pcol p3">'+(p3?('<div class="crown"></div>'+avatarHTML('ppic',p3.photo,p3.name)+'<div class="pname">'+esc(p3.name)+'</div><div class="pscore">'+p3.correct+' right</div><div class="pbar">3</div>'):'')+'</div>';
     h+='</div>';
     if(scores.length>3){
       h+='<div class="lbrest">';
       for(i=3;i<scores.length;i++){
         s=scores[i];
-        h+='<div class="lbrow"><span class="rk">'+(i+1)+'</span><span class="nm">'+esc(s.name)+'</span><span class="sc">'+s.correct+' right</span></div>';
+        h+='<div class="lbrow"><span class="rk">'+(i+1)+'</span>'+avatarHTML('lbav',s.photo,s.name)+'<span class="nm">'+esc(s.name)+'</span><span class="sc">'+s.correct+' right</span></div>';
       }
       h+='</div>';
     }
@@ -1195,10 +1362,38 @@ function postEntry(){
   var texts=[], truthIdx=0;
   for(i=0;i<4;i++){ texts.push(opts[i].t); if(opts[i].is) truthIdx=i; }
   var id='e'+Date.now()+'_'+Math.random().toString(36).substring(2,6);
-  DL.set('entries/'+id,{name:name,options:texts,truth:truthIdx,at:Date.now()});
+  var match=findPerson(name);
+  DL.set('entries/'+id,{
+    personId:match?match.id:'',
+    name:match?match.name:name,
+    photo:match?(match.photo||''):'',
+    options:texts,truth:truthIdx,at:Date.now()
+  });
   $('newName').value=''; $('newTruth').value=''; $('newLie1').value=''; $('newLie2').value=''; $('newLie3').value='';
-  toast(name+' is live on the board. Shuffled and secret.','gold');
+  toast((match?match.name:name)+' is live on the board. Shuffled and secret.','gold');
   adminTab('manage');
+}
+
+function findPerson(name){
+  var list=rosterList(), q=(name||'').toLowerCase().replace(/\s+/g,' ').trim(), i;
+  if(!q) return null;
+  for(i=0;i<list.length;i++){ if(list[i].name.toLowerCase()===q) return list[i]; }
+  return null;
+}
+function renderRosterOptions(){
+  var dl=$('rosterList');
+  if(!dl) return;
+  var list=rosterList(), h='', i;
+  for(i=0;i<list.length;i++) h+='<option value="'+esc(list[i].name)+'"></option>';
+  dl.innerHTML=h;
+}
+function onNewNameInput(){
+  var el=$('newNameNote');
+  if(!el) return;
+  var v=$('newName').value.replace(/\s+/g,' ').trim();
+  if(!v){ el.textContent='Pick someone from the roster so their photo shows on the card. A name that is not in the roster still works, it just uses initials.'; return; }
+  var m=findPerson(v);
+  el.textContent=m?('Matched to '+m.name+' in the roster'+(m.photo?', photo included.':'. No photo on file, so initials will show.')):'Not in the roster, so this card will use initials.';
 }
 
 /* ---------------- admin: manage + scores + settings ---------------- */
@@ -1220,14 +1415,15 @@ function renderManage(){
   for(i=0;i<list.length;i++){
     e=list[i]; vf=votesFor(e.id);
     h+='<div class="mcard">';
-    h+='<div class="mchead"><span class="mcname">'+esc(e.name)+'</span><span class="cmeta">'+fmtDate(e.at)+' &#183; '+vf.total+' vote'+(vf.total===1?'':'s')+'</span>';
+    h+='<div class="mchead">'+avatarHTML('mav',personPhoto(e.personId,e.photo),e.name)+'<span class="mcname">'+esc(e.name)+'</span><span class="cmeta">'+fmtDate(e.at)+' &#183; '+vf.total+' vote'+(vf.total===1?'':'s')+'</span>';
+    h+='<button class="iconbtn" title="Clear this card\'s answers" onclick="clearCardVotes(\''+e.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"></path><polyline points="3 4 3 10 9 10"></polyline></svg></button>';
     h+='<button class="iconbtn" title="Delete" onclick="delEntry(\''+e.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button></div>';
     for(k=0;k<4;k++){
       h+='<div class="mcopt'+(k===e.truth?' ist':'')+'"><span class="l">'+String.fromCharCode(65+k)+'</span><span class="tx">'+esc(e.options[k])+'</span>'+(k===e.truth?'<span class="mtruthtag">Truth</span>':'')+'<span class="ct">'+vf.counts[k]+'</span></div>';
-      if(vf.names[k].length){
-        nm=[];
-        for(j=0;j<vf.names[k].length;j++) nm.push(esc(vf.names[k][j]));
-        h+='<div class="mvoters">'+nm.join(', ')+'</div>';
+      if(vf.people[k].length){
+        nm='';
+        for(j=0;j<vf.people[k].length;j++) nm+='<span class="mvpill">'+avatarHTML('mav',vf.people[k][j].photo,vf.people[k][j].name)+esc(vf.people[k][j].name)+'</span>';
+        h+='<div class="mvoters">'+nm+'</div>';
       }
     }
     h+='</div>';
@@ -1244,11 +1440,41 @@ function renderScoresTable(){
   for(i=0;i<scores.length;i++){
     s=scores[i];
     h+='<tr'+(s.correct===scores[0].correct&&scores[0].correct>0?' class="top"':'')+'>';
-    h+='<td class="mono">'+(i+1)+'</td><td>'+esc(s.name)+'</td><td class="mono ok">'+s.correct+'</td><td class="mono no">'+s.wrong+'</td><td class="mono">'+s.total+' / '+list.length+'</td>';
+    h+='<td class="mono">'+(i+1)+'</td><td><span class="mvpill">'+avatarHTML('mav',s.photo,s.name)+esc(s.name)+'</span></td><td class="mono ok">'+s.correct+'</td><td class="mono no">'+s.wrong+'</td><td class="mono">'+s.total+' / '+list.length+'</td>';
     h+='</tr>';
   }
   h+='</table>';
   $('scoreTableWrap').innerHTML=h;
+}
+function answerCount(){
+  var n=0, id, k, list=entriesList(), have={}, i;
+  for(i=0;i<list.length;i++) have[list[i].id]=1;
+  for(id in STATE.votes){
+    if(!STATE.votes.hasOwnProperty(id)) continue;
+    if(!have[id]) continue;
+    for(k in STATE.votes[id]){ if(STATE.votes[id].hasOwnProperty(k)) n++; }
+  }
+  return n;
+}
+function clearAllVotes(){
+  var n=answerCount();
+  if(!n){ toast('There are no answers to clear.'); return; }
+  cfOpen('Clear every answer?','This wipes all '+n+' answer'+(n===1?'':'s')+' and the running tally. The cards, truths, and lies all stay put, and everyone can answer again from scratch. There is no undo.','Clear the answers','danger',function(){
+    DL.remove('votes');
+    PENDING={};
+    toast('All answers cleared. The board is open again.','gold');
+  });
+}
+function clearCardVotes(id){
+  var e=STATE.entries?STATE.entries[id]:null;
+  var nm=e&&e.name?e.name:'this card';
+  var vf=votesFor(id);
+  if(!vf.total){ toast('No answers on that card yet.'); return; }
+  cfOpen('Clear answers on '+esc(nm)+"'s card?",'This wipes the '+vf.total+' answer'+(vf.total===1?'':'s')+' on this card only. The card itself stays. There is no undo.','Clear them','danger',function(){
+    DL.remove('votes/'+id);
+    delete PENDING[id];
+    toast('Answers cleared on that card.');
+  });
 }
 function renderSettingsBits(){
   var inp=$('setEmail');
@@ -1257,6 +1483,13 @@ function renderSettingsBits(){
   $('revealNote').textContent=revealed
     ? 'Answers are live on the front page right now. Players can see the truths, their scores, and the podium.'
     : 'When you reveal, every player sees the correct answers, their own score, and the winner podium. Do this once the month wraps up.';
+  var n=answerCount();
+  $('resetNote').textContent=n
+    ? ('There '+(n===1?'is':'are')+' '+n+' answer'+(n===1?'':'s')+' on the board right now. Clearing wipes them and the tally, then everyone answers again. The cards, truths, and lies stay exactly where they are.')
+    : 'No answers on the board yet. Nothing to clear.';
+  $('resetBtnWrap').innerHTML=n
+    ? '<button class="btn danger wide" onclick="clearAllVotes()">Clear all answers</button>'
+    : '<button class="btn ghost wide" style="opacity:.5;cursor:not-allowed" onclick="toast(\'There are no answers to clear.\')">Clear all answers</button>';
   $('revealBtnWrap').innerHTML=revealed
     ? '<button class="btn ghost wide" onclick="doHide()">Hide answers again</button>'
     : '<button class="btn goldb wide" onclick="doReveal()">&#127881; Reveal all answers</button>';
@@ -1273,6 +1506,7 @@ function renderConnNote(){
 }
 function renderAdminLive(){
   if(!adminOpenNow()) return;
+  renderRosterOptions();
   renderManage();
   renderScoresTable();
   renderSettingsBits();
