@@ -561,6 +561,12 @@ var ROSTER_FB={
   databaseURL: 'https://fundinghypeboard-default-rtdb.firebaseio.com'
 };
 var ROSTER_PATH='roster';
+/* People who should be pickable here but are not in the Funding Floor
+   roster. Added on top of it, never written back. To give someone a
+   photo, paste an image URL into photo. Leave it empty for initials. */
+var EXTRA_ROSTER={
+  x_leif_boyd:{name:'Leif Boyd',photo:''}
+};
 var DB_ROOT='gtc_aug_2026';
 var ADMIN_PIN='030303';
 var DEFAULT_EMAIL='goodtimescrew@partnersmortgage.com';
@@ -636,6 +642,16 @@ var LDB={settings:{},entries:{},votes:{}};
 var SUBS={settings:[],entries:[],votes:[]};
 var DATA_READY=false;
 var ROSTER={}, ROSTER_STATE='loading', rsDb=null;
+function withExtras(base){
+  var out={}, k;
+  for(k in base){ if(base.hasOwnProperty(k)) out[k]=base[k]; }
+  for(k in EXTRA_ROSTER){
+    if(!EXTRA_ROSTER.hasOwnProperty(k)) continue;
+    if(findPerson(EXTRA_ROSTER[k].name,out)) continue;  /* already in the roster, skip the duplicate */
+    out[k]=EXTRA_ROSTER[k];
+  }
+  return out;
+}
 var LS_DB_KEY='gtcAug26_localdb';
 
 function fireNode(node,val){
@@ -811,12 +827,12 @@ function paintUserChip(){
     av.textContent=MY.name?initials(MY.name):'?';
   }
 }
-function rosterList(){
-  var out=[], k;
-  for(k in ROSTER){
-    if(!ROSTER.hasOwnProperty(k)) continue;
-    if(!ROSTER[k]||!ROSTER[k].name) continue;
-    out.push({id:k,name:ROSTER[k].name,photo:ROSTER[k].photo||''});
+function rosterList(src){
+  var r=src||ROSTER, out=[], k;
+  for(k in r){
+    if(!r.hasOwnProperty(k)) continue;
+    if(!r[k]||!r[k].name) continue;
+    out.push({id:k,name:r[k].name,photo:r[k].photo||''});
   }
   out.sort(function(a,b){ return a.name.toLowerCase()<b.name.toLowerCase()?-1:1; });
   return out;
@@ -825,12 +841,16 @@ function renderPicker(){
   var grid=$('pGrid');
   if(!grid) return;
   if(ROSTER_STATE==='loading'){ grid.innerHTML='<div class="pnone">Loading the roster...</div>'; return; }
-  if(ROSTER_STATE==='error'){
+  if(ROSTER_STATE==='error'&&!rosterList().length){
     grid.innerHTML='<div class="pnone">The roster could not load. Use the name option below and you are good to go.</div>';
     showManual(true);
     return;
   }
   var list=rosterList(), q=($('pSearch')?$('pSearch').value:'').toLowerCase().trim(), h='', i, p, shown=0;
+  if(ROSTER_STATE==='error'){
+    h+='<div class="pnone">The main roster did not load, so only a few names are here. Use the name option below if you are missing.</div>';
+    showManual(true);
+  }
   for(i=0;i<list.length;i++){
     p=list[i];
     if(q&&p.name.toLowerCase().indexOf(q)===-1) continue;
@@ -879,21 +899,23 @@ function saveName(){
 }
 /* Roster lives in another project, so it gets its own Firebase app. */
 function connectRoster(){
-  if(!window.firebase||!firebase.database){ ROSTER_STATE='error'; renderPicker(); return; }
+  if(!window.firebase||!firebase.database){ ROSTER=withExtras({}); ROSTER_STATE='error'; renderPicker(); return; }
   try{
     var app=firebase.initializeApp(ROSTER_FB,'gtc-roster-'+Date.now());
     rsDb=app.database();
     rsDb.ref(ROSTER_PATH).on('value',function(snap){
-      ROSTER=snap.val()||{};
+      ROSTER=withExtras(snap.val()||{});
       ROSTER_STATE='ready';
       refreshMyPerson();
       renderPicker();
       renderAll();
     },function(){
+      ROSTER=withExtras({});
       ROSTER_STATE='error';
       renderPicker();
     });
   }catch(e){
+    ROSTER=withExtras({});
     ROSTER_STATE='error';
     renderPicker();
   }
@@ -1374,8 +1396,8 @@ function postEntry(){
   adminTab('manage');
 }
 
-function findPerson(name){
-  var list=rosterList(), q=(name||'').toLowerCase().replace(/\s+/g,' ').trim(), i;
+function findPerson(name,src){
+  var list=rosterList(src), q=(name||'').toLowerCase().replace(/\s+/g,' ').trim(), i;
   if(!q) return null;
   for(i=0;i<list.length;i++){ if(list[i].name.toLowerCase()===q) return list[i]; }
   return null;
