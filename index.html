@@ -356,6 +356,7 @@ textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
 .dtab{flex:1;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:11px 4px;border:none;background:transparent;border-bottom:2px solid transparent;cursor:pointer;transition:all .25s}
 .dtab:hover{color:var(--ink)}
 .dtab.on{color:var(--gold);border-bottom-color:var(--gold)}
+.dpick{padding:14px 20px 16px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.015)}
 .dbody{flex:1;overflow-y:auto;padding:22px;overscroll-behavior:contain}
 .dpanel{display:none}
 .dpanel.on{display:block;animation:fadeUp .4s both}
@@ -526,6 +527,11 @@ textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
       <button class="dtab" id="dtab-scores" onclick="adminTab('scores')">Scores</button>
       <button class="dtab" id="dtab-settings" onclick="adminTab('settings')">Settings</button>
     </div>
+  </div>
+  <div class="dpick">
+    <label class="f-label" for="adminCh" style="margin-top:0;">Editing which challenge</label>
+    <select class="f-in" id="adminCh" onchange="adminPick(this.value)"></select>
+    <div class="dnote" id="adminChNote" style="margin-top:8px;"></div>
   </div>
   <div class="dbody">
 
@@ -954,37 +960,37 @@ function curId(){
   if(VIEW_ID&&STATE.challenges&&STATE.challenges[VIEW_ID]) return VIEW_ID;
   return activeId();
 }
-function curCh(){
-  var list=challengeList(), id=curId(), i;
+function curCh(cid){
+  var list=challengeList(), id=cid||curId(), i;
   for(i=0;i<list.length;i++){ if(list[i].id===id) return list[i]; }
   return null;
 }
 function isActiveView(){ return curId()===activeId(); }
-function curType(){ var c=curCh(); return c?c.type:'truths'; }
+function curType(cid){ var c=curCh(cid); return c?c.type:'truths'; }
 function chNode(id){ return (STATE.ch&&STATE.ch[id])?STATE.ch[id]:{}; }
-function entriesPath(){ var c=curCh(); return (c&&c.legacy)?'entries':('ch/'+curId()+'/entries'); }
-function votesPath(){ var c=curCh(); return (c&&c.legacy)?'votes':('ch/'+curId()+'/votes'); }
-function respPath(){ return 'ch/'+curId()+'/responses'; }
-function imgPath(){ return 'img/'+curId(); }
-function curEntries(){
-  var c=curCh();
+function entriesPath(cid){ var c=curCh(cid); return (c&&c.legacy)?'entries':('ch/'+(cid||curId())+'/entries'); }
+function votesPath(cid){ var c=curCh(cid); return (c&&c.legacy)?'votes':('ch/'+(cid||curId())+'/votes'); }
+function respPath(cid){ return 'ch/'+(cid||curId())+'/responses'; }
+function imgPath(cid){ return 'img/'+(cid||curId()); }
+function curEntries(cid){
+  var c=curCh(cid);
   if(c&&c.legacy) return STATE.entries||{};
-  return chNode(curId()).entries||{};
+  return chNode(cid||curId()).entries||{};
 }
-function curVotes(){
-  var c=curCh();
+function curVotes(cid){
+  var c=curCh(cid);
   if(c&&c.legacy) return STATE.votes||{};
-  return chNode(curId()).votes||{};
+  return chNode(cid||curId()).votes||{};
 }
-function curResponses(){ return chNode(curId()).responses||{}; }
-function isRevealed(){
-  var c=curCh();
+function curResponses(cid){ return chNode(cid||curId()).responses||{}; }
+function isRevealed(cid){
+  var c=curCh(cid);
   if(!c) return false;
   if(c.legacy) return !!(STATE.settings&&STATE.settings.revealed);
   return !!c.revealed;
 }
-function setRevealed(v){
-  var c=curCh();
+function setRevealed(v,cid){
+  var c=curCh(cid);
   if(!c) return;
   if(c.legacy){
     DL.set('settings/revealed',v);
@@ -993,6 +999,15 @@ function setRevealed(v){
     DL.set('challenges/'+c.id+'/revealed',v);
   }
 }
+/* HQ edits one challenge at a time, chosen in the drawer. What you are
+   editing in HQ and what the front page is showing are separate. */
+var ADMIN_ID='';
+function aid(){
+  if(ADMIN_ID&&STATE.challenges&&STATE.challenges[ADMIN_ID]) return ADMIN_ID;
+  return curId();
+}
+function aType(){ return curType(aid()); }
+function aCh(){ return curCh(aid()); }
 function viewChallenge(id){
   VIEW_ID=(id===activeId())?'':id;
   PENDING={};
@@ -1204,8 +1219,8 @@ function mailClick(ev){
 }
 
 /* ---------------- data helpers ---------------- */
-function entriesList(){
-  var src=curEntries(), out=[], k, e;
+function entriesList(cid){
+  var src=curEntries(cid), out=[], k, e;
   for(k in src){
     if(!src.hasOwnProperty(k)) continue;
     e=src[k];
@@ -1215,8 +1230,8 @@ function entriesList(){
   out.sort(function(a,b){ return b.at-a.at; });
   return out;
 }
-function votesFor(id){
-  var allv=curVotes();
+function votesFor(id,cid){
+  var allv=curVotes(cid);
   var raw=allv&&allv[id]?allv[id]:{};
   var counts=[0,0,0,0], people=[[],[],[],[]], total=0, myPick=null, k, v;
   for(k in raw){
@@ -1241,8 +1256,8 @@ function uniqueVoterCount(){
   }
   return n;
 }
-function computeScores(){
-  var players={}, list=entriesList(), cv=curVotes(), i, e, raw, k, v, rec, out=[], p;
+function computeScores(cid){
+  var players={}, list=entriesList(cid), cv=curVotes(cid), i, e, raw, k, v, rec, out=[], p;
   for(i=0;i<list.length;i++){
     e=list[i];
     raw=cv&&cv[e.id]?cv[e.id]:{};
@@ -1346,8 +1361,9 @@ function optionHTML(e,vf,i,revealed,own){
   var sel=(vf.myPick===i);
   var submitted=(vf.myPick!==null);
   var staged=(!submitted&&PENDING[e.id]===i);
-  var locked=own||revealed||submitted;
-  var showRes=own||revealed||submitted;
+  var closed=!isActiveView();
+  var locked=own||revealed||submitted||closed;
+  var showRes=own||revealed||submitted||closed;
   var cls='opt';
   if(locked) cls+=' locked';
   if(sel) cls+=' sel';
@@ -1393,16 +1409,21 @@ function renderBoard(){
     e=list[i]; vf=votesFor(e.id);
     own=isMine(e);
     tag='';
+    var closedView=!isActiveView();
     if(own){ tag='<span class="minitag gold">Your card</span>'; }
+    else if(closedView){ tag=(vf.myPick!==null)?'<span class="minitag tealy">Your answer is in</span>':'<span class="minitag">Closed</span>'; }
     else if(revealed&&vf.myPick!==null){ tag=(vf.myPick===e.truth)?'<span class="minitag gold">&#127942; You nailed it</span>':'<span class="minitag">Missed it</span>'; }
-    else if(vf.myPick!==null){ tag='<span class="minitag tealy">Locked in</span>'; }
+    else if(vf.myPick!==null){ tag='<span class="minitag tealy">Your answer is in</span>'; }
+    else { tag='<span class="minitag gold">Needs your answer</span>'; }
     delay=Math.min(i*0.07,0.5);
     h+='<div class="card" style="animation-delay:'+delay+'s">';
     h+='<div class="chead">'+avatarHTML('cav',personPhoto(e.personId,e.photo),e.name)+'<div><div class="cname">'+esc(e.name)+'</div><div class="cmeta">Posted '+fmtDate(e.at)+'</div></div><span class="ctag">'+tag+'</span></div>';
     h+='<div class="qline">'+(revealed?'The truth, <b>revealed</b>.':'Which one is <b>true</b>?')+'</div>';
     var k;
     for(k=0;k<4;k++) h+=optionHTML(e,vf,k,revealed,own);
-    if(own&&!revealed){
+    if(!isActiveView()){
+      h+='<div class="lockednote">'+(vf.myPick!==null?('You answered '+String.fromCharCode(65+vf.myPick)+' on this one.'):'This challenge has wrapped up.')+'</div>';
+    } else if(own&&!revealed){
       h+='<div class="ownnote">This one is yours. No voting on your own truth, but you can watch the guesses roll in.</div>';
     } else if(!own&&!revealed){
       if(vf.myPick===null){
@@ -1412,7 +1433,7 @@ function renderBoard(){
         h+='<button class="subbtn'+(has?'':' off')+'" type="button"'+(has?' onclick="submitVote(\''+e.id+'\')"':'')+'>Submit answer</button>';
         h+='</div>';
       } else {
-        h+='<div class="lockednote">Answer '+String.fromCharCode(65+vf.myPick)+' is locked in. The truth comes out at the reveal.</div>';
+        h+='<div class="lockednote">You answered '+String.fromCharCode(65+vf.myPick)+' on this card, so it is locked. Other cards are still waiting on you.</div>';
       }
     }
     var seeRes=own||revealed||(vf.myPick!==null);
@@ -1435,6 +1456,7 @@ function renderBoard(){
 
 /* ---------------- voting ---------------- */
 function voteGuard(id){
+  if(!isActiveView()){ toast('That challenge is closed. You are just looking back at it.'); return null; }
   if(!MY.name){ openName(false); return null; }
   if(isRevealed()){ toast('Voting is closed. The answers are out.'); return null; }
   var e=curEntries()[id]||null;
@@ -1576,8 +1598,8 @@ function confettiTick(){
    ===================================================================== */
 var DRAFT_IMG=null;        /* compressed data url waiting to be saved */
 var DRAFT_HAS=false;
-function responseList(){
-  var src=curResponses(), out=[], k, r;
+function responseList(cid){
+  var src=curResponses(cid), out=[], k, r;
   for(k in src){
     if(!src.hasOwnProperty(k)) continue;
     r=src[k];
@@ -1718,6 +1740,7 @@ function submitResponse(){
   toast('You are in. Thanks for playing.','gold');
 }
 function editResponse(){
+  if(!isActiveView()){ toast('That challenge is closed. You are just looking back at it.'); return; }
   var mine=myResponse();
   if(!mine) return;
   var key=MY.key, cid=curId(), ck=cid+'/'+key;
@@ -1740,12 +1763,13 @@ function editResponse(){
   },60);
 }
 function delResponse(key){
-  var src=curResponses(), r=src[key];
+  var src=curResponses(aid()), r=src[key];
+  if(!r) return;
   var nm=r&&r.name?r.name:'this answer';
   cfOpen('Delete '+esc(nm)+"'s answer?",'It comes off the board along with the photo. There is no undo.','Delete it','danger',function(){
-    DL.remove(respPath()+'/'+key);
-    DL.remove(imgPath()+'/'+key);
-    delete IMGCACHE[curId()+'/'+key];
+    DL.remove(respPath(aid())+'/'+key);
+    DL.remove(imgPath(aid())+'/'+key);
+    delete IMGCACHE[aid()+'/'+key];
     toast('Answer deleted.');
   });
 }
@@ -1824,6 +1848,7 @@ function pinKey(d){
 function pinBack(){ PIN_BUF=PIN_BUF.slice(0,-1); renderDots(); }
 function pinClose(){ PIN_BUF=''; $('pinOvl').classList.remove('show'); }
 function openAdmin(){
+  ADMIN_ID=curId();   /* HQ starts on whatever you were just looking at */
   $('drawer').classList.add('open');
   $('dScrim').classList.add('show');
   renderAdminLive();
@@ -1839,7 +1864,7 @@ function lockAdmin(){
 }
 function adminTab(t){
   var tabs=['months','new','manage','scores','settings'], i;
-  if(curType()==='prompt'&&(t==='new'||t==='scores')) t='months';
+  if(aType()==='prompt'&&(t==='new'||t==='scores')) t='months';
   for(i=0;i<tabs.length;i++){
     $('dtab-'+tabs[i]).className='dtab'+(tabs[i]===t?' on':'');
     $('dpanel-'+tabs[i]).className='dpanel'+(tabs[i]===t?' on':'');
@@ -1847,8 +1872,25 @@ function adminTab(t){
   syncAdminTabs();
 }
 /* The truths game has cards and scores. A question challenge has neither. */
+function adminPick(id){
+  ADMIN_ID=id||'';
+  syncAdminTabs();
+  renderAdminLive();
+}
+function renderAdminPicker(){
+  var list=challengeList(), sel=aid(), h='', i, c, act=activeId();
+  for(i=0;i<list.length;i++){
+    c=list[i];
+    h+='<option value="'+c.id+'"'+(c.id===sel?' selected':'')+'>'+esc(c.eyebrow||c.month||c.id)+(c.id===act?' (live now)':'')+'</option>';
+  }
+  $('adminCh').innerHTML=h;
+  var cc=aCh();
+  $('adminChNote').textContent=cc
+    ? ((cc.type==='prompt'?'A question challenge. ':'One truth, three lies. ')+(cc.id===act?'This is what everyone sees right now.':'Closed to players. Editing here changes the archive only.'))
+    : 'No challenge selected.';
+}
 function syncAdminTabs(){
-  var prompt=(curType()==='prompt');
+  var prompt=(aType()==='prompt');
   $('dtab-new').style.display=prompt?'none':'';
   $('dtab-scores').style.display=prompt?'none':'';
   if(prompt&&($('dtab-new').className.indexOf('on')>-1||$('dtab-scores').className.indexOf('on')>-1)) adminTab('months');
@@ -1951,7 +1993,7 @@ function postEntry(){
   for(i=0;i<4;i++){ texts.push(opts[i].t); if(opts[i].is) truthIdx=i; }
   var id='e'+Date.now()+'_'+Math.random().toString(36).substring(2,6);
   var match=findPerson(name);
-  DL.set(entriesPath()+'/'+id,{
+  DL.set(entriesPath(aid())+'/'+id,{
     personId:match?match.id:'',
     name:match?match.name:name,
     photo:match?(match.photo||''):'',
@@ -1986,23 +2028,23 @@ function onNewNameInput(){
 
 /* ---------------- admin: manage + scores + settings ---------------- */
 function delEntry(id){
-  var e=curEntries()[id]||null;
+  var e=curEntries(aid())[id]||null;
   var nm=e&&e.name?e.name:'this card';
   cfOpen('Delete '+esc(nm)+"'s card?",'This removes the card and every vote on it. There is no undo.','Delete it','danger',function(){
-    DL.remove(entriesPath()+'/'+id);
-    DL.remove(votesPath()+'/'+id);
+    DL.remove(entriesPath(aid())+'/'+id);
+    DL.remove(votesPath(aid())+'/'+id);
     toast('Deleted.');
   });
 }
 function renderManage(){
   $('manageNote').textContent='Everything live on the board. The green option is the truth, only visible here in HQ until the reveal.';
-  var list=entriesList().slice().reverse(), h='', i, e, vf, k, nm, j;
+  var list=entriesList(aid()).slice().reverse(), h='', i, e, vf, k, nm, j;
   if(!list.length){
     $('manageList').innerHTML='<div class="dnote" style="margin-top:14px;">Nothing posted yet. Build the first one in the New tab.</div>';
     return;
   }
   for(i=0;i<list.length;i++){
-    e=list[i]; vf=votesFor(e.id);
+    e=list[i]; vf=votesFor(e.id,aid());
     h+='<div class="mcard">';
     h+='<div class="mchead">'+avatarHTML('mav',personPhoto(e.personId,e.photo),e.name)+'<span class="mcname">'+esc(e.name)+'</span><span class="cmeta">'+fmtDate(e.at)+' &#183; '+vf.total+' vote'+(vf.total===1?'':'s')+'</span>';
     h+='<button class="iconbtn" title="Clear this card\'s answers" onclick="clearCardVotes(\''+e.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"></path><polyline points="3 4 3 10 9 10"></polyline></svg></button>';
@@ -2020,7 +2062,7 @@ function renderManage(){
   $('manageList').innerHTML=h;
 }
 function renderScoresTable(){
-  var scores=computeScores(), h='', i, s, list=entriesList();
+  var scores=computeScores(aid()), h='', i, s, list=entriesList(aid());
   if(!scores.length){
     $('scoreTableWrap').innerHTML='<div class="dnote" style="margin-top:14px;">No votes yet. The tally builds itself as the crew starts guessing.</div>';
     return;
@@ -2035,10 +2077,10 @@ function renderScoresTable(){
   h+='</table>';
   $('scoreTableWrap').innerHTML=h;
 }
-function answerCount(){
-  var n=0, id, k, list=entriesList(), have={}, i;
+function answerCount(cid){
+  var n=0, id, k, list=entriesList(cid), have={}, i;
   for(i=0;i<list.length;i++) have[list[i].id]=1;
-  var av=curVotes();
+  var av=curVotes(cid);
   for(id in av){
     if(!av.hasOwnProperty(id)) continue;
     if(!have[id]) continue;
@@ -2046,66 +2088,65 @@ function answerCount(){
   }
   return n;
 }
-function answerCountPrompt(){ return responseList().length; }
+function answerCountPrompt(cid){ return responseList(cid).length; }
 function clearAllVotes(){
-  if(curType()==='prompt'){ clearAllResponses(); return; }
-  var n=answerCount();
+  if(aType()==='prompt'){ clearAllResponses(); return; }
+  var n=answerCount(aid());
   if(!n){ toast('There are no answers to clear.'); return; }
   cfOpen('Clear every answer?','This wipes all '+n+' answer'+(n===1?'':'s')+' and the running tally. The cards, truths, and lies all stay put, and everyone can answer again from scratch. There is no undo.','Clear the answers','danger',function(){
-    DL.remove(votesPath());
+    DL.remove(votesPath(aid()));
     PENDING={};
     toast('All answers cleared. The board is open again.','gold');
   });
 }
 function clearAllResponses(){
-  var n=answerCountPrompt();
+  var n=answerCountPrompt(aid());
   if(!n){ toast('There are no answers to clear.'); return; }
   cfOpen('Clear every answer?','This wipes all '+n+' answer'+(n===1?'':'s')+' and their photos for this challenge. The question itself stays. There is no undo.','Clear the answers','danger',function(){
-    DL.remove(respPath());
-    DL.remove(imgPath());
+    DL.remove(respPath(aid()));
+    DL.remove(imgPath(aid()));
     IMGCACHE={};
     toast('All answers cleared.','gold');
   });
 }
 function clearCardVotes(id){
-  var e=curEntries()[id]||null;
+  var e=curEntries(aid())[id]||null;
   var nm=e&&e.name?e.name:'this card';
-  var vf=votesFor(id);
+  var vf=votesFor(id,aid());
   if(!vf.total){ toast('No answers on that card yet.'); return; }
   cfOpen('Clear answers on '+esc(nm)+"'s card?",'This wipes the '+vf.total+' answer'+(vf.total===1?'':'s')+' on this card only. The card itself stays. There is no undo.','Clear them','danger',function(){
-    DL.remove(votesPath()+'/'+id);
+    DL.remove(votesPath(aid())+'/'+id);
     delete PENDING[id];
     toast('Answers cleared on that card.');
   });
 }
 function renderSettingsBits(){
-  var prompt=(curType()==='prompt');
+  var prompt=(aType()==='prompt'), ach=aCh();
+  var aname=ach?(ach.eyebrow||ach.month||'this challenge'):'this challenge';
+  var inp=$('setEmail');
+  if(document.activeElement!==inp) inp.value=crewEmail();
   $('revealSec').style.display=prompt?'none':'';
   $('revealNote').style.display=prompt?'none':'';
   $('revealBtnWrap').style.display=prompt?'none':'';
   if(prompt){
-    var rn=answerCountPrompt();
+    var rn=answerCountPrompt(aid());
     $('resetNote').textContent=rn
-      ? ('There '+(rn===1?'is':'are')+' '+rn+' answer'+(rn===1?'':'s')+' in for '+((curCh()&&(curCh().eyebrow||curCh().month))||'this challenge')+'. Clearing wipes them and their photos so everyone starts over.')
-      : 'No answers in yet. Nothing to clear.';
+      ? ('There '+(rn===1?'is':'are')+' '+rn+' answer'+(rn===1?'':'s')+' in for '+aname+'. Clearing wipes them and their photos so everyone starts over.')
+      : ('No answers in yet for '+aname+'. Nothing to clear.');
     $('resetBtnWrap').innerHTML=rn
       ? '<button class="btn danger wide" onclick="clearAllVotes()">Clear all answers</button>'
       : '<button class="btn ghost wide" style="opacity:.5;cursor:not-allowed" onclick="toast(\'There are no answers to clear.\')">Clear all answers</button>';
     renderConnNote();
-    var inp0=$('setEmail');
-    if(document.activeElement!==inp0) inp0.value=crewEmail();
     return;
   }
-  var inp=$('setEmail');
-  if(document.activeElement!==inp) inp.value=crewEmail();
-  var revealed=isRevealed();
+  var revealed=isRevealed(aid());
   $('revealNote').textContent=revealed
-    ? 'Answers are live on the front page right now. Players can see the truths, their scores, and the podium.'
-    : 'When you reveal, every player sees the correct answers, their own score, and the winner podium. Do this once the month wraps up.';
-  var n=answerCount();
+    ? ('Answers on '+aname+' are out. Anyone looking at it sees the truths, their score, and the podium.')
+    : ('When you reveal '+aname+', everyone sees the correct answers, their own score, and the winner podium. Do this once the month wraps up.');
+  var n=answerCount(aid());
   $('resetNote').textContent=n
-    ? ('There '+(n===1?'is':'are')+' '+n+' answer'+(n===1?'':'s')+' on the board right now. Clearing wipes them and the tally, then everyone answers again. The cards, truths, and lies stay exactly where they are.')
-    : 'No answers on the board yet. Nothing to clear.';
+    ? ('There '+(n===1?'is':'are')+' '+n+' answer'+(n===1?'':'s')+' on '+aname+' right now. Clearing wipes them and the tally, then everyone answers again. The cards, truths, and lies stay exactly where they are.')
+    : ('No answers on '+aname+' yet. Nothing to clear.');
   $('resetBtnWrap').innerHTML=n
     ? '<button class="btn danger wide" onclick="clearAllVotes()">Clear all answers</button>'
     : '<button class="btn ghost wide" style="opacity:.5;cursor:not-allowed" onclick="toast(\'There are no answers to clear.\')">Clear all answers</button>';
@@ -2125,16 +2166,17 @@ function renderConnNote(){
 }
 function renderAdminLive(){
   if(!adminOpenNow()) return;
+  renderAdminPicker();
   syncAdminTabs();
   renderRosterOptions();
   renderChAdmin();
-  if(curType()==='prompt') renderManageResponses();
+  if(aType()==='prompt') renderManageResponses();
   else renderManage();
   renderScoresTable();
   renderSettingsBits();
 }
 function renderManageResponses(){
-  var list=responseList(), h='', i, r;
+  var list=responseList(aid()), h='', i, r;
   $('manageNote').textContent='Every answer that has come in. Deleting one takes its photo with it.';
   if(!list.length){
     $('manageList').innerHTML='<div class="dnote" style="margin-top:14px;">No answers yet.</div>';
@@ -2157,13 +2199,15 @@ function saveEmail(){
   toast('Crew email saved. The big button points there now.');
 }
 function doReveal(){
-  cfOpen('Reveal all answers?','Everyone sees the truths, their own score, and the winner podium the moment this goes live. This is the big moment. Ready?','Yes, reveal it','goldb',function(){
-    setRevealed(true);
+  var a=aCh(), an=a?(a.eyebrow||a.month):'this challenge';
+  cfOpen('Reveal all answers for '+esc(an)+'?','Everyone sees the truths, their own score, and the winner podium the moment this goes live. This is the big moment. Ready?','Yes, reveal it','goldb',function(){
+    setRevealed(true,aid());
   });
 }
 function doHide(){
-  cfOpen('Hide answers again?','The board goes back to secret voting mode. Handy if the reveal fired early.','Hide them','danger',function(){
-    setRevealed(false);
+  var a=aCh(), an=a?(a.eyebrow||a.month):'this challenge';
+  cfOpen('Hide answers again for '+esc(an)+'?','The board goes back to secret voting mode. Handy if the reveal fired early.','Hide them','danger',function(){
+    setRevealed(false,aid());
   });
 }
 
