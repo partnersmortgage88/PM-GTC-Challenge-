@@ -89,6 +89,56 @@ input,textarea{font-family:var(--sans)}
 .pcol.p1 .ppic{border-color:rgba(255,172,39,.65);box-shadow:0 8px 26px rgba(255,172,39,.3);width:min(92px,18vw);height:min(92px,18vw)}
 .pcol.p2 .ppic{border-color:rgba(185,199,198,.5)}
 .pcol.p3 .ppic{border-color:rgba(201,137,96,.5)}
+/* challenge switcher */
+.chbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 22px}
+.chpill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line2);background:var(--panel);color:var(--muted);border-radius:999px;padding:7px 15px;font-family:var(--sans);font-size:12.5px;cursor:pointer;transition:border-color .2s,color .2s,background .2s}
+.chpill:hover{border-color:var(--teal);color:var(--ink)}
+.chpill.on{border-color:rgba(255,172,39,.55);background:rgba(255,172,39,.1);color:var(--gold2)}
+.chpill .dot{width:6px;height:6px;border-radius:50%;background:var(--good)}
+.chpill.past .dot{background:var(--faint)}
+.chlabel{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-right:2px}
+.pastnote{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border:1px solid rgba(255,172,39,.3);background:rgba(255,172,39,.07);border-radius:14px;padding:11px 16px;margin:0 0 22px;font-size:13px;color:var(--gold2)}
+.pastnote .sp{flex:1}
+/* prompt challenge */
+.qcard{border:1px solid var(--line2);border-radius:22px;background:var(--panel);padding:26px 24px;margin-bottom:26px;position:relative;overflow:hidden}
+.qcard:before{content:'';position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,transparent,var(--teal),var(--gold),transparent);opacity:.6}
+.qbig{font-family:var(--serif);font-size:clamp(23px,3.4vw,33px);line-height:1.2;color:var(--ink);margin-bottom:6px}
+.qbig em{font-style:italic;color:var(--gold2)}
+.qsub{font-size:13.5px;color:var(--muted);margin-bottom:18px}
+.qta{width:100%;min-height:92px;resize:vertical;border:1px solid var(--line2);background:var(--bg1);color:var(--ink);border-radius:14px;padding:13px 15px;font-family:var(--sans);font-size:14.5px;line-height:1.5;outline:none;transition:border-color .2s}
+.qta:focus{border-color:var(--teal)}
+.drop{margin-top:12px;border:1px dashed var(--line2);border-radius:16px;padding:18px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s}
+.drop:hover{border-color:var(--teal);background:rgba(37,186,196,.05)}
+.drop svg{width:22px;height:22px;color:var(--muted);margin-bottom:6px}
+.dropt{font-size:13px;color:var(--ink)}
+.drops{font-size:11.5px;color:var(--faint);margin-top:3px}
+.prevwrap{margin-top:12px;position:relative;display:inline-block;max-width:100%}
+.prevwrap img{max-width:220px;max-height:220px;border-radius:16px;border:1px solid var(--line2);display:block}
+.pxbtn{position:absolute;top:-9px;right:-9px;width:28px;height:28px;border-radius:50%;border:1px solid var(--line2);background:var(--bg0);color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;line-height:1}
+.pxbtn:hover{border-color:var(--bad);color:var(--bad)}
+.qrow{display:flex;align-items:center;gap:12px;margin-top:16px;flex-wrap:wrap}
+.qrow .sp{flex:1}
+.qcount{font-family:var(--mono);font-size:11px;color:var(--faint)}
+.myans{border:1px solid rgba(37,186,196,.35);background:rgba(37,186,196,.06);border-radius:18px;padding:18px 20px;margin-bottom:26px}
+.myhead{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.myhead .who{flex:1;font-size:14px;color:var(--ink)}
+.mytag{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal2)}
+.mytext{font-size:15px;line-height:1.55;color:var(--ink);white-space:pre-wrap;word-break:break-word}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.gcard{border:1px solid var(--line2);border-radius:20px;background:var(--panel);overflow:hidden;animation:cardIn .5s ease both;display:flex;flex-direction:column}
+.board.noanim .gcard{animation:none}
+.gpic{width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--bg1);display:block;cursor:zoom-in;border-bottom:1px solid var(--line)}
+.gbody{padding:16px 17px 17px;flex:1;display:flex;flex-direction:column;gap:10px}
+.ghead{display:flex;align-items:center;gap:10px}
+.gav{width:32px;height:32px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:600;color:#fff;overflow:hidden;flex-shrink:0}
+.gname{font-size:13.5px;color:var(--ink);flex:1;line-height:1.25}
+.gwhen{font-family:var(--mono);font-size:10px;color:var(--faint)}
+.gtext{font-size:14.5px;line-height:1.5;color:var(--ink);white-space:pre-wrap;word-break:break-word}
+.gdel{align-self:flex-start;border:1px solid var(--line2);background:transparent;color:var(--faint);border-radius:9px;padding:4px 9px;font-size:11px;cursor:pointer;font-family:var(--sans)}
+.gdel:hover{border-color:var(--bad);color:var(--bad)}
+.lbox{position:fixed;inset:0;background:rgba(4,10,11,.92);z-index:120;display:none;align-items:center;justify-content:center;padding:28px;cursor:zoom-out}
+.lbox.show{display:flex;animation:fadeIn .22s ease}
+.lbox img{max-width:min(920px,94vw);max-height:88vh;border-radius:18px;border:1px solid var(--line2)}
 .rosterchip{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-left:8px}
 .cogbtn{width:38px;height:38px;border-radius:12px;border:1px solid var(--line2);background:rgba(255,255,255,.02);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s}
 .cogbtn:hover{color:var(--gold);border-color:rgba(255,172,39,.4);transform:rotate(40deg)}
@@ -375,20 +425,23 @@ textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
 
 <div class="wrap">
 
+  <div class="chbar" id="chBar"></div>
+  <div id="pastNote"></div>
+
   <section class="hero">
-    <span class="eyebrow">Good Times Crew &#183; August Challenge</span>
-    <h1>One truth.<br><em>Three lies.</em></h1>
-    <p class="sub">Everyone sends in one true story about themselves. The Crew invents three fakes to hide it in. Your job: read all four and spot the truth.</p>
+    <span class="eyebrow" id="heroEyebrow">Good Times Crew</span>
+    <h1 id="heroTitle">One truth.<br><em>Three lies.</em></h1>
+    <p class="sub" id="heroSub"></p>
     <div class="statusrow" id="statusRow"></div>
   </section>
 
-  <div class="steps">
+  <div class="steps" id="stepsStrip">
     <div class="step"><div class="sn">Step 1</div><div class="st">Email your truth</div><div class="sd">One true thing about you that nobody at Partners would ever guess.</div></div>
     <div class="step"><div class="sn">Step 2</div><div class="st">The Crew cooks up three lies</div><div class="sd">Your truth gets hidden between three convincing fakes and posted below.</div></div>
     <div class="step"><div class="sn">Step 3</div><div class="st">Everyone votes</div><div class="sd">Pick what's real, then submit. One shot per card, and you only see how everyone else voted after you answer.</div></div>
   </div>
 
-  <div class="ctazone">
+  <div class="ctazone" id="ctaZone">
     <a class="bigmail" id="mailBtn" href="#" target="_blank" rel="noopener" onclick="return mailClick(event)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
       Email the Good Times Crew
@@ -399,7 +452,9 @@ textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
 
   <div class="revealzone" id="revealZone"></div>
 
-  <div class="seclabel"><span class="t">The board</span><span class="rule"></span></div>
+  <div id="promptZone"></div>
+
+  <div class="seclabel" id="boardLabel"><span class="t">The board</span><span class="rule"></span></div>
   <div class="board" id="board"></div>
   <div class="empty" id="emptyState" style="display:none;">
     <div class="ee">&#128373;&#65039;</div>
@@ -409,7 +464,7 @@ textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
 
 </div>
 
-<footer class="foot"><b>Partners Mortgage</b> &#183; Good Times Crew &#183; August 2026</footer>
+<footer class="foot"><b>Partners Mortgage</b> &#183; Good Times Crew &#183; <span id="footMonth">2026</span></footer>
 
 <!-- name modal -->
 <div class="ovl" id="nameOvl">
@@ -465,7 +520,8 @@ textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
       <button class="iconbtn" onclick="closeAdmin()" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
     </div>
     <div class="dtabs">
-      <button class="dtab on" id="dtab-new" onclick="adminTab('new')">New</button>
+      <button class="dtab on" id="dtab-months" onclick="adminTab('months')">Challenges</button>
+      <button class="dtab" id="dtab-new" onclick="adminTab('new')">New</button>
       <button class="dtab" id="dtab-manage" onclick="adminTab('manage')">Manage</button>
       <button class="dtab" id="dtab-scores" onclick="adminTab('scores')">Scores</button>
       <button class="dtab" id="dtab-settings" onclick="adminTab('settings')">Settings</button>
@@ -473,7 +529,29 @@ textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
   </div>
   <div class="dbody">
 
-    <div class="dpanel on" id="dpanel-new">
+    <div class="dpanel on" id="dpanel-months">
+      <div class="dsec">This month</div>
+      <div class="dnote">Whichever challenge is live here is what everyone lands on. The others stay on the site for good, players can flip back to them any time.</div>
+      <div id="chAdminList"></div>
+      <div class="dsec">Start a new challenge</div>
+      <div class="dnote">A question is the simple kind: everyone answers and can add a photo. One truth three lies is the August style game with cards you build.</div>
+      <label class="f-label" for="chType">Kind of challenge</label>
+      <select class="f-in" id="chType" onchange="chTypeSwitch()">
+        <option value="prompt">A question everyone answers</option>
+        <option value="truths">One truth, three lies</option>
+      </select>
+      <label class="f-label" for="chMonth">Month label</label>
+      <input class="f-in" id="chMonth" maxlength="28" autocomplete="off" placeholder="e.g. October Challenge">
+      <div id="chQWrap">
+        <label class="f-label" for="chQuestion">The question</label>
+        <input class="f-in" id="chQuestion" maxlength="120" autocomplete="off" placeholder="e.g. What is your go to comfort movie?">
+      </div>
+      <label class="f-label" for="chTagline">One line under the headline</label>
+      <input class="f-in" id="chTagline" maxlength="180" autocomplete="off" placeholder="Optional. A short nudge to get people answering.">
+      <div class="mrow"><button class="btn goldb wide" onclick="createChallenge()">Create and make it live</button></div>
+    </div>
+
+    <div class="dpanel" id="dpanel-new">
       <div class="dnote">Post a new challenge. Type the person's real truth first, then invent three lies. The four options get shuffled automatically, so the truth never sits in the same spot.</div>
       <label class="f-label" for="newName">Whose truth is this?</label>
       <input class="f-in" id="newName" list="rosterList" maxlength="40" autocomplete="off" placeholder="Start typing a name from the roster" oninput="onNewNameInput()">
@@ -491,7 +569,7 @@ textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
     </div>
 
     <div class="dpanel" id="dpanel-manage">
-      <div class="dnote">Everything live on the board. The green option is the truth, only visible here in HQ until the reveal.</div>
+      <div class="dnote" id="manageNote">Everything live on the board. The green option is the truth, only visible here in HQ until the reveal.</div>
       <div id="manageList"></div>
     </div>
 
@@ -506,7 +584,7 @@ textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
       <label class="f-label" for="setEmail">Good Times Crew inbox</label>
       <input class="f-in" id="setEmail" autocomplete="off" placeholder="goodtimescrew@partnersmortgage.com">
       <div class="mrow"><button class="btn wide" onclick="saveEmail()">Save email</button></div>
-      <div class="dsec">The big reveal</div>
+      <div class="dsec" id="revealSec">The big reveal</div>
       <div class="dnote goldn" id="revealNote">When you reveal, every player sees the correct answers, their own score, and the winner's podium. Do this once the month wraps up.</div>
       <div class="mrow" id="revealBtnWrap"></div>
       <div class="dsec">Reset answers</div>
@@ -518,6 +596,8 @@ textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
 
   </div>
 </aside>
+
+<div class="lbox" id="lbox" onclick="closeLightbox()"><img id="lboxImg" src="" alt=""></div>
 
 <div class="toast" id="toast"></div>
 
@@ -572,7 +652,10 @@ var ADMIN_PIN='030303';
 var DEFAULT_EMAIL='goodtimescrew@partnersmortgage.com';
 
 /* ---------------- state ---------------- */
-var STATE={settings:{},entries:{},votes:{},prevRevealed:null};
+var STATE={settings:{},entries:{},votes:{},challenges:{},ch:{},prevRevealed:null};
+var VIEW_ID='';        /* which challenge is on screen, empty means the active one */
+var IMGCACHE={};       /* photo data urls, fetched on demand */
+var IMGWANT={};
 var MY={id:'',name:'',photo:'',key:''};
 var USE_FB=false, db=null, FB_READY=false, CONN=false;
 var BOARD_PAINTED=false;
@@ -638,8 +721,8 @@ function cfCancel(){
 }
 
 /* ---------------- data layer ---------------- */
-var LDB={settings:{},entries:{},votes:{}};
-var SUBS={settings:[],entries:[],votes:[]};
+var LDB={settings:{},entries:{},votes:{},challenges:{},ch:{},img:{}};
+var SUBS={settings:[],entries:[],votes:[],challenges:[],ch:[],img:[]};
 var DATA_READY=false;
 var ROSTER={}, ROSTER_STATE='loading', rsDb=null;
 function withExtras(base){
@@ -701,6 +784,18 @@ var DL={
       db.ref(DB_ROOT+'/'+path).set(val,function(err){ if(err) toast('Could not save. Check the connection.'); });
     } else {
       localSet(path,val);
+    }
+  },
+  once:function(path,cb){
+    if(USE_FB){
+      db.ref(DB_ROOT+'/'+path).once('value',function(snap){ cb(snap.val()); },function(){ cb(null); });
+    } else {
+      var seg=path.split('/'), node=LDB, i;
+      for(i=0;i<seg.length;i++){
+        if(node===null||typeof node!=='object'){ cb(null); return; }
+        node=node[seg[i]];
+      }
+      cb(node===undefined?null:node);
     }
   },
   remove:function(path){
@@ -783,6 +878,11 @@ function initData(){
 }
 function subscribeAll(){
   DATA_READY=true;
+  DL.on('challenges',function(v){
+    STATE.challenges=v||{};
+    seedChallenges();
+    renderAll();
+  });
   DL.on('settings',function(v){
     STATE.settings=v||{};
     watchReveal();
@@ -790,6 +890,115 @@ function subscribeAll(){
   });
   DL.on('entries',function(v){ STATE.entries=v||{}; renderAll(); });
   DL.on('votes',function(v){ STATE.votes=v||{}; renderAll(); });
+  DL.on('ch',function(v){ STATE.ch=v||{}; renderAll(); });
+}
+
+/* =====================================================================
+   CHALLENGES
+   Every month is its own challenge and nothing is thrown away. Two
+   kinds so far:
+     truths  - the August game, one truth hidden among three lies
+     prompt  - a single question everyone answers, photo optional
+   August's data stays exactly where it has always been (entries and
+   votes at the top level, flagged legacy). Everything new lives under
+   ch/<challengeId>/, and photos sit apart under img/<challengeId>/ so
+   the board stays light to load.
+   ===================================================================== */
+var SEED_CHALLENGES={
+  aug2026:{
+    id:'aug2026',type:'truths',legacy:true,
+    eyebrow:'August Challenge',
+    title:'One truth.|Three lies.',
+    tagline:'Everyone sends in one true story about themselves. The Crew invents three fakes to hide it in. Your job: read all four and spot the truth.',
+    month:'August 2026',at:1754006400000
+  },
+  sep2026:{
+    id:'sep2026',type:'prompt',
+    eyebrow:'September Challenge',
+    title:'What is your|favorite fall drink?',
+    tagline:'One question, one answer. Snap a photo of it if you want to show it off.',
+    question:'What is your favorite fall drink?',
+    month:'September 2026',at:1756684800000
+  }
+};
+function seedChallenges(){
+  if(!DATA_READY) return;
+  var have=STATE.challenges||{}, k, seeded=false;
+  for(k in SEED_CHALLENGES){
+    if(!SEED_CHALLENGES.hasOwnProperty(k)) continue;
+    if(have[k]) continue;
+    DL.set('challenges/'+k,SEED_CHALLENGES[k]);
+    seeded=true;
+  }
+  if(seeded&&!(STATE.settings&&STATE.settings.activeChallenge)) DL.set('settings/activeChallenge','sep2026');
+}
+function challengeList(){
+  var out=[], k, c;
+  for(k in STATE.challenges){
+    if(!STATE.challenges.hasOwnProperty(k)) continue;
+    c=STATE.challenges[k];
+    if(!c||!c.title) continue;
+    out.push({id:k,type:c.type||'prompt',legacy:!!c.legacy,eyebrow:c.eyebrow||'',title:c.title,
+      tagline:c.tagline||'',question:c.question||'',month:c.month||'',at:c.at||0,revealed:!!c.revealed});
+  }
+  out.sort(function(a,b){ return b.at-a.at; });
+  return out;
+}
+function activeId(){
+  var a=STATE.settings&&STATE.settings.activeChallenge?STATE.settings.activeChallenge:'';
+  if(a&&STATE.challenges&&STATE.challenges[a]) return a;
+  var list=challengeList();
+  return list.length?list[0].id:'';
+}
+function curId(){
+  if(VIEW_ID&&STATE.challenges&&STATE.challenges[VIEW_ID]) return VIEW_ID;
+  return activeId();
+}
+function curCh(){
+  var list=challengeList(), id=curId(), i;
+  for(i=0;i<list.length;i++){ if(list[i].id===id) return list[i]; }
+  return null;
+}
+function isActiveView(){ return curId()===activeId(); }
+function curType(){ var c=curCh(); return c?c.type:'truths'; }
+function chNode(id){ return (STATE.ch&&STATE.ch[id])?STATE.ch[id]:{}; }
+function entriesPath(){ var c=curCh(); return (c&&c.legacy)?'entries':('ch/'+curId()+'/entries'); }
+function votesPath(){ var c=curCh(); return (c&&c.legacy)?'votes':('ch/'+curId()+'/votes'); }
+function respPath(){ return 'ch/'+curId()+'/responses'; }
+function imgPath(){ return 'img/'+curId(); }
+function curEntries(){
+  var c=curCh();
+  if(c&&c.legacy) return STATE.entries||{};
+  return chNode(curId()).entries||{};
+}
+function curVotes(){
+  var c=curCh();
+  if(c&&c.legacy) return STATE.votes||{};
+  return chNode(curId()).votes||{};
+}
+function curResponses(){ return chNode(curId()).responses||{}; }
+function isRevealed(){
+  var c=curCh();
+  if(!c) return false;
+  if(c.legacy) return !!(STATE.settings&&STATE.settings.revealed);
+  return !!c.revealed;
+}
+function setRevealed(v){
+  var c=curCh();
+  if(!c) return;
+  if(c.legacy){
+    DL.set('settings/revealed',v);
+    if(v) DL.set('settings/revealedAt',Date.now());
+  } else {
+    DL.set('challenges/'+c.id+'/revealed',v);
+  }
+}
+function viewChallenge(id){
+  VIEW_ID=(id===activeId())?'':id;
+  PENDING={};
+  BOARD_PAINTED=false;
+  renderAll();
+  try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(e){ window.scrollTo(0,0); }
 }
 
 /* ---------------- identity ---------------- */
@@ -967,6 +1176,7 @@ function openScheme(u){
   catch(e){ try{ window.location.href=u; }catch(e2){} }
 }
 function updateMailBtn(){
+  if(curType()==='prompt') return;
   buildMailLinks();
   $('mailBtn').setAttribute('href',MAILV.web);
   if($('mailAlt')) $('mailAlt').setAttribute('href',MAILV.def);
@@ -995,10 +1205,10 @@ function mailClick(ev){
 
 /* ---------------- data helpers ---------------- */
 function entriesList(){
-  var out=[], k, e;
-  for(k in STATE.entries){
-    if(!STATE.entries.hasOwnProperty(k)) continue;
-    e=STATE.entries[k];
+  var src=curEntries(), out=[], k, e;
+  for(k in src){
+    if(!src.hasOwnProperty(k)) continue;
+    e=src[k];
     if(!e||!e.options||e.options.length!==4) continue;
     out.push({id:k,personId:e.personId||'',photo:e.photo||'',name:e.name||'Mystery',options:e.options,truth:e.truth,at:e.at||0});
   }
@@ -1006,7 +1216,8 @@ function entriesList(){
   return out;
 }
 function votesFor(id){
-  var raw=STATE.votes&&STATE.votes[id]?STATE.votes[id]:{};
+  var allv=curVotes();
+  var raw=allv&&allv[id]?allv[id]:{};
   var counts=[0,0,0,0], people=[[],[],[],[]], total=0, myPick=null, k, v;
   for(k in raw){
     if(!raw.hasOwnProperty(k)) continue;
@@ -1019,22 +1230,22 @@ function votesFor(id){
   return {counts:counts,people:people,total:total,myPick:myPick};
 }
 function uniqueVoterCount(){
-  var seen={}, n=0, id, k;
-  for(id in STATE.votes){
-    if(!STATE.votes.hasOwnProperty(id)) continue;
-    if(!STATE.entries||!STATE.entries[id]) continue;
-    for(k in STATE.votes[id]){
-      if(!STATE.votes[id].hasOwnProperty(k)) continue;
+  var seen={}, n=0, id, k, av=curVotes(), ae=curEntries();
+  for(id in av){
+    if(!av.hasOwnProperty(id)) continue;
+    if(!ae||!ae[id]) continue;
+    for(k in av[id]){
+      if(!av[id].hasOwnProperty(k)) continue;
       if(!seen[k]){ seen[k]=1; n++; }
     }
   }
   return n;
 }
 function computeScores(){
-  var players={}, list=entriesList(), i, e, raw, k, v, rec, out=[], p;
+  var players={}, list=entriesList(), cv=curVotes(), i, e, raw, k, v, rec, out=[], p;
   for(i=0;i<list.length;i++){
     e=list[i];
-    raw=STATE.votes&&STATE.votes[e.id]?STATE.votes[e.id]:{};
+    raw=cv&&cv[e.id]?cv[e.id]:{};
     for(k in raw){
       if(!raw.hasOwnProperty(k)) continue;
       v=raw[k];
@@ -1066,15 +1277,60 @@ function votableCount(){
 
 /* ---------------- render: status + board ---------------- */
 function renderAll(){
+  renderChrome();
   renderStatus();
-  renderBoard();
-  renderReveal();
+  if(curType()==='prompt'){
+    renderPrompt();
+  } else {
+    renderBoard();
+    renderReveal();
+  }
   renderAdminLive();
   updateMailBtn();
 }
+/* Hero, switcher and which sections belong to this kind of challenge. */
+function renderChrome(){
+  var c=curCh(), list=challengeList(), i, p, h='';
+  var prompt=(c&&c.type==='prompt');
+  if(c){
+    $('heroEyebrow').innerHTML='Good Times Crew &#183; '+esc(c.eyebrow||c.month||'Challenge');
+    $('heroTitle').innerHTML=titleHTML(c.title);
+    $('heroSub').textContent=c.tagline||'';
+  }
+  if(list.length>1){
+    h+='<span class="chlabel">Challenges</span>';
+    for(i=0;i<list.length;i++){
+      p=list[i];
+      h+='<button class="chpill'+(p.id===curId()?' on':'')+(p.id===activeId()?'':' past')+'" type="button" onclick="viewChallenge(\''+p.id+'\')">';
+      h+='<span class="dot"></span>'+esc(p.eyebrow||p.month||p.id)+'</button>';
+    }
+  }
+  $('chBar').innerHTML=h;
+  $('pastNote').innerHTML=(c&&!isActiveView())
+    ? '<div class="pastnote"><span>You are looking back at '+esc(c.eyebrow||c.month)+'. It is closed, so this is read only.</span><span class="sp"></span><button class="btn ghost" onclick="viewChallenge(\''+activeId()+'\')">Back to this month</button></div>'
+    : '';
+  if($('footMonth')&&c) $('footMonth').textContent=c.month||'2026';
+  $('stepsStrip').style.display=prompt?'none':'';
+  $('ctaZone').style.display=prompt?'none':'';
+  $('boardLabel').style.display=prompt?'none':'';
+  $('board').style.display=prompt?'none':'';
+  $('revealZone').style.display=prompt?'none':'';
+  $('emptyState').style.display='none';
+  if(prompt) $('promptZone').style.display='';
+  else { $('promptZone').style.display='none'; $('promptZone').innerHTML=''; }
+}
+function titleHTML(t){
+  var parts=(t||'').split('|'), i, h='';
+  for(i=0;i<parts.length;i++){
+    if(i) h+='<br>';
+    h+=(i%2===1)?('<em>'+esc(parts[i])+'</em>'):esc(parts[i]);
+  }
+  return h;
+}
 function renderStatus(){
+  if(curType()==='prompt'){ renderPromptStatus(); return; }
   var list=entriesList(), voters=uniqueVoterCount(), h='';
-  var revealed=!!(STATE.settings&&STATE.settings.revealed);
+  var revealed=isRevealed();
   if(list.length){
     h+='<span class="schip"><b>'+list.length+'</b> challenge'+(list.length===1?'':'s')+' on the board</span>';
     h+='<span class="schip"><b>'+voters+'</b> player'+(voters===1?'':'s')+' voting</span>';
@@ -1131,7 +1387,7 @@ function optionHTML(e,vf,i,revealed,own){
 }
 function renderBoard(){
   var list=entriesList(), board=$('board'), h='', i, e, vf, own, revealed, tag, delay;
-  revealed=!!(STATE.settings&&STATE.settings.revealed);
+  revealed=isRevealed();
   $('emptyState').style.display=list.length?'none':'block';
   for(i=0;i<list.length;i++){
     e=list[i]; vf=votesFor(e.id);
@@ -1180,8 +1436,8 @@ function renderBoard(){
 /* ---------------- voting ---------------- */
 function voteGuard(id){
   if(!MY.name){ openName(false); return null; }
-  if(STATE.settings&&STATE.settings.revealed){ toast('Voting is closed. The answers are out.'); return null; }
-  var e=STATE.entries?STATE.entries[id]:null;
+  if(isRevealed()){ toast('Voting is closed. The answers are out.'); return null; }
+  var e=curEntries()[id]||null;
   if(!e){ toast('That card just changed. Try again.'); return null; }
   if(isMine(e)){ toast('Nice try. No voting on your own card.'); return null; }
   if(votesFor(id).myPick!==null){ toast('Your answer on this one is already locked in.'); return null; }
@@ -1201,7 +1457,7 @@ function submitVote(id){
   var letter=String.fromCharCode(65+i);
   cfOpen('Submit answer '+letter+'?','This is final. You cannot change your answer on '+esc(e.name)+"'s card after this.",'Lock it in','goldb',function(){
     if(!voteGuard(id)) return;
-    DL.set('votes/'+id+'/'+MY.key,{personId:MY.id,name:MY.name,photo:MY.photo,opt:i,at:Date.now(),locked:true});
+    DL.set(votesPath()+'/'+id+'/'+MY.key,{personId:MY.id,name:MY.name,photo:MY.photo,opt:i,at:Date.now(),locked:true});
     delete PENDING[id];
     toast('Answer '+letter+' locked in.','gold');
   });
@@ -1210,7 +1466,7 @@ function submitVote(id){
 /* ---------------- reveal zone ---------------- */
 function renderReveal(){
   var zone=$('revealZone');
-  var revealed=!!(STATE.settings&&STATE.settings.revealed);
+  var revealed=isRevealed();
   if(!revealed){ zone.classList.remove('show'); zone.innerHTML=''; return; }
   var scores=computeScores(), h='', me=null, i, s;
   for(i=0;i<scores.length;i++){ if(scores[i].key===MY.key){ me=scores[i]; break; } }
@@ -1243,7 +1499,8 @@ function renderReveal(){
   zone.classList.add('show');
 }
 function watchReveal(){
-  var rv=!!(STATE.settings&&STATE.settings.revealed);
+  if(curType()==='prompt'){ STATE.prevRevealed=null; return; }
+  var rv=isRevealed();
   if(STATE.prevRevealed===false&&rv){
     celebrate();
     toast('The answers are out!','gold');
@@ -1312,6 +1569,227 @@ function confettiTick(){
   else { CONF.running=false; ctx.clearRect(0,0,cv.width,cv.height); }
 }
 
+/* =====================================================================
+   PROMPT CHALLENGES
+   One question, one answer per person, photo optional. Answers are
+   editable by their owner while the challenge is the active one.
+   ===================================================================== */
+var DRAFT_IMG=null;        /* compressed data url waiting to be saved */
+var DRAFT_HAS=false;
+function responseList(){
+  var src=curResponses(), out=[], k, r;
+  for(k in src){
+    if(!src.hasOwnProperty(k)) continue;
+    r=src[k];
+    if(!r||!r.text) continue;
+    out.push({key:k,personId:r.personId||'',name:r.name||k,photo:personPhoto(r.personId,r.photo),
+      text:r.text,hasImg:!!r.hasImg,at:r.at||0});
+  }
+  out.sort(function(a,b){ return b.at-a.at; });
+  return out;
+}
+function myResponse(){
+  var src=curResponses();
+  return (MY.key&&src[MY.key])?src[MY.key]:null;
+}
+function renderPromptStatus(){
+  var n=responseList().length, h='';
+  h+='<span class="schip"><b>'+n+'</b> answer'+(n===1?'':'s')+' in</span>';
+  if(myResponse()) h+='<span class="schip goldy">You are in</span>';
+  else if(isActiveView()) h+='<span class="schip">Yours is missing</span>';
+  $('statusRow').innerHTML=h;
+}
+function renderPrompt(){
+  var c=curCh(), zone=$('promptZone'), mine=myResponse(), h='';
+  if(!c) return;
+  var open=isActiveView();
+  if(open&&!mine){
+    h+='<div class="qcard">';
+    h+='<div class="qbig">'+esc(c.question||'')+'</div>';
+    h+='<div class="qsub">Pick your name up top if you have not, then tell us. A photo is optional.</div>';
+    h+='<textarea class="qta" id="ansText" maxlength="400" placeholder="Answer here" oninput="countAns()"></textarea>';
+    h+='<div id="dropZone">'+dropHTML()+'</div>';
+    h+='<div class="qrow"><span class="qcount" id="ansCount">0 / 400</span><span class="sp"></span>';
+    h+='<button class="btn goldb" onclick="submitResponse()">Submit answer</button></div>';
+    h+='</div>';
+  } else if(mine){
+    h+='<div class="myans">';
+    h+='<div class="myhead">'+avatarHTML('gav',personPhoto(mine.personId,mine.photo),mine.name)+'<span class="who">'+esc(mine.name)+'</span><span class="mytag">Your answer</span></div>';
+    h+='<div class="mytext">'+esc(mine.text)+'</div>';
+    if(mine.hasImg) h+='<div class="prevwrap" style="margin-top:12px;">'+imgTagFor(MY.key,'onclick="openLightbox(this.src)" style="cursor:zoom-in"')+'</div>';
+    if(open) h+='<div class="qrow"><span class="sp"></span><button class="btn ghost" onclick="editResponse()">Edit my answer</button></div>';
+    h+='</div>';
+  }
+  var list=responseList(), i, r;
+  h+='<div class="seclabel"><span class="t">'+(list.length?'Everyone else':'No answers yet')+'</span><span class="rule"></span></div>';
+  if(!list.length){
+    h+='<div class="empty" style="display:block;"><div class="ee">&#127810;</div><div class="et">Nobody has answered yet</div><div class="es">Be the first one in.</div></div>';
+  } else {
+    h+='<div class="gal">';
+    for(i=0;i<list.length;i++){
+      r=list[i];
+      h+='<div class="gcard">';
+      if(r.hasImg) h+=imgTagFor(r.key,'class="gpic" onclick="openLightbox(this.src)"');
+      h+='<div class="gbody"><div class="ghead">'+avatarHTML('gav',r.photo,r.name)+'<span class="gname">'+esc(r.name)+'</span><span class="gwhen">'+fmtDate(r.at)+'</span></div>';
+      h+='<div class="gtext">'+esc(r.text)+'</div>';
+      h+='</div></div>';
+    }
+    h+='</div>';
+  }
+  zone.innerHTML=h;
+  if(open&&!mine){ countAns(); paintPreview(); }
+  hydrateImages();
+}
+function dropHTML(){
+  if(DRAFT_IMG){
+    return '<div class="prevwrap"><img src="'+DRAFT_IMG+'" alt="Your photo"><button class="pxbtn" type="button" title="Remove photo" onclick="clearDraftImg()">&#215;</button></div>';
+  }
+  return '<div class="drop" onclick="pickPhoto()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16.5V19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2.5"></path><polyline points="7 9 12 4 17 9"></polyline><line x1="12" y1="4" x2="12" y2="16"></line></svg><div class="dropt">Add a photo of it</div><div class="drops">Optional. Anything from your phone or computer.</div></div>';
+}
+function paintPreview(){
+  var d=$('dropZone');
+  if(d) d.innerHTML=dropHTML();
+}
+function countAns(){
+  var el=$('ansText'), c=$('ansCount');
+  if(el&&c) c.textContent=el.value.length+' / 400';
+}
+function pickPhoto(){
+  var inp=document.createElement('input');
+  inp.type='file';
+  inp.accept='image/*';
+  inp.onchange=function(){
+    if(!inp.files||!inp.files[0]) return;
+    var f=inp.files[0];
+    if(f.size>18000000){ toast('That photo is enormous. Try a smaller one.'); return; }
+    toast('Working on that photo...');
+    compressImage(f,function(url){
+      if(!url){ toast('That file did not work as an image.'); return; }
+      DRAFT_IMG=url;
+      paintPreview();
+      toast('Photo ready.');
+    });
+  };
+  inp.click();
+}
+function clearDraftImg(){
+  DRAFT_IMG=null;
+  paintPreview();
+}
+/* Photos live in the database, so they get shrunk hard before saving. */
+function compressImage(file,cb){
+  var rd=new FileReader();
+  rd.onerror=function(){ cb(null); };
+  rd.onload=function(){
+    var img=new Image();
+    img.onerror=function(){ cb(null); };
+    img.onload=function(){
+      try{
+        var max=1000, w=img.width||1, h=img.height||1;
+        var sc=Math.min(1,max/Math.max(w,h));
+        var cv=document.createElement('canvas');
+        cv.width=Math.max(1,Math.round(w*sc));
+        cv.height=Math.max(1,Math.round(h*sc));
+        cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+        var q=0.72, url=cv.toDataURL('image/jpeg',q);
+        while(url.length>620000&&q>0.35){ q-=0.12; url=cv.toDataURL('image/jpeg',q); }
+        cb(url);
+      }catch(e){ cb(null); }
+    };
+    img.src=rd.result;
+  };
+  rd.readAsDataURL(file);
+}
+function submitResponse(){
+  if(!MY.name){ openName(false); return; }
+  if(!isActiveView()){ toast('That challenge is closed.'); return; }
+  var el=$('ansText'), txt=el?el.value.replace(/\s+$/,'').trim():'';
+  if(txt.length<2){ toast('Give us an answer first.'); return; }
+  var key=MY.key, img=DRAFT_IMG;
+  DL.set(respPath()+'/'+key,{personId:MY.id,name:MY.name,photo:MY.photo,text:txt,hasImg:!!img,at:Date.now()});
+  if(img){
+    DL.set(imgPath()+'/'+key,img);
+    IMGCACHE[curId()+'/'+key]=img;
+  } else {
+    DL.remove(imgPath()+'/'+key);
+    delete IMGCACHE[curId()+'/'+key];
+  }
+  DRAFT_IMG=null;
+  toast('You are in. Thanks for playing.','gold');
+}
+function editResponse(){
+  var mine=myResponse();
+  if(!mine) return;
+  var key=MY.key, cid=curId(), ck=cid+'/'+key;
+  DRAFT_IMG=mine.hasImg?(IMGCACHE[ck]||null):null;
+  /* The photo may not have been pulled down yet. Go get it so that
+     editing the words does not quietly throw the picture away. */
+  if(mine.hasImg&&!DRAFT_IMG){
+    DL.once('img/'+cid+'/'+key,function(url){
+      if(!url||cid!==curId()) return;
+      IMGCACHE[ck]=url;
+      DRAFT_IMG=url;
+      paintPreview();
+    });
+  }
+  DL.remove(respPath()+'/'+key);
+  setTimeout(function(){
+    var el=$('ansText');
+    if(el){ el.value=mine.text; el.focus(); countAns(); }
+    paintPreview();
+  },60);
+}
+function delResponse(key){
+  var src=curResponses(), r=src[key];
+  var nm=r&&r.name?r.name:'this answer';
+  cfOpen('Delete '+esc(nm)+"'s answer?",'It comes off the board along with the photo. There is no undo.','Delete it','danger',function(){
+    DL.remove(respPath()+'/'+key);
+    DL.remove(imgPath()+'/'+key);
+    delete IMGCACHE[curId()+'/'+key];
+    toast('Answer deleted.');
+  });
+}
+/* Photos are pulled one at a time, only when they are on screen. */
+function imgTagFor(key,attrs){
+  var ck=curId()+'/'+key;
+  if(IMGCACHE[ck]) return '<img src="'+IMGCACHE[ck]+'" alt="Photo" '+attrs+'>';
+  return '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" data-imgkey="'+esc(key)+'" '+attrs+'>';
+}
+function hydrateImages(){
+  var els=document.querySelectorAll('[data-imgkey]'), i, key, ck;
+  for(i=0;i<els.length;i++){
+    key=els[i].getAttribute('data-imgkey');
+    ck=curId()+'/'+key;
+    if(IMGCACHE[ck]){ els[i].src=IMGCACHE[ck]; els[i].removeAttribute('data-imgkey'); continue; }
+    if(IMGWANT[ck]) continue;
+    IMGWANT[ck]=1;
+    fetchImage(curId(),key);
+  }
+}
+function fetchImage(cid,key){
+  DL.once('img/'+cid+'/'+key,function(url){
+    var ck=cid+'/'+key;
+    delete IMGWANT[ck];
+    if(!url) return;
+    IMGCACHE[ck]=url;
+    var els=document.querySelectorAll('[data-imgkey="'+key+'"]'), i;
+    for(i=0;i<els.length;i++){
+      if(cid!==curId()) continue;
+      els[i].src=url;
+      els[i].removeAttribute('data-imgkey');
+    }
+  });
+}
+function openLightbox(src){
+  if(!src||src.indexOf('data:image/gif')===0) return;
+  $('lboxImg').src=src;
+  $('lbox').classList.add('show');
+}
+function closeLightbox(){
+  $('lbox').classList.remove('show');
+  $('lboxImg').src='';
+}
+
 /* ---------------- pin + admin ---------------- */
 var PENDING={};
 var PIN_BUF='';
@@ -1360,11 +1838,99 @@ function lockAdmin(){
   toast('HQ locked.');
 }
 function adminTab(t){
-  var tabs=['new','manage','scores','settings'], i;
+  var tabs=['months','new','manage','scores','settings'], i;
+  if(curType()==='prompt'&&(t==='new'||t==='scores')) t='months';
   for(i=0;i<tabs.length;i++){
     $('dtab-'+tabs[i]).className='dtab'+(tabs[i]===t?' on':'');
     $('dpanel-'+tabs[i]).className='dpanel'+(tabs[i]===t?' on':'');
   }
+  syncAdminTabs();
+}
+/* The truths game has cards and scores. A question challenge has neither. */
+function syncAdminTabs(){
+  var prompt=(curType()==='prompt');
+  $('dtab-new').style.display=prompt?'none':'';
+  $('dtab-scores').style.display=prompt?'none':'';
+  if(prompt&&($('dtab-new').className.indexOf('on')>-1||$('dtab-scores').className.indexOf('on')>-1)) adminTab('months');
+}
+function chTypeSwitch(){
+  $('chQWrap').style.display=($('chType').value==='truths')?'none':'';
+}
+function renderChAdmin(){
+  var list=challengeList(), h='', i, c, act=activeId();
+  if(!list.length){ $('chAdminList').innerHTML='<div class="dnote" style="margin-top:14px;">No challenges yet.</div>'; return; }
+  for(i=0;i<list.length;i++){
+    c=list[i];
+    h+='<div class="mcard">';
+    h+='<div class="mchead"><span class="mcname">'+esc(c.eyebrow||c.month||c.id)+'</span>';
+    h+='<span class="cmeta">'+(c.type==='prompt'?'Question':'One truth, three lies')+(c.id===act?' &#183; live now':'')+'</span>';
+    if(c.id!==act) h+='<button class="iconbtn" title="Delete this challenge" onclick="delChallenge(\''+c.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>';
+    h+='</div>';
+    h+='<div class="dnote" style="margin:6px 0 10px;">'+esc(c.question||(c.title||'').split('|').join(' '))+'</div>';
+    h+='<div class="qrow" style="margin-top:0;">';
+    h+=(c.id===act)
+      ? '<span class="mytag">Live on the front page</span>'
+      : '<button class="btn" onclick="makeActive(\''+c.id+'\')">Make this the live one</button>';
+    h+='<span class="sp"></span><button class="btn ghost" onclick="closeAdmin();viewChallenge(\''+c.id+'\')">View it</button>';
+    h+='</div></div>';
+  }
+  $('chAdminList').innerHTML=h;
+}
+function makeActive(id){
+  var c=null, list=challengeList(), i;
+  for(i=0;i<list.length;i++){ if(list[i].id===id) c=list[i]; }
+  if(!c) return;
+  cfOpen('Make '+esc(c.eyebrow||c.month)+' the live challenge?','Everyone who opens the site lands here from now on. The other challenges stay on the site and nothing is deleted.','Make it live','goldb',function(){
+    DL.set('settings/activeChallenge',id);
+    VIEW_ID='';
+    BOARD_PAINTED=false;
+    toast((c.eyebrow||c.month)+' is live.','gold');
+  });
+}
+function delChallenge(id){
+  var c=null, list=challengeList(), i;
+  for(i=0;i<list.length;i++){ if(list[i].id===id) c=list[i]; }
+  if(!c) return;
+  if(c.legacy){ toast('August stays put. It is the original.'); return; }
+  cfOpen('Delete '+esc(c.eyebrow||c.month)+'?','The challenge and every answer and photo in it are removed for good. There is no undo.','Delete it','danger',function(){
+    DL.remove('challenges/'+id);
+    DL.remove('ch/'+id);
+    DL.remove('img/'+id);
+    if(VIEW_ID===id) VIEW_ID='';
+    toast('Challenge deleted.');
+  });
+}
+function createChallenge(){
+  var type=$('chType').value;
+  var month=$('chMonth').value.replace(/\s+/g,' ').trim();
+  var q=$('chQuestion').value.replace(/\s+/g,' ').trim();
+  var tag=$('chTagline').value.replace(/\s+/g,' ').trim();
+  if(!month){ toast('Give it a month label.'); return; }
+  if(type==='prompt'&&!q){ toast('A question challenge needs a question.'); return; }
+  var id='c'+Date.now()+'_'+Math.random().toString(36).substring(2,5);
+  var rec={
+    id:id,type:type,eyebrow:month,month:month,
+    title:type==='prompt'?splitQuestion(q):'One truth.|Three lies.',
+    tagline:tag||(type==='prompt'?'One question, one answer. Add a photo if you want.':'One true story hidden between three fakes. Spot the truth.'),
+    question:type==='prompt'?q:'',
+    at:Date.now()
+  };
+  cfOpen('Create '+esc(month)+'?','It goes live right away and becomes what everyone sees. '+(activeId()?'The current challenge moves into the archive, still on the site.':''),'Create it','goldb',function(){
+    DL.set('challenges/'+id,rec);
+    DL.set('settings/activeChallenge',id);
+    VIEW_ID='';
+    BOARD_PAINTED=false;
+    $('chMonth').value=''; $('chQuestion').value=''; $('chTagline').value='';
+    toast(month+' is live.','gold');
+    adminTab('months');
+  });
+}
+/* Break a question so the second half lands in gold italics. */
+function splitQuestion(q){
+  var words=q.split(' ');
+  if(words.length<4) return q;
+  var cut=Math.ceil(words.length/2);
+  return words.slice(0,cut).join(' ')+'|'+words.slice(cut).join(' ');
 }
 function adminOpenNow(){ return $('drawer').classList.contains('open'); }
 
@@ -1385,7 +1951,7 @@ function postEntry(){
   for(i=0;i<4;i++){ texts.push(opts[i].t); if(opts[i].is) truthIdx=i; }
   var id='e'+Date.now()+'_'+Math.random().toString(36).substring(2,6);
   var match=findPerson(name);
-  DL.set('entries/'+id,{
+  DL.set(entriesPath()+'/'+id,{
     personId:match?match.id:'',
     name:match?match.name:name,
     photo:match?(match.photo||''):'',
@@ -1420,15 +1986,16 @@ function onNewNameInput(){
 
 /* ---------------- admin: manage + scores + settings ---------------- */
 function delEntry(id){
-  var e=STATE.entries?STATE.entries[id]:null;
+  var e=curEntries()[id]||null;
   var nm=e&&e.name?e.name:'this card';
   cfOpen('Delete '+esc(nm)+"'s card?",'This removes the card and every vote on it. There is no undo.','Delete it','danger',function(){
-    DL.remove('entries/'+id);
-    DL.remove('votes/'+id);
+    DL.remove(entriesPath()+'/'+id);
+    DL.remove(votesPath()+'/'+id);
     toast('Deleted.');
   });
 }
 function renderManage(){
+  $('manageNote').textContent='Everything live on the board. The green option is the truth, only visible here in HQ until the reveal.';
   var list=entriesList().slice().reverse(), h='', i, e, vf, k, nm, j;
   if(!list.length){
     $('manageList').innerHTML='<div class="dnote" style="margin-top:14px;">Nothing posted yet. Build the first one in the New tab.</div>';
@@ -1471,37 +2038,67 @@ function renderScoresTable(){
 function answerCount(){
   var n=0, id, k, list=entriesList(), have={}, i;
   for(i=0;i<list.length;i++) have[list[i].id]=1;
-  for(id in STATE.votes){
-    if(!STATE.votes.hasOwnProperty(id)) continue;
+  var av=curVotes();
+  for(id in av){
+    if(!av.hasOwnProperty(id)) continue;
     if(!have[id]) continue;
-    for(k in STATE.votes[id]){ if(STATE.votes[id].hasOwnProperty(k)) n++; }
+    for(k in av[id]){ if(av[id].hasOwnProperty(k)) n++; }
   }
   return n;
 }
+function answerCountPrompt(){ return responseList().length; }
 function clearAllVotes(){
+  if(curType()==='prompt'){ clearAllResponses(); return; }
   var n=answerCount();
   if(!n){ toast('There are no answers to clear.'); return; }
   cfOpen('Clear every answer?','This wipes all '+n+' answer'+(n===1?'':'s')+' and the running tally. The cards, truths, and lies all stay put, and everyone can answer again from scratch. There is no undo.','Clear the answers','danger',function(){
-    DL.remove('votes');
+    DL.remove(votesPath());
     PENDING={};
     toast('All answers cleared. The board is open again.','gold');
   });
 }
+function clearAllResponses(){
+  var n=answerCountPrompt();
+  if(!n){ toast('There are no answers to clear.'); return; }
+  cfOpen('Clear every answer?','This wipes all '+n+' answer'+(n===1?'':'s')+' and their photos for this challenge. The question itself stays. There is no undo.','Clear the answers','danger',function(){
+    DL.remove(respPath());
+    DL.remove(imgPath());
+    IMGCACHE={};
+    toast('All answers cleared.','gold');
+  });
+}
 function clearCardVotes(id){
-  var e=STATE.entries?STATE.entries[id]:null;
+  var e=curEntries()[id]||null;
   var nm=e&&e.name?e.name:'this card';
   var vf=votesFor(id);
   if(!vf.total){ toast('No answers on that card yet.'); return; }
   cfOpen('Clear answers on '+esc(nm)+"'s card?",'This wipes the '+vf.total+' answer'+(vf.total===1?'':'s')+' on this card only. The card itself stays. There is no undo.','Clear them','danger',function(){
-    DL.remove('votes/'+id);
+    DL.remove(votesPath()+'/'+id);
     delete PENDING[id];
     toast('Answers cleared on that card.');
   });
 }
 function renderSettingsBits(){
+  var prompt=(curType()==='prompt');
+  $('revealSec').style.display=prompt?'none':'';
+  $('revealNote').style.display=prompt?'none':'';
+  $('revealBtnWrap').style.display=prompt?'none':'';
+  if(prompt){
+    var rn=answerCountPrompt();
+    $('resetNote').textContent=rn
+      ? ('There '+(rn===1?'is':'are')+' '+rn+' answer'+(rn===1?'':'s')+' in for '+((curCh()&&(curCh().eyebrow||curCh().month))||'this challenge')+'. Clearing wipes them and their photos so everyone starts over.')
+      : 'No answers in yet. Nothing to clear.';
+    $('resetBtnWrap').innerHTML=rn
+      ? '<button class="btn danger wide" onclick="clearAllVotes()">Clear all answers</button>'
+      : '<button class="btn ghost wide" style="opacity:.5;cursor:not-allowed" onclick="toast(\'There are no answers to clear.\')">Clear all answers</button>';
+    renderConnNote();
+    var inp0=$('setEmail');
+    if(document.activeElement!==inp0) inp0.value=crewEmail();
+    return;
+  }
   var inp=$('setEmail');
   if(document.activeElement!==inp) inp.value=crewEmail();
-  var revealed=!!(STATE.settings&&STATE.settings.revealed);
+  var revealed=isRevealed();
   $('revealNote').textContent=revealed
     ? 'Answers are live on the front page right now. Players can see the truths, their scores, and the podium.'
     : 'When you reveal, every player sees the correct answers, their own score, and the winner podium. Do this once the month wraps up.';
@@ -1528,10 +2125,30 @@ function renderConnNote(){
 }
 function renderAdminLive(){
   if(!adminOpenNow()) return;
+  syncAdminTabs();
   renderRosterOptions();
-  renderManage();
+  renderChAdmin();
+  if(curType()==='prompt') renderManageResponses();
+  else renderManage();
   renderScoresTable();
   renderSettingsBits();
+}
+function renderManageResponses(){
+  var list=responseList(), h='', i, r;
+  $('manageNote').textContent='Every answer that has come in. Deleting one takes its photo with it.';
+  if(!list.length){
+    $('manageList').innerHTML='<div class="dnote" style="margin-top:14px;">No answers yet.</div>';
+    return;
+  }
+  for(i=0;i<list.length;i++){
+    r=list[i];
+    h+='<div class="mcard">';
+    h+='<div class="mchead">'+avatarHTML('mav',r.photo,r.name)+'<span class="mcname">'+esc(r.name)+'</span><span class="cmeta">'+fmtDate(r.at)+(r.hasImg?' &#183; photo':'')+'</span>';
+    h+='<button class="iconbtn" title="Delete" onclick="delResponse(\''+r.key+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button></div>';
+    h+='<div class="dnote" style="margin-top:8px;">'+esc(r.text)+'</div>';
+    h+='</div>';
+  }
+  $('manageList').innerHTML=h;
 }
 function saveEmail(){
   var v=$('setEmail').value.trim();
@@ -1541,13 +2158,12 @@ function saveEmail(){
 }
 function doReveal(){
   cfOpen('Reveal all answers?','Everyone sees the truths, their own score, and the winner podium the moment this goes live. This is the big moment. Ready?','Yes, reveal it','goldb',function(){
-    DL.set('settings/revealed',true);
-    DL.set('settings/revealedAt',Date.now());
+    setRevealed(true);
   });
 }
 function doHide(){
   cfOpen('Hide answers again?','The board goes back to secret voting mode. Handy if the reveal fired early.','Hide them','danger',function(){
-    DL.set('settings/revealed',false);
+    setRevealed(false);
   });
 }
 
