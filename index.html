@@ -35,7 +35,7 @@ input,textarea{font-family:var(--sans)}
 
 /* ---------- ambient background ---------- */
 .orbs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55}
+.orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;will-change:transform;transform:translateZ(0);backface-visibility:hidden}
 .orb.o1{width:640px;height:640px;left:-180px;top:-220px;background:radial-gradient(circle,rgba(0,129,139,.34),transparent 62%);animation:drift1 26s ease-in-out infinite alternate}
 .orb.o2{width:560px;height:560px;right:-200px;top:14%;background:radial-gradient(circle,rgba(43,195,205,.20),transparent 60%);animation:drift2 32s ease-in-out infinite alternate}
 .orb.o3{width:520px;height:520px;left:24%;bottom:-260px;background:radial-gradient(circle,rgba(255,172,39,.13),transparent 60%);animation:drift3 38s ease-in-out infinite alternate}
@@ -90,14 +90,11 @@ input,textarea{font-family:var(--sans)}
 .pcol.p2 .ppic{border-color:rgba(185,199,198,.5)}
 .pcol.p3 .ppic{border-color:rgba(201,137,96,.5)}
 /* challenge switcher */
-.chbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 22px}
-.chpill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line2);background:var(--panel);color:var(--muted);border-radius:999px;padding:7px 15px;font-family:var(--sans);font-size:12.5px;cursor:pointer;transition:border-color .2s,color .2s,background .2s}
-.chpill:hover{border-color:var(--teal);color:var(--ink)}
-.chpill.on{border-color:rgba(255,172,39,.55);background:rgba(255,172,39,.1);color:var(--gold2)}
-.chpill .dot{width:6px;height:6px;border-radius:50%;background:var(--good)}
-.chpill.past .dot{background:var(--faint)}
+.chbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-top:22px}
+.chsel{appearance:none;-webkit-appearance:none;border:1px solid var(--line2);background:var(--panel) url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2395A9A8' stroke-width='2' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 13px center;background-size:15px;color:var(--ink);border-radius:999px;padding:9px 38px 9px 17px;font-family:var(--sans);font-size:13px;cursor:pointer;outline:none;transition:border-color .2s;max-width:min(320px,70vw)}
+.chsel:hover,.chsel:focus{border-color:var(--teal)}
 .chlabel{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-right:2px}
-.pastnote{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border:1px solid rgba(255,172,39,.3);background:rgba(255,172,39,.07);border-radius:14px;padding:11px 16px;margin:0 0 22px;font-size:13px;color:var(--gold2)}
+.pastnote{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border:1px solid rgba(255,172,39,.3);background:rgba(255,172,39,.07);border-radius:14px;padding:11px 16px;margin:16px 0 0;font-size:13px;color:var(--gold2)}
 .pastnote .sp{flex:1}
 /* prompt challenge */
 .qcard{border:1px solid var(--line2);border-radius:22px;background:var(--panel);padding:26px 24px;margin-bottom:26px;position:relative;overflow:hidden}
@@ -124,9 +121,9 @@ input,textarea{font-family:var(--sans)}
 .myhead .who{flex:1;font-size:14px;color:var(--ink)}
 .mytag{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal2)}
 .mytext{font-size:15px;line-height:1.55;color:var(--ink);white-space:pre-wrap;word-break:break-word}
-.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;align-items:start}
 .gcard{border:1px solid var(--line2);border-radius:20px;background:var(--panel);overflow:hidden;animation:cardIn .5s ease both;display:flex;flex-direction:column}
-.board.noanim .gcard{animation:none}
+.board.noanim .gcard,.gal.noanim .gcard{animation:none}
 .gpic{width:100%;aspect-ratio:4/3;object-fit:contain;background:#0A1416;display:block;cursor:zoom-in;border-bottom:1px solid var(--line)}
 .gbody{padding:16px 17px 17px;flex:1;display:flex;flex-direction:column;gap:10px}
 .ghead{display:flex;align-items:center;gap:10px}
@@ -139,6 +136,182 @@ input,textarea{font-family:var(--sans)}
 .lbox{position:fixed;inset:0;background:rgba(4,10,11,.92);z-index:120;display:none;align-items:center;justify-content:center;padding:28px;cursor:zoom-out}
 .lbox.show{display:flex;animation:fadeIn .22s ease}
 .lbox img{max-width:min(920px,94vw);max-height:88vh;border-radius:18px;border:1px solid var(--line2)}
+/* =====================================================================
+   SEASONS
+   The palette shifts with the calendar. Night Ledger stays underneath,
+   only the accents move, so it never stops looking like our tools.
+   ===================================================================== */
+:root[data-season="halloween"]{
+  --bg0:#090D11;--bg1:#101620;--panel:rgba(26,24,44,.5);--line:rgba(150,128,206,.1);--line2:rgba(150,128,206,.16);
+  --gold:#F3862A;--gold2:#FFB166;--teal:#8F7BD6;--teal2:#AE9BEC;--grad:linear-gradient(135deg,#4A3272,#F3862A)
+}
+:root[data-season="thanks"]{
+  --bg0:#0E0B08;--bg1:#171009;--panel:rgba(48,32,18,.5);--line:rgba(232,163,61,.13);--line2:rgba(232,163,61,.2);
+  --gold:#E8A33D;--gold2:#F6CB84;--teal:#C8794A;--teal2:#E09A6B;--grad:linear-gradient(135deg,#7A3E1D,#E8A33D)
+}
+:root[data-season="holiday"]{
+  --bg0:#060F0E;--bg1:#0A1816;--panel:rgba(14,38,33,.52);--line:rgba(220,196,140,.13);--line2:rgba(220,196,140,.19);
+  --gold:#E8C66B;--gold2:#F6E3AE;--teal:#3FAE78;--teal2:#6FD0A0;--grad:linear-gradient(135deg,#17563C,#B5342B)
+}
+:root[data-season="halloween"] .orb.o1{background:radial-gradient(circle,rgba(96,56,146,.3),transparent 62%)}
+:root[data-season="halloween"] .orb.o2{background:radial-gradient(circle,rgba(243,134,42,.13),transparent 60%)}
+:root[data-season="halloween"] .orb.o3{background:radial-gradient(circle,rgba(143,123,214,.12),transparent 60%)}
+:root[data-season="thanks"] .orb.o1{background:radial-gradient(circle,rgba(176,86,30,.36),transparent 62%)}
+:root[data-season="thanks"] .orb.o2{background:radial-gradient(circle,rgba(232,163,61,.2),transparent 60%)}
+:root[data-season="thanks"] .orb.o3{background:radial-gradient(circle,rgba(201,99,45,.17),transparent 60%)}
+:root[data-season="holiday"] .orb.o1{background:radial-gradient(circle,rgba(23,86,60,.42),transparent 62%)}
+:root[data-season="holiday"] .orb.o2{background:radial-gradient(circle,rgba(181,52,43,.17),transparent 60%)}
+:root[data-season="holiday"] .orb.o3{background:radial-gradient(circle,rgba(232,198,107,.15),transparent 60%)}
+
+#seasonLayer{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.sfx{position:absolute;pointer-events:none}
+
+/* moon and fog, October */
+.moon{top:8vh;right:8vw;width:104px;height:104px;border-radius:50%;
+  background:radial-gradient(circle at 36% 34%,#FFE9C2,#FFC98A 52%,#E8A861 74%,transparent 76%);
+  box-shadow:0 0 56px 20px rgba(255,180,100,.09);opacity:.3}
+.moon:after{content:'';position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle at 64% 30%,rgba(120,70,20,.22) 9px,transparent 10px),
+             radial-gradient(circle at 40% 62%,rgba(120,70,20,.18) 13px,transparent 14px),
+             radial-gradient(circle at 70% 68%,rgba(120,70,20,.14) 7px,transparent 8px)}
+.web{top:0;width:150px;height:150px;opacity:.09;color:#B6A4E2}
+.web.wl{left:0}
+.web.wr{right:0;transform:scaleX(-1)}
+.bat{color:#160F22;opacity:.5;width:24px;height:24px;will-change:transform;animation:batfly linear infinite}
+.bat svg{width:100%;height:100%;display:block;animation:flap .42s ease-in-out infinite alternate;transform-origin:50% 50%}
+@keyframes batfly{
+  0%{transform:translate(-14vw,0) scale(.7)}
+  25%{transform:translate(18vw,-7vh) scale(.95)}
+  50%{transform:translate(52vw,3vh) scale(.8)}
+  75%{transform:translate(86vw,-9vh) scale(1)}
+  100%{transform:translate(118vw,-2vh) scale(.75)}
+}
+@keyframes flap{from{transform:scaleY(1) scaleX(1)}to{transform:scaleY(.58) scaleX(1.06)}}
+.fog{left:0;right:0;bottom:-10px;height:150px;
+  background:linear-gradient(to top,rgba(96,56,146,.1),rgba(243,134,42,.02) 46%,transparent);
+  filter:blur(14px);animation:fogdrift 26s ease-in-out infinite alternate}
+@keyframes fogdrift{from{transform:translateX(-3%)}to{transform:translateX(3%)}}
+
+/* leaves, November */
+.leaf{top:-40px;width:19px;height:19px;opacity:.65;will-change:transform;animation:leaffall linear infinite}
+.leaf svg{width:100%;height:100%;display:block;animation:leafspin 3.4s ease-in-out infinite alternate}
+@keyframes leaffall{
+  0%{transform:translate(0,-6vh) rotate(0)}
+  25%{transform:translate(5vw,22vh) rotate(60deg)}
+  50%{transform:translate(-3vw,49vh) rotate(150deg)}
+  75%{transform:translate(6vw,76vh) rotate(240deg)}
+  100%{transform:translate(-1vw,106vh) rotate(330deg)}
+}
+@keyframes leafspin{from{transform:rotateY(0) rotateZ(-7deg)}to{transform:rotateY(150deg) rotateZ(9deg)}}
+.harvest{left:0;right:0;top:0;height:150px;
+  background:linear-gradient(to bottom,rgba(232,163,61,.11),transparent);pointer-events:none}
+
+/* lights and snow, December */
+.lights{left:0;right:0;top:0;height:74px}
+.lights svg{width:100%;height:74px;display:block}
+.bulb{animation:twinkle 2.6s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:1}50%{opacity:.34}}
+.snow{top:-12px;border-radius:50%;background:#EAF6F4;will-change:transform;animation:snowfall linear infinite}
+@keyframes snowfall{
+  0%{transform:translate(0,-4vh)}
+  33%{transform:translate(3vw,34vh)}
+  66%{transform:translate(-3vw,70vh)}
+  100%{transform:translate(1vw,106vh)}
+}
+.frost{left:0;right:0;bottom:-10px;height:160px;
+  background:linear-gradient(to top,rgba(111,208,160,.13),transparent);filter:blur(11px)}
+
+@media(max-width:700px){.moon{width:88px;height:88px;top:9vh}.web{width:128px;height:128px}}
+@media(prefers-reduced-motion:reduce){
+  .bat,.leaf,.snow{display:none}
+  .fog,.lights svg,.bulb{animation:none}
+}
+/* ---- activity challenge ---- */
+.goalwrap{border:1px solid var(--line2);border-radius:20px;background:var(--panel);padding:20px 22px;margin-bottom:18px}
+.goalhead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.goalbig{font-family:var(--mono);font-size:26px;color:var(--gold2);line-height:1}
+.goalof{font-size:13px;color:var(--muted)}
+.goalsp{flex:1}
+.goalpct{font-family:var(--mono);font-size:13px;color:var(--teal2)}
+.goalbar{height:12px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;position:relative}
+.goalfill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--teal),var(--gold));width:0;transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.goalnote{margin-top:10px;font-size:12.5px;color:var(--faint)}
+.logcard{border:1px solid var(--line2);border-radius:22px;background:var(--panel);padding:24px;margin-bottom:24px;position:relative;overflow:hidden}
+.logcard:before{content:'';position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,transparent,var(--teal),var(--gold),transparent);opacity:.6}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.chip{border:1px solid var(--line2);background:var(--bg1);color:var(--muted);border-radius:999px;padding:8px 15px;font-size:12.5px;font-family:var(--sans);cursor:pointer;transition:border-color .18s,color .18s,background .18s}
+.chip:hover{border-color:var(--teal);color:var(--ink)}
+.chip.on{border-color:var(--gold);background:rgba(255,172,39,.12);color:var(--gold2)}
+.minrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:6px}
+.minin{width:92px;text-align:center;font-family:var(--mono)}
+.ptpreview{font-family:var(--mono);font-size:12px;color:var(--teal2);background:rgba(37,186,196,.08);border:1px solid rgba(37,186,196,.28);border-radius:999px;padding:6px 13px}
+.statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:12px;margin-bottom:22px}
+.statbox{border:1px solid var(--line2);border-radius:16px;background:var(--panel);padding:15px 16px}
+.statv{font-family:var(--mono);font-size:23px;color:var(--ink);line-height:1.1}
+.statv.gold{color:var(--gold2)}
+.statv.teal{color:var(--teal2)}
+.statl{font-size:11.5px;color:var(--faint);margin-top:4px;letter-spacing:.02em}
+.twocol{display:grid;grid-template-columns:1.15fr .85fr;gap:20px;align-items:start}
+@media(max-width:820px){.twocol{grid-template-columns:1fr}}
+.lbcard,.piecard{border:1px solid var(--line2);border-radius:20px;background:var(--panel);padding:20px}
+.lbhead{margin:34px 0 16px}
+.myrank{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold2);border:1px solid rgba(255,172,39,.3);background:rgba(255,172,39,.08);border-radius:999px;padding:6px 13px;white-space:nowrap}
+.lbcard.big{padding:24px 24px 20px;border-color:rgba(255,172,39,.22);box-shadow:0 18px 50px rgba(0,0,0,.3);position:relative;overflow:hidden}
+.lbcard.big:before{content:'';position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--teal),transparent);opacity:.75}
+.apod{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:end;margin:4px 0 6px}
+.apcol{text-align:center;border:1px solid var(--line2);border-radius:18px;background:rgba(255,255,255,.015);padding:16px 10px 14px}
+.apcol.me{border-color:rgba(37,186,196,.45);background:rgba(37,186,196,.07)}
+.apcol.p1{padding-top:24px;padding-bottom:20px;border-color:rgba(255,172,39,.45);background:linear-gradient(180deg,rgba(255,172,39,.12),rgba(255,172,39,.03))}
+.apcol.p2{border-color:rgba(185,199,198,.3)}
+.apcol.p3{border-color:rgba(201,137,96,.3)}
+.apav{position:relative;width:min(70px,16vw);height:min(70px,16vw);margin:0 auto 10px}
+.apcol.p1 .apav{width:min(88px,20vw);height:min(88px,20vw)}
+.apimg{width:100%;height:100%;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:16px;font-weight:600;color:#fff;overflow:hidden;border:2px solid var(--line2)}
+.apcol.p1 .apimg{border-color:rgba(255,172,39,.7);box-shadow:0 10px 30px rgba(255,172,39,.25)}
+.apcol.p2 .apimg{border-color:rgba(185,199,198,.5)}
+.apcol.p3 .apimg{border-color:rgba(201,137,96,.5)}
+.apav.empty{border-radius:50%;border:1px dashed var(--line2);width:min(70px,16vw);height:min(70px,16vw)}
+.apmedal{position:absolute;bottom:-4px;right:-4px;width:26px;height:26px;border-radius:50%;background:var(--bg0);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.apcol.p1 .apmedal{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1A1206;border-color:transparent;font-weight:700}
+.apname{font-size:13.5px;color:var(--ink);line-height:1.25;word-break:break-word}
+.apcol.p1 .apname{font-size:15px}
+.apname.dim,.appts.dim{color:var(--faint)}
+.appts{font-family:var(--mono);font-size:22px;color:var(--gold2);margin-top:6px;line-height:1}
+.apcol.p1 .appts{font-size:28px}
+.appts span{font-size:11px;color:var(--faint);margin-left:3px}
+.apbar{margin-top:7px;font-size:11.5px;color:var(--faint)}
+.lbrest2{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+@media(max-width:560px){.apod{gap:8px}.apcol{padding:12px 6px}.apcol.p1{padding-top:18px}}
+.mtabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.mtab{border:1px solid var(--line2);background:transparent;color:var(--muted);border-radius:999px;padding:6px 13px;font-size:12px;font-family:var(--sans);cursor:pointer}
+.mtab:hover{border-color:var(--teal);color:var(--ink)}
+.mtab.on{border-color:rgba(255,172,39,.5);background:rgba(255,172,39,.1);color:var(--gold2)}
+.lrow{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:14px;border:1px solid transparent;transition:background .2s}
+.lrow+.lrow{margin-top:2px}
+.lrow.me{border-color:rgba(37,186,196,.4);background:rgba(37,186,196,.07)}
+.lrow.top1 .lrk{color:var(--gold2)}
+.lrk{font-family:var(--mono);font-size:13px;color:var(--faint);width:26px;flex-shrink:0}
+.lav{width:34px;height:34px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:600;color:#fff;overflow:hidden;flex-shrink:0}
+.lnm{flex:1;min-width:0}
+.lnm b{display:block;font-size:14px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lnm span{font-size:11.5px;color:var(--faint)}
+.lpt{font-family:var(--mono);font-size:16px;color:var(--teal2);text-align:right}
+.lpt small{display:block;font-size:10px;color:var(--faint)}
+.flame{font-size:11px;color:var(--gold2)}
+.donut{display:block;margin:0 auto}
+.legend{margin-top:14px}
+.lgrow{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--muted);padding:3px 0}
+.lgdot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.lgnm{flex:1}
+.lgv{font-family:var(--mono);font-size:12px;color:var(--ink)}
+.feedrow{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--line)}
+.feedrow:last-child{border-bottom:0}
+.fav{width:28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:600;color:#fff;overflow:hidden;flex-shrink:0}
+.ftx{flex:1;font-size:13px;color:var(--muted);line-height:1.35}
+.ftx b{color:var(--ink);font-weight:500}
+.fwhen{font-family:var(--mono);font-size:10.5px;color:var(--faint)}
+.fdel{border:1px solid var(--line2);background:transparent;color:var(--faint);border-radius:8px;padding:3px 8px;font-size:10.5px;cursor:pointer;font-family:var(--sans)}
+.fdel:hover{border-color:var(--bad);color:var(--bad)}
 .rosterchip{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-left:8px}
 .cogbtn{width:38px;height:38px;border-radius:12px;border:1px solid var(--line2);background:rgba(255,255,255,.02);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s}
 .cogbtn:hover{color:var(--gold);border-color:rgba(255,172,39,.4);transform:rotate(40deg)}
@@ -152,18 +325,18 @@ input,textarea{font-family:var(--sans)}
 .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 clamp(16px,4vw,34px) 90px}
 
 /* ---------- hero ---------- */
-.hero{text-align:center;padding:clamp(44px,7vw,76px) 0 8px}
+.hero{text-align:center;padding:clamp(34px,5vw,58px) 0 4px}
 .eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal2);border:1px solid var(--line);border-radius:999px;padding:7px 16px;background:rgba(37,186,196,.06);animation:fadeUp .7s .05s both}
-.hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(46px,8.4vw,96px);line-height:1.02;margin:26px 0 0;letter-spacing:-.01em;animation:fadeUp .7s .15s both}
+.hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(42px,7.4vw,84px);line-height:1.04;margin:20px 0 0;letter-spacing:-.01em;animation:fadeUp .7s .15s both}
 .hero h1 em{font-style:italic;color:var(--gold)}
-.hero .sub{max-width:560px;margin:20px auto 0;color:var(--muted);font-size:clamp(15px,1.8vw,17px);animation:fadeUp .7s .25s both}
+.hero .sub{max-width:560px;margin:16px auto 0;color:var(--muted);font-size:clamp(15px,1.8vw,17px);animation:fadeUp .7s .25s both}
 .statusrow{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:22px;animation:fadeUp .7s .32s both}
 .schip{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--muted);border:1px solid var(--line2);border-radius:999px;padding:6px 14px}
 .schip b{color:var(--ink);font-weight:600}
 .schip.goldy{color:var(--gold2);border-color:rgba(255,172,39,.4);background:rgba(255,172,39,.07)}
 
 /* ---------- steps ---------- */
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:40px auto 0;max-width:880px;animation:fadeUp .7s .4s both}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:34px auto 0;max-width:880px;animation:fadeUp .7s .4s both}
 .step{position:relative;border:1px solid var(--line2);border-radius:18px;background:var(--panel);backdrop-filter:blur(8px);padding:18px 18px 16px;text-align:left;transition:border-color .3s,transform .3s}
 .step:hover{border-color:var(--line);transform:translateY(-3px)}
 .step .sn{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--gold)}
@@ -172,7 +345,7 @@ input,textarea{font-family:var(--sans)}
 @media(max-width:720px){.steps{grid-template-columns:1fr;max-width:440px}}
 
 /* ---------- big mail cta ---------- */
-.ctazone{text-align:center;margin:44px 0 10px;animation:fadeUp .7s .5s both}
+.ctazone{text-align:center;margin:36px 0 6px;animation:fadeUp .7s .5s both}
 .bigmail{
   display:inline-flex;align-items:center;gap:13px;
   font-size:clamp(16px,2.2vw,19px);font-weight:600;color:#fff;text-decoration:none;
@@ -189,7 +362,7 @@ input,textarea{font-family:var(--sans)}
 .ctahint{margin-top:13px;font-size:13px;color:var(--faint)}
 
 /* ---------- section labels ---------- */
-.seclabel{display:flex;align-items:center;gap:14px;margin:58px 0 20px}
+.seclabel{display:flex;align-items:center;gap:14px;margin:42px 0 18px}
 .seclabel .t{font-family:var(--serif);font-style:italic;font-size:clamp(24px,3.4vw,32px);color:var(--ink);white-space:nowrap}
 .seclabel .rule{flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
 
@@ -430,7 +603,7 @@ textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
   <div id="pastNote"></div>
 
   <section class="hero">
-    <span class="eyebrow" id="heroEyebrow">Good Times Crew</span>
+    <span class="eyebrow" id="heroEyebrow">Good Times Crew</span><span id="seasonSlot"></span>
     <h1 id="heroTitle">One truth.<br><em>Three lies.</em></h1>
     <p class="sub" id="heroSub"></p>
     <div class="statusrow" id="statusRow"></div>
@@ -487,7 +660,7 @@ textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
 <div class="ovl" id="pinOvl">
   <div class="modal" id="pinModal" style="width:min(360px,100%);">
     <h3>Crew <em>HQ</em></h3>
-    <p class="mp">Enter the Crew PIN to open the back end.</p>
+    <p class="mp">Enter the Crew PIN to open the back end. Tap the pad or just type it.</p>
     <div class="pindots" id="pinDots"></div>
     <div class="pinpad">
       <button class="pk" onclick="pinKey('1')">1</button><button class="pk" onclick="pinKey('2')">2</button><button class="pk" onclick="pinKey('3')">3</button>
@@ -545,6 +718,7 @@ textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
       <select class="f-in" id="chType" onchange="chTypeSwitch()">
         <option value="prompt">A question everyone answers</option>
         <option value="truths">One truth, three lies</option>
+        <option value="activity">An activity challenge with points</option>
       </select>
       <label class="f-label" for="chMonth">Month label</label>
       <input class="f-in" id="chMonth" maxlength="28" autocomplete="off" placeholder="e.g. October Challenge">
@@ -590,6 +764,28 @@ textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
       <label class="f-label" for="setEmail">Good Times Crew inbox</label>
       <input class="f-in" id="setEmail" autocomplete="off" placeholder="goodtimescrew@partnersmortgage.com">
       <div class="mrow"><button class="btn wide" onclick="saveEmail()">Save email</button></div>
+      <div class="dsec" id="actSec">Challenge setup</div>
+      <div class="dnote" id="actNote"></div>
+      <div id="actWrap">
+        <label class="f-label" for="setGoal">Crew hour goal</label>
+        <input class="f-in" id="setGoal" type="number" min="1" max="100000" autocomplete="off">
+        <label class="f-label" for="setTypes">Activity types</label>
+        <input class="f-in" id="setTypes" maxlength="260" autocomplete="off" placeholder="Walk, Run, Cardio, Strength">
+        <div class="dnote" style="margin-top:7px;">Separate with commas. Removing one leaves old logs alone, it just stops being offered.</div>
+        <div class="mrow"><button class="btn primary wide" onclick="saveActivitySetup()">Save setup</button></div>
+      </div>
+      <div class="dsec">Seasonal look</div>
+      <div class="dnote">October leans Halloween, November Thanksgiving, December holiday. It switches itself on the first of the month.</div>
+      <div class="dnote" style="margin-top:10px;">Try one on first. Previewing only changes your own screen, nobody else sees it until you set it below.</div>
+      <div class="seasontest" id="seasonTest"></div>
+      <label class="f-label" for="setSeason">What everyone sees</label>
+      <select class="f-in" id="setSeason" onchange="saveSeason(this.value)">
+        <option value="auto">Follow the calendar</option>
+        <option value="halloween">Halloween</option>
+        <option value="thanks">Thanksgiving</option>
+        <option value="holiday">Holiday</option>
+        <option value="off">Plain, no season</option>
+      </select>
       <div class="dsec" id="revealSec">The big reveal</div>
       <div class="dnote goldn" id="revealNote">When you reveal, every player sees the correct answers, their own score, and the winner's podium. Do this once the month wraps up.</div>
       <div class="mrow" id="revealBtnWrap"></div>
@@ -602,6 +798,8 @@ textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
 
   </div>
 </aside>
+
+<div id="seasonLayer"></div>
 
 <div class="lbox" id="lbox" onclick="closeLightbox()"><img id="lboxImg" src="" alt=""></div>
 
@@ -887,10 +1085,13 @@ function subscribeAll(){
   DL.on('challenges',function(v){
     STATE.challenges=v||{};
     seedChallenges();
+    migrate();
     renderAll();
   });
   DL.on('settings',function(v){
     STATE.settings=v||{};
+    seedChallenges();
+    migrate();
     watchReveal();
     renderAll();
   });
@@ -918,6 +1119,18 @@ var SEED_CHALLENGES={
     tagline:'Everyone sends in one true story about themselves. The Crew invents three fakes to hide it in. Your job: read all four and spot the truth.',
     month:'August 2026',at:1754006400000
   },
+  fall2026:{
+    id:'fall2026',type:'activity',
+    eyebrow:'Oct to Dec Challenge',
+    title:'Keep|Moving.',
+    tagline:'October, November, December. Log anything that gets you moving and watch the crew rack up the hours together.',
+    question:'',
+    month:'October to December 2026',
+    start:'2026-10-01',end:'2026-12-31',
+    goalHours:1500,
+    types:'Walk,Run,Cardio,Strength,Swim,Cycle,Yoga,Hike,Sports,Other',
+    at:1759294800000
+  },
   sep2026:{
     id:'sep2026',type:'prompt',
     eyebrow:'September Challenge',
@@ -927,6 +1140,18 @@ var SEED_CHALLENGES={
     month:'September 2026',at:1756684800000
   }
 };
+/* =====================================================================
+   ACTIVITY CHALLENGES
+   Log anything active. Points come off your day's total, so two short
+   walks add up the same as one long one. Consistency is rewarded with
+   a ladder that can never be taken away, and a single day off never
+   breaks a run, because nobody should quit over one bad Tuesday.
+   ===================================================================== */
+var PT_PER_MIN=30;        /* minutes per point */
+var DAY_CAP=4;            /* most points a single day can earn */
+var MIN_ACTIVE=15;        /* minutes that make a day count at all */
+var STREAK_EVERY=3;       /* every third day in a row earns a bonus */
+var STREAK_BONUS=1;
 function seedChallenges(){
   if(!DATA_READY) return;
   var have=STATE.challenges||{}, k, seeded=false;
@@ -938,6 +1163,22 @@ function seedChallenges(){
   }
   if(seeded&&!(STATE.settings&&STATE.settings.activeChallenge)) DL.set('settings/activeChallenge','sep2026');
 }
+/* Runs once against a database that was seeded before the Oct to Dec
+   challenge existed: renames it and makes it the live one. The schema
+   flag means a later choice in HQ is never overridden. */
+function migrate(){
+  if(!DATA_READY) return;
+  if(!STATE.challenges||!STATE.challenges.fall2026) return;
+  var v=(STATE.settings&&STATE.settings.schema)?STATE.settings.schema:0;
+  if(v>=2) return;
+  var c=STATE.challenges.fall2026;
+  if(c.eyebrow!=='Oct to Dec Challenge'){
+    DL.set('challenges/fall2026/eyebrow','Oct to Dec Challenge');
+    DL.set('challenges/fall2026/month','October to December 2026');
+  }
+  DL.set('settings/activeChallenge','fall2026');
+  DL.set('settings/schema',2);
+}
 function challengeList(){
   var out=[], k, c;
   for(k in STATE.challenges){
@@ -945,7 +1186,8 @@ function challengeList(){
     c=STATE.challenges[k];
     if(!c||!c.title) continue;
     out.push({id:k,type:c.type||'prompt',legacy:!!c.legacy,eyebrow:c.eyebrow||'',title:c.title,
-      tagline:c.tagline||'',question:c.question||'',month:c.month||'',at:c.at||0,revealed:!!c.revealed});
+      tagline:c.tagline||'',question:c.question||'',month:c.month||'',at:c.at||0,revealed:!!c.revealed,
+      start:c.start||'',end:c.end||'',goalHours:c.goalHours||0,types:c.types||''});
   }
   out.sort(function(a,b){ return b.at-a.at; });
   return out;
@@ -983,6 +1225,118 @@ function curVotes(cid){
   return chNode(cid||curId()).votes||{};
 }
 function curResponses(cid){ return chNode(cid||curId()).responses||{}; }
+function curLogs(cid){ return chNode(cid||curId()).logs||{}; }
+function logsPath(cid){ return 'ch/'+(cid||curId())+'/logs'; }
+
+/* ---- activity scoring ---------------------------------------------- */
+function dayKey(ts){
+  var d=new Date(ts), m=d.getMonth()+1, dd=d.getDate();
+  return d.getFullYear()+'-'+(m<10?'0':'')+m+'-'+(dd<10?'0':'')+dd;
+}
+function dayNum(day){
+  var p=day.split('-');
+  return Math.floor(Date.UTC(parseInt(p[0],10),parseInt(p[1],10)-1,parseInt(p[2],10))/86400000);
+}
+function prettyDay(day){
+  var p=day.split('-'), names=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return names[parseInt(p[1],10)-1]+' '+parseInt(p[2],10);
+}
+function activityTypes(cid){
+  var c=curCh(cid), raw=(c&&c.types)?c.types:'Walk,Run,Cardio,Strength,Swim,Cycle,Yoga,Hike,Sports,Other';
+  var out=[], parts=raw.split(','), i, t;
+  for(i=0;i<parts.length;i++){ t=parts[i].replace(/\s+/g,' ').trim(); if(t) out.push(t); }
+  return out;
+}
+function logList(cid,monthPrefix){
+  var src=curLogs(cid), out=[], k, l;
+  for(k in src){
+    if(!src.hasOwnProperty(k)) continue;
+    l=src[k];
+    if(!l||!l.mins||!l.day) continue;
+    if(monthPrefix&&l.day.indexOf(monthPrefix)!==0) continue;
+    out.push({id:k,personId:l.personId||'',key:l.who||l.personId||normKey(l.name||''),
+      name:l.name||'Someone',photo:personPhoto(l.personId,l.photo),
+      type:l.type||'Other',mins:l.mins,day:l.day,at:l.at||0,hasImg:!!l.hasImg,note:l.note||''});
+  }
+  out.sort(function(a,b){ return b.at-a.at; });
+  return out;
+}
+/* Every number on the page comes from this, so edits and deletions
+   always reconcile instead of drifting from a stored total. */
+function scoreActivity(cid,monthPrefix){
+  var logs=logList(cid,monthPrefix), people={}, types={}, totalMins=0, i, l, p;
+  for(i=0;i<logs.length;i++){
+    l=logs[i];
+    if(!l.key) continue;
+    p=people[l.key];
+    if(!p){ p={key:l.key,id:l.personId,name:l.name,photo:l.photo,days:{},mins:0,sessions:0,types:{}}; people[l.key]=p; }
+    p.mins+=l.mins; p.sessions++;
+    p.days[l.day]=(p.days[l.day]||0)+l.mins;
+    p.types[l.type]=(p.types[l.type]||0)+l.mins;
+    types[l.type]=(types[l.type]||0)+l.mins;
+    totalMins+=l.mins;
+  }
+  var rows=[], k;
+  for(k in people){
+    if(!people.hasOwnProperty(k)) continue;
+    rows.push(finishPerson(people[k]));
+  }
+  rows.sort(function(a,b){
+    if(b.points!==a.points) return b.points-a.points;
+    if(b.mins!==a.mins) return b.mins-a.mins;
+    return a.name.toLowerCase()<b.name.toLowerCase()?-1:1;
+  });
+  return {rows:rows,types:types,totalMins:totalMins,totalLogs:logs.length,logs:logs};
+}
+function finishPerson(p){
+  var days=[], k, base=0, active=0, mins;
+  for(k in p.days){
+    if(!p.days.hasOwnProperty(k)) continue;
+    mins=p.days[k];
+    base+=Math.min(DAY_CAP,Math.floor(mins/PT_PER_MIN));
+    if(mins>=MIN_ACTIVE){ active++; days.push(k); }
+  }
+  days.sort();
+  /* Every run of days in a row pays a point per third day, and a
+     single day off does not break the run. */
+  var run=0, best=0, cur=0, i, gap, bonus=0;
+  for(i=0;i<days.length;i++){
+    if(i===0){ run=1; }
+    else {
+      gap=dayNum(days[i])-dayNum(days[i-1]);
+      if(gap<=2){ run++; }
+      else { bonus+=Math.floor(run/STREAK_EVERY)*STREAK_BONUS; run=1; }
+    }
+    if(run>best) best=run;
+  }
+  if(days.length) bonus+=Math.floor(run/STREAK_EVERY)*STREAK_BONUS;
+  cur=run;
+  var mile=0;
+  var top='', tv=-1;
+  for(k in p.types){ if(p.types.hasOwnProperty(k)&&p.types[k]>tv){ tv=p.types[k]; top=k; } }
+  return {key:p.key,id:p.id,name:p.name,photo:p.photo,mins:p.mins,sessions:p.sessions,
+    activeDays:active,streak:cur,bestStreak:best,base:base,streakBonus:bonus,milestoneBonus:mile,
+    points:base+bonus+mile,topType:top,types:p.types};
+}
+function toNextBonus(streak){
+  var r=streak%STREAK_EVERY;
+  return r===0?STREAK_EVERY:(STREAK_EVERY-r);
+}
+function monthsOf(cid){
+  var c=curCh(cid), out=[];
+  if(!c||!c.start||!c.end) return out;
+  var sp=c.start.split('-'), ep=c.end.split('-');
+  var y=parseInt(sp[0],10), m=parseInt(sp[1],10);
+  var ey=parseInt(ep[0],10), em=parseInt(ep[1],10);
+  var names=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var guard=0;
+  while((y<ey||(y===ey&&m<=em))&&guard<36){
+    out.push({prefix:y+'-'+(m<10?'0':'')+m,label:names[m-1]});
+    m++; if(m>12){ m=1; y++; }
+    guard++;
+  }
+  return out;
+}
 function isRevealed(cid){
   var c=curCh(cid);
   if(!c) return false;
@@ -1294,7 +1648,9 @@ function votableCount(){
 function renderAll(){
   renderChrome();
   renderStatus();
-  if(curType()==='prompt'){
+  if(curType()==='activity'){
+    renderActivity();
+  } else if(curType()==='prompt'){
     renderPrompt();
   } else {
     renderBoard();
@@ -1305,20 +1661,23 @@ function renderAll(){
 }
 /* Hero, switcher and which sections belong to this kind of challenge. */
 function renderChrome(){
+  applySeason();
   var c=curCh(), list=challengeList(), i, p, h='';
-  var prompt=(c&&c.type==='prompt');
+  var prompt=(c&&(c.type==='prompt'||c.type==='activity'));
   if(c){
     $('heroEyebrow').innerHTML='Good Times Crew &#183; '+esc(c.eyebrow||c.month||'Challenge');
+    $('seasonSlot').innerHTML=seasonChipHTML();
     $('heroTitle').innerHTML=titleHTML(c.title);
     $('heroSub').textContent=c.tagline||'';
   }
   if(list.length>1){
-    h+='<span class="chlabel">Challenges</span>';
+    h+='<span class="chlabel">Challenge</span>';
+    h+='<select class="chsel" id="chSel" onchange="viewChallenge(this.value)">';
     for(i=0;i<list.length;i++){
       p=list[i];
-      h+='<button class="chpill'+(p.id===curId()?' on':'')+(p.id===activeId()?'':' past')+'" type="button" onclick="viewChallenge(\''+p.id+'\')">';
-      h+='<span class="dot"></span>'+esc(p.eyebrow||p.month||p.id)+'</button>';
+      h+='<option value="'+p.id+'"'+(p.id===curId()?' selected':'')+'>'+esc(p.eyebrow||p.month||p.id)+(p.id===activeId()?' (this month)':'')+'</option>';
     }
+    h+='</select>';
   }
   $('chBar').innerHTML=h;
   $('pastNote').innerHTML=(c&&!isActiveView())
@@ -1343,6 +1702,7 @@ function titleHTML(t){
   return h;
 }
 function renderStatus(){
+  if(curType()==='activity'){ renderActivityStatus(); return; }
   if(curType()==='prompt'){ renderPromptStatus(); return; }
   var list=entriesList(), voters=uniqueVoterCount(), h='';
   var revealed=isRevealed();
@@ -1814,6 +2174,446 @@ function closeLightbox(){
   $('lboxImg').src='';
 }
 
+/* =====================================================================
+   ACTIVITY CHALLENGE SCREENS
+   ===================================================================== */
+var LOG_TYPE='', LOG_MINS=30, MONTH_VIEW='', PIE_MINE=false;
+var LOG_NOTE='', ACT_PAINTED=false, GOAL_PAINTED=false;
+/* A live update from anyone else repaints the page. Hold on to what the
+   person is in the middle of typing so it survives the repaint. */
+function grabFormState(){
+  var n=$('logNote'), m=$('minsIn'), act=document.activeElement;
+  if(n) LOG_NOTE=n.value;
+  if(m&&!isNaN(parseInt(m.value,10))) LOG_MINS=Math.max(1,Math.min(600,parseInt(m.value,10)));
+  return {id:act&&act.id?act.id:'',start:(act&&act.selectionStart!=null)?act.selectionStart:null};
+}
+function restoreFormState(f){
+  var n=$('logNote');
+  if(n) n.value=LOG_NOTE;
+  if(!f||!f.id) return;
+  var el=$(f.id);
+  if(!el||typeof el.focus!=='function') return;
+  el.focus();
+  if(f.start!=null&&el.setSelectionRange){ try{ el.setSelectionRange(f.start,f.start); }catch(e){} }
+}
+function renderActivityStatus(){
+  var st=scoreActivity(curId()), me=myRow(st), h='';
+  h+='<span class="schip"><b>'+st.totalLogs+'</b> session'+(st.totalLogs===1?'':'s')+' logged</span>';
+  h+='<span class="schip"><b>'+Math.round(st.totalMins/60)+'</b> crew hours</span>';
+  if(me) h+='<span class="schip goldy">'+me.points+' point'+(me.points===1?'':'s')+' for you</span>';
+  $('statusRow').innerHTML=h;
+}
+function myRow(st){
+  var i;
+  for(i=0;i<st.rows.length;i++){ if(st.rows[i].key===MY.key) return st.rows[i]; }
+  return null;
+}
+function renderActivity(){
+  var c=curCh(), zone=$('promptZone'), open=isActiveView(), h='';
+  if(!c) return;
+  var form=grabFormState();
+  var all=scoreActivity(curId()), me=myRow(all);
+  h+=goalHTML(c,all);
+  if(open) h+=logFormHTML(c);
+  h+=statsHTML(me,all);
+  h+=leaderHTML(c);
+  h+='<div class="twocol">';
+  h+=pieHTML(all);
+  h+=feedHTML(all,open);
+  h+='</div>';
+  h+=wallHTML(all);
+  zone.innerHTML=h;
+  if(open){ paintPreview(); restoreFormState(form); }
+  var f=$('goalFill');
+  if(f){
+    if(GOAL_PAINTED){ f.style.transition='none'; f.style.width=f.getAttribute('data-w')+'%'; }
+    else { setTimeout(function(){ var g=$('goalFill'); if(g) g.style.width=g.getAttribute('data-w')+'%'; },60); GOAL_PAINTED=true; }
+  }
+  ACT_PAINTED=true;
+  hydrateImages();
+}
+function goalHTML(c,all){
+  var goal=(c.goalHours||1500), hrs=all.totalMins/60;
+  var pct=Math.max(0,Math.min(100,(hrs/goal)*100));
+  var h='<div class="goalwrap">';
+  h+='<div class="goalhead"><span class="goalbig">'+fmtNum(Math.round(hrs))+'</span><span class="goalof">of '+fmtNum(goal)+' crew hours</span>';
+  h+='<span class="goalsp"></span><span class="goalpct">'+pct.toFixed(1)+'%</span></div>';
+  h+='<div class="goalbar"><div class="goalfill" id="goalFill" data-w="'+pct.toFixed(2)+'"></div></div>';
+  h+='<div class="goalnote">Every minute anyone logs moves this bar. '+(pct>=100?'We did it.':'Still '+fmtNum(Math.max(0,Math.round(goal-hrs)))+' hours to go.')+'</div>';
+  h+='</div>';
+  return h;
+}
+function fmtNum(n){
+  var s=String(n), out='', i, c=0;
+  for(i=s.length-1;i>=0;i--){ out=s.charAt(i)+out; c++; if(c%3===0&&i>0) out=','+out; }
+  return out;
+}
+function logFormHTML(c){
+  var types=activityTypes(curId()), i, h='';
+  if(!LOG_TYPE) LOG_TYPE=types[0]||'Walk';
+  h+='<div class="logcard">';
+  h+='<div class="qbig" style="font-size:clamp(20px,2.6vw,26px);">Log what you did <em>today.</em></div>';
+  h+='<div class="qsub">Anything that gets you moving counts. 30 minutes is a point, 60 is two, and the day caps at four.</div>';
+  h+='<label class="f-label">Activity</label><div class="chips" id="typeChips">';
+  for(i=0;i<types.length;i++){
+    h+='<button class="chip'+(types[i]===LOG_TYPE?' on':'')+'" type="button" onclick="setLogType(\''+esc(types[i]).split("'").join("")+'\')">'+esc(types[i])+'</button>';
+  }
+  h+='</div>';
+  h+='<label class="f-label">How long</label><div class="chips" id="minChips">';
+  var presets=[15,30,45,60,90];
+  for(i=0;i<presets.length;i++){
+    h+='<button class="chip'+(presets[i]===LOG_MINS?' on':'')+'" type="button" onclick="setLogMins('+presets[i]+')">'+presets[i]+' min</button>';
+  }
+  h+='</div>';
+  h+='<div class="minrow"><input class="f-in minin" id="minsIn" type="number" min="5" max="600" value="'+LOG_MINS+'" oninput="typeMins()"><span class="goalof">minutes</span>';
+  h+='<span class="goalsp"></span><span class="ptpreview" id="ptPrev">'+ptPreviewText(LOG_MINS)+'</span></div>';
+  h+='<label class="f-label" for="logNote">Anything to add</label>';
+  h+='<input class="f-in" id="logNote" maxlength="90" autocomplete="off" value="'+esc(LOG_NOTE)+'" oninput="LOG_NOTE=this.value" placeholder="Optional. Where you went, who with, how it felt.">';
+  h+='<div id="dropZone">'+dropHTML()+'</div>';
+  h+='<div class="qrow"><span class="qcount">Logged against '+esc(MY.name||'your name')+'</span><span class="sp"></span>';
+  h+='<button class="btn goldb" onclick="submitLog()">Log it</button></div>';
+  h+='</div>';
+  return h;
+}
+function ptPreviewText(m){
+  var p=Math.min(DAY_CAP,Math.floor(m/PT_PER_MIN));
+  if(m<MIN_ACTIVE) return 'Under 15 min, keep going';
+  if(!p) return 'Counts as an active day';
+  return p+' point'+(p===1?'':'s')+' toward today';
+}
+function setLogType(t){
+  LOG_TYPE=t;
+  markChips('typeChips',t);
+}
+function setLogMins(m){
+  LOG_MINS=m;
+  markChips('minChips',m+' min');
+  var i=$('minsIn');
+  if(i) i.value=m;
+  var p=$('ptPrev');
+  if(p) p.textContent=ptPreviewText(m);
+}
+function markChips(wrapId,label){
+  var wrap=$(wrapId);
+  if(!wrap) return;
+  var els=wrap.querySelectorAll('.chip'), i;
+  for(i=0;i<els.length;i++){
+    if(els[i].textContent===label) els[i].className='chip on';
+    else els[i].className='chip';
+  }
+}
+function typeMins(){
+  var v=parseInt($('minsIn').value,10);
+  if(isNaN(v)) return;
+  LOG_MINS=Math.max(1,Math.min(600,v));
+  var p=$('ptPrev');
+  if(p) p.textContent=ptPreviewText(LOG_MINS);
+}
+function statsHTML(me,all){
+  var h='<div class="statgrid">';
+  var mins=me?me.mins:0, pts=me?me.points:0, days=me?me.activeDays:0, st=me?me.streak:0, ses=me?me.sessions:0;
+  h+='<div class="statbox"><div class="statv gold">'+pts+'</div><div class="statl">Your points</div></div>';
+  h+='<div class="statbox"><div class="statv">'+fmtNum(Math.round(mins/60*10)/10)+'</div><div class="statl">Hours moved</div></div>';
+  h+='<div class="statbox"><div class="statv">'+ses+'</div><div class="statl">Sessions</div></div>';
+  h+='<div class="statbox"><div class="statv">'+days+'</div><div class="statl">Active days</div></div>';
+  h+='<div class="statbox"><div class="statv teal">'+st+'</div><div class="statl">'+(st?('Day run, '+toNextBonus(st)+' to a bonus'):'Start a run today')+'</div></div>';
+  h+='<div class="statbox"><div class="statv">'+(me&&me.topType?esc(me.topType):'&#8212;').replace('&#8212;','-')+'</div><div class="statl">Most logged</div></div>';
+  h+='</div>';
+  return h;
+}
+function leaderHTML(c){
+  var months=monthsOf(curId()), i, h='';
+  var st=scoreActivity(curId(),MONTH_VIEW), rows=st.rows, r, mine=-1;
+  for(i=0;i<rows.length;i++){ if(rows[i].key===MY.key) mine=i; }
+  h+='<div class="seclabel lbhead"><span class="t">Leaderboard</span><span class="rule"></span>';
+  if(mine>-1) h+='<span class="myrank">You are '+ordinal(mine+1)+' of '+rows.length+'</span>';
+  h+='</div>';
+  h+='<div class="lbcard big">';
+  h+='<div class="mtabs"><button class="mtab'+(MONTH_VIEW===''?' on':'')+'" onclick="setMonth(\'\')">All three months</button>';
+  for(i=0;i<months.length;i++){
+    h+='<button class="mtab'+(MONTH_VIEW===months[i].prefix?' on':'')+'" onclick="setMonth(\''+months[i].prefix+'\')">'+months[i].label+'</button>';
+  }
+  h+='</div>';
+  if(!rows.length){
+    h+='<div class="dnote">Nothing logged yet'+(MONTH_VIEW?' this month':'')+'. First one on the board sets the pace.</div></div>';
+    return h;
+  }
+  /* top three get the podium, everyone else gets a row */
+  var pod=rows.slice(0,3), spots=[1,0,2], idx, p;
+  h+='<div class="apod">';
+  for(i=0;i<3;i++){
+    idx=spots[i]; p=pod[idx];
+    h+='<div class="apcol p'+(idx+1)+(p&&p.key===MY.key?' me':'')+'">';
+    if(p){
+      h+='<div class="apav">'+avatarHTML('apimg',p.photo,p.name)+'<span class="apmedal">'+(idx+1)+'</span></div>';
+      h+='<div class="apname">'+esc(p.name)+'</div>';
+      h+='<div class="appts">'+p.points+'<span>pts</span></div>';
+      h+='<div class="apbar"><span>'+fmtNum(Math.round(p.mins/60*10)/10)+' hrs</span></div>';
+    } else {
+      h+='<div class="apav empty"></div><div class="apname dim">Open spot</div><div class="appts dim">&#183;</div><div class="apbar"></div>';
+    }
+    h+='</div>';
+  }
+  h+='</div>';
+  if(rows.length>3){
+    h+='<div class="lbrest2">';
+    for(i=3;i<rows.length;i++){
+      r=rows[i];
+      h+='<div class="lrow'+(r.key===MY.key?' me':'')+'">';
+      h+='<span class="lrk">'+(i+1)+'</span>'+avatarHTML('lav',r.photo,r.name);
+      h+='<span class="lnm"><b>'+esc(r.name)+'</b><span>'+fmtNum(Math.round(r.mins/60*10)/10)+' hrs &#183; '+r.activeDays+' day'+(r.activeDays===1?'':'s')+(r.streakBonus?' &#183; <span class="flame">+'+r.streakBonus+' run bonus</span>':'')+'</span></span>';
+      h+='<span class="lpt">'+r.points+'<small>points</small></span>';
+      h+='</div>';
+    }
+    h+='</div>';
+  }
+  h+='</div>';
+  return h;
+}
+function ordinal(n){
+  var s=['th','st','nd','rd'], v=n%100;
+  return n+(s[(v-20)%10]||s[v]||s[0]);
+}
+function setMonth(p){ MONTH_VIEW=p; renderActivity(); }
+function actNoAnim(){ return ACT_PAINTED?' noanim':''; }
+function pieHTML(all){
+  var st=PIE_MINE?mineOnly(all):all;
+  var keys=[], k, total=0;
+  for(k in st.types){ if(st.types.hasOwnProperty(k)){ keys.push({name:k,mins:st.types[k]}); total+=st.types[k]; } }
+  keys.sort(function(a,b){ return b.mins-a.mins; });
+  var colors=['#25BAC4','#FFAC27','#3ECF8E','#9B8CFF','#FF7A6B','#5FD3E0','#FFD089','#7FE3B4','#C0B4FF','#FFA79B'];
+  var h='<div class="piecard"><div class="seclabel" style="margin:0 0 12px;"><span class="t">The mix</span><span class="rule"></span></div>';
+  h+='<div class="mtabs"><button class="mtab'+(PIE_MINE?'':' on')+'" onclick="setPie(false)">Whole crew</button><button class="mtab'+(PIE_MINE?' on':'')+'" onclick="setPie(true)">Just me</button></div>';
+  if(!total){
+    h+='<div class="dnote">No minutes logged yet.</div></div>';
+    return h;
+  }
+  var r=54, cir=2*Math.PI*r, off=0, i, pct, seg='';
+  for(i=0;i<keys.length;i++){
+    pct=keys[i].mins/total;
+    seg+='<circle cx="70" cy="70" r="'+r+'" fill="none" stroke="'+colors[i%colors.length]+'" stroke-width="22" stroke-dasharray="'+(pct*cir).toFixed(2)+' '+(cir-pct*cir).toFixed(2)+'" stroke-dashoffset="'+(-off*cir).toFixed(2)+'" transform="rotate(-90 70 70)"></circle>';
+    off+=pct;
+  }
+  h+='<svg class="donut" viewBox="0 0 140 140" width="150" height="150">'+seg;
+  h+='<text x="70" y="66" text-anchor="middle" fill="#EEF5F4" font-family="ui-monospace,monospace" font-size="17">'+Math.round(total/60)+'</text>';
+  h+='<text x="70" y="82" text-anchor="middle" fill="#95A9A8" font-family="ui-monospace,monospace" font-size="9">HOURS</text></svg>';
+  h+='<div class="legend">';
+  for(i=0;i<keys.length;i++){
+    pct=Math.round(keys[i].mins/total*100);
+    h+='<div class="lgrow"><span class="lgdot" style="background:'+colors[i%colors.length]+'"></span><span class="lgnm">'+esc(keys[i].name)+'</span><span class="lgv">'+pct+'%</span></div>';
+  }
+  h+='</div></div>';
+  return h;
+}
+function setPie(m){ PIE_MINE=m; renderActivity(); }
+function mineOnly(all){
+  var me=myRow(all), types=me?me.types:{}, t=0, k;
+  for(k in types){ if(types.hasOwnProperty(k)) t+=types[k]; }
+  return {types:types,totalMins:t};
+}
+function wallHTML(all){
+  var logs=all.logs, pics=[], i;
+  for(i=0;i<logs.length;i++){ if(logs[i].hasImg) pics.push(logs[i]); }
+  var h='<div class="seclabel"><span class="t">The wall</span><span class="rule"></span></div>';
+  if(!pics.length){
+    h+='<div class="empty" style="display:block;"><div class="ee">&#128248;</div><div class="et">No photos yet</div><div class="es">Add one when you log and it lands here.</div></div>';
+    return h;
+  }
+  h+='<div class="gal'+actNoAnim()+'">';
+  for(i=0;i<pics.length;i++){
+    h+='<div class="gcard">'+imgTagFor(pics[i].id,'class="gpic" onclick="openLightbox(this.src)"');
+    h+='<div class="gbody"><div class="ghead">'+avatarHTML('gav',pics[i].photo,pics[i].name)+'<span class="gname">'+esc(pics[i].name)+'</span><span class="gwhen">'+prettyDay(pics[i].day)+'</span></div>';
+    h+='<div class="gtext" style="font-size:13.5px;">'+esc(pics[i].type)+', '+pics[i].mins+' min'+(pics[i].note?('<br>'+esc(pics[i].note)):'')+'</div>';
+    h+='</div></div>';
+  }
+  h+='</div>';
+  return h;
+}
+function feedHTML(all,open){
+  var logs=all.logs.slice(0,25), i, l, h='';
+  h+='<div class="seclabel"><span class="t">Latest</span><span class="rule"></span></div>';
+  if(!logs.length){ return h+'<div class="dnote">Nothing logged yet.</div>'; }
+  h+='<div class="qcard" style="padding:14px 18px;">';
+  for(i=0;i<logs.length;i++){
+    l=logs[i];
+    h+='<div class="feedrow">'+avatarHTML('fav',l.photo,l.name);
+    h+='<span class="ftx"><b>'+esc(l.name)+'</b> logged '+l.mins+' min of '+esc(l.type)+(l.note?(' &#183; '+esc(l.note)):'')+'</span>';
+    h+='<span class="fwhen">'+prettyDay(l.day)+'</span>';
+    if(open&&l.key===MY.key) h+='<button class="fdel" onclick="delLog(\''+l.id+'\')">Remove</button>';
+    h+='</div>';
+  }
+  h+='</div>';
+  return h;
+}
+function submitLog(){
+  if(!MY.name){ openName(false); return; }
+  if(!isActiveView()){ toast('That challenge is closed.'); return; }
+  var mins=LOG_MINS;
+  if(!mins||mins<1){ toast('How many minutes?'); return; }
+  if(mins>600){ toast('Over ten hours? Log it in pieces.'); return; }
+  var note=($('logNote')?$('logNote').value:LOG_NOTE).replace(/\s+/g,' ').trim();
+  var id='l'+Date.now()+'_'+Math.random().toString(36).substring(2,6);
+  var img=DRAFT_IMG;
+  DL.set(logsPath()+'/'+id,{who:MY.key,personId:MY.id,name:MY.name,photo:MY.photo,
+    type:LOG_TYPE,mins:mins,note:note,day:dayKey(Date.now()),at:Date.now(),hasImg:!!img});
+  if(img){
+    DL.set(imgPath()+'/'+id,img);
+    IMGCACHE[curId()+'/'+id]=img;
+  }
+  DRAFT_IMG=null;
+  LOG_NOTE='';
+  if($('logNote')) $('logNote').value='';
+  var p=Math.min(DAY_CAP,Math.floor(mins/PT_PER_MIN));
+  toast(p?('Logged. '+p+' point'+(p===1?'':'s')+' banked.'):'Logged. That keeps your day alive.','gold');
+}
+function delLog(id){
+  var src=curLogs(), l=src[id];
+  if(!l) return;
+  if(l.who!==MY.key&&!ssGet('gtcAugHQ')){ toast('That one is not yours.'); return; }
+  cfOpen('Remove this log?','It comes off the board, the leaderboard, and the wall. There is no undo.','Remove it','danger',function(){
+    DL.remove(logsPath()+'/'+id);
+    DL.remove(imgPath()+'/'+id);
+    delete IMGCACHE[curId()+'/'+id];
+    toast('Removed.');
+  });
+}
+
+/* =====================================================================
+   SEASONAL THEME
+   October leans Halloween, November Thanksgiving, December holiday.
+   Driven by the real date, checked every few minutes so a browser left
+   open overnight rolls over on its own. HQ can pin or kill it.
+   ===================================================================== */
+var SEASONS={
+  halloween:{months:[10],label:'Spooky season',chip:'\uD83C\uDF83'},
+  thanks:{months:[11],label:'Gratitude season',chip:'\uD83C\uDF42'},
+  holiday:{months:[12],label:'Holiday season',chip:'\u2744'}
+};
+var SEASON_PREVIEW='';
+function autoSeason(){
+  var m=new Date().getMonth()+1, k;
+  for(k in SEASONS){
+    if(!SEASONS.hasOwnProperty(k)) continue;
+    if(SEASONS[k].months.indexOf(m)>-1) return k;
+  }
+  return '';
+}
+function seasonSetting(){
+  return (STATE.settings&&STATE.settings.season)?STATE.settings.season:'auto';
+}
+function activeSeason(){
+  if(SEASON_PREVIEW) return SEASON_PREVIEW==='off'?'':SEASON_PREVIEW;
+  var set=seasonSetting();
+  if(set==='off') return '';
+  if(set&&set!=='auto'&&SEASONS[set]) return set;
+  return autoSeason();
+}
+/* Previewing is local to this screen so a theme can be tried on
+   without the whole crew seeing it. */
+function previewSeason(k){
+  SEASON_PREVIEW=k;
+  applySeason();
+  renderSettingsBits();
+  if(!k){ toast('Preview off. Back to the real setting.'); return; }
+  toast('Previewing '+(SEASONS[k]?SEASONS[k].label:'the plain look')+'. Only you can see this.');
+}
+function rnd(a,b){ return a+Math.random()*(b-a); }
+function sceneHalloween(){
+  var h='', i, top, dur, delay, size;
+  h+='<div class="sfx moon"></div>';
+  h+='<div class="sfx web wl">'+webSVG()+'</div>';
+  for(i=0;i<4;i++){
+    top=rnd(10,62).toFixed(1);
+    dur=rnd(26,42).toFixed(1);
+    delay=rnd(0,38).toFixed(1);
+    size=rnd(14,24).toFixed(0);
+    h+='<div class="sfx bat" style="top:'+top+'vh;width:'+size+'px;height:'+size+'px;animation-duration:'+dur+'s;animation-delay:-'+delay+'s;">'+batSVG()+'</div>';
+  }
+  h+='<div class="sfx fog"></div>';
+  return h;
+}
+function batSVG(){
+  return '<svg viewBox="0 0 64 32" fill="currentColor" aria-hidden="true"><path d="M32 9c2.2-4 5-5 7-2 1.4 2 1.2 4 .6 5.6 3-3.4 7-5.6 11-5.6-2.4 1.8-3.6 4.4-3.8 7.4 2.6-1.4 5.4-1.6 8.2-.6-3.8 1-6.6 3.4-8.6 7-2 3.6-5.6 6-9.4 6.2-2.2.2-4-1.2-5-3.2-1 2-2.8 3.4-5 3.2-3.8-.2-7.4-2.6-9.4-6.2-2-3.6-4.8-6-8.6-7 2.8-1 5.6-.8 8.2.6-.2-3-1.4-5.6-3.8-7.4 4 0 8 2.2 11 5.6-.6-1.6-.8-3.6.6-5.6 2-3 4.8-2 7 2z"></path></svg>';
+}
+function webSVG(){
+  return '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true">'+
+    '<path d="M0 0 L100 62 M0 0 L62 100 M0 0 L84 84 M0 0 L34 100 M0 0 L100 30"></path>'+
+    '<path d="M16 5 Q12 12 5 16 M31 10 Q24 24 10 31 M47 16 Q35 35 16 47 M63 22 Q46 46 22 63 M79 28 Q58 58 28 79"></path>'+
+    '</svg>';
+}
+function sceneThanks(){
+  var h='<div class="sfx harvest"></div>', i, left, dur, delay, size, col;
+  var cols=['#E8A33D','#C8542A','#B9762E','#8E4A22','#D98C3B'];
+  for(i=0;i<16;i++){
+    left=rnd(0,100).toFixed(1);
+    dur=rnd(13,26).toFixed(1);
+    delay=rnd(0,24).toFixed(1);
+    size=rnd(13,25).toFixed(0);
+    col=cols[i%cols.length];
+    h+='<div class="sfx leaf" style="left:'+left+'%;width:'+size+'px;height:'+size+'px;color:'+col+';animation-duration:'+dur+'s;animation-delay:-'+delay+'s;">'+leafSVG()+'</div>';
+  }
+  return h;
+}
+function leafSVG(){
+  return '<svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 2c6 4.6 10 10 10 15.4C26 23.6 21.6 28 16 28S6 23.6 6 17.4C6 12 10 6.6 16 2z"></path><path d="M16 6v20" stroke="rgba(0,0,0,.28)" stroke-width="1.3"></path><path d="M16 12l-5 3M16 17l5 3M16 21l-4 2.6" stroke="rgba(0,0,0,.22)" stroke-width="1.1" fill="none"></path></svg>';
+}
+function sceneHoliday(){
+  var h=lightsHTML(), i, left, dur, delay, size, op;
+  for(i=0;i<26;i++){
+    left=rnd(0,100).toFixed(1);
+    dur=rnd(11,26).toFixed(1);
+    delay=rnd(0,26).toFixed(1);
+    size=rnd(2.5,6.5).toFixed(1);
+    op=rnd(.3,.85).toFixed(2);
+    h+='<div class="sfx snow" style="left:'+left+'%;width:'+size+'px;height:'+size+'px;opacity:'+op+';animation-duration:'+dur+'s;animation-delay:-'+delay+'s;"></div>';
+  }
+  h+='<div class="sfx frost"></div>';
+  return h;
+}
+function lightsHTML(){
+  var cols=['#FF5F52','#FFD36B','#6FD0A0','#7FB6FF','#F39CD6'];
+  var n=22, h='', i, x, y, t;
+  h+='<div class="sfx lights"><svg viewBox="0 0 1000 74" preserveAspectRatio="none">';
+  h+='<path d="M0 8 Q125 46 250 20 Q375 -6 500 20 Q625 46 750 20 Q875 -6 1000 20" stroke="rgba(220,196,140,.42)" stroke-width="1.6" fill="none"></path>';
+  for(i=0;i<n;i++){
+    t=i/(n-1);
+    x=t*1000;
+    /* follow the swag so the bulbs hang off the wire */
+    y=20+22*Math.sin(t*Math.PI*4-Math.PI/2)*-1;
+    y=Math.max(8,Math.min(44,y));
+    h+='<line x1="'+x.toFixed(1)+'" y1="'+y.toFixed(1)+'" x2="'+x.toFixed(1)+'" y2="'+(y+9).toFixed(1)+'" stroke="rgba(220,196,140,.35)" stroke-width="1.2"></line>';
+    h+='<circle class="bulb" cx="'+x.toFixed(1)+'" cy="'+(y+13).toFixed(1)+'" r="4.6" fill="'+cols[i%cols.length]+'" opacity=".9" style="animation-delay:-'+(i*0.27).toFixed(2)+'s"></circle>';
+    h+='<circle cx="'+x.toFixed(1)+'" cy="'+(y+13).toFixed(1)+'" r="9" fill="'+cols[i%cols.length]+'" opacity=".16"></circle>';
+  }
+  h+='</svg></div>';
+  return h;
+}
+function sceneFor(k){
+  if(k==='halloween') return sceneHalloween();
+  if(k==='thanks') return sceneThanks();
+  if(k==='holiday') return sceneHoliday();
+  return '';
+}
+function applySeason(){
+  var k=activeSeason(), root=document.documentElement, lay=$('seasonLayer');
+  if(root.getAttribute('data-season')===k&&lay&&(lay.getAttribute('data-built')===k)) return;
+  root.setAttribute('data-season',k);
+  if(!lay) return;
+  var reduced=false;
+  try{ reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+  lay.innerHTML=k?sceneFor(k):'';
+  lay.setAttribute('data-built',k);
+  if(reduced&&k){
+    var els=lay.querySelectorAll('.bat,.leaf,.snow'), i;
+    for(i=0;i<els.length;i++) els[i].style.display='none';
+  }
+}
+function seasonChipHTML(){
+  var k=activeSeason();
+  if(!k) return '';
+  return '<span class="seasonchip">'+SEASONS[k].chip+' '+esc(SEASONS[k].label)+'</span>';
+}
+
 /* ---------------- pin + admin ---------------- */
 var PENDING={};
 var PIN_BUF='';
@@ -1864,7 +2664,7 @@ function lockAdmin(){
 }
 function adminTab(t){
   var tabs=['months','new','manage','scores','settings'], i;
-  if(aType()==='prompt'&&(t==='new'||t==='scores')) t='months';
+  if(aType()!=='truths'&&(t==='new'||t==='scores')) t='months';
   for(i=0;i<tabs.length;i++){
     $('dtab-'+tabs[i]).className='dtab'+(tabs[i]===t?' on':'');
     $('dpanel-'+tabs[i]).className='dpanel'+(tabs[i]===t?' on':'');
@@ -1890,13 +2690,13 @@ function renderAdminPicker(){
     : 'No challenge selected.';
 }
 function syncAdminTabs(){
-  var prompt=(aType()==='prompt');
+  var prompt=(aType()!=='truths');
   $('dtab-new').style.display=prompt?'none':'';
   $('dtab-scores').style.display=prompt?'none':'';
   if(prompt&&($('dtab-new').className.indexOf('on')>-1||$('dtab-scores').className.indexOf('on')>-1)) adminTab('months');
 }
 function chTypeSwitch(){
-  $('chQWrap').style.display=($('chType').value==='truths')?'none':'';
+  $('chQWrap').style.display=($('chType').value==='prompt')?'':'none';
 }
 function renderChAdmin(){
   var list=challengeList(), h='', i, c, act=activeId();
@@ -1905,7 +2705,7 @@ function renderChAdmin(){
     c=list[i];
     h+='<div class="mcard">';
     h+='<div class="mchead"><span class="mcname">'+esc(c.eyebrow||c.month||c.id)+'</span>';
-    h+='<span class="cmeta">'+(c.type==='prompt'?'Question':'One truth, three lies')+(c.id===act?' &#183; live now':'')+'</span>';
+    h+='<span class="cmeta">'+(c.type==='prompt'?'Question':(c.type==='activity'?'Activity challenge':'One truth, three lies'))+(c.id===act?' &#183; live now':'')+'</span>';
     if(c.id!==act) h+='<button class="iconbtn" title="Delete this challenge" onclick="delChallenge(\''+c.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>';
     h+='</div>';
     h+='<div class="dnote" style="margin:6px 0 10px;">'+esc(c.question||(c.title||'').split('|').join(' '))+'</div>';
@@ -1949,6 +2749,8 @@ function createChallenge(){
   var tag=$('chTagline').value.replace(/\s+/g,' ').trim();
   if(!month){ toast('Give it a month label.'); return; }
   if(type==='prompt'&&!q){ toast('A question challenge needs a question.'); return; }
+  var now=new Date(), yy=now.getFullYear(), mm=now.getMonth()+1;
+  var lastDay=new Date(yy,mm,0).getDate();
   var id='c'+Date.now()+'_'+Math.random().toString(36).substring(2,5);
   var rec={
     id:id,type:type,eyebrow:month,month:month,
@@ -1957,6 +2759,14 @@ function createChallenge(){
     question:type==='prompt'?q:'',
     at:Date.now()
   };
+  if(type==='activity'){
+    rec.title='Keep|Moving.';
+    rec.tagline=tag||'Log anything that gets you moving and watch the crew rack up the hours together.';
+    rec.start=yy+'-'+(mm<10?'0':'')+mm+'-01';
+    rec.end=yy+'-'+(mm<10?'0':'')+mm+'-'+lastDay;
+    rec.goalHours=500;
+    rec.types='Walk,Run,Cardio,Strength,Swim,Cycle,Yoga,Hike,Sports,Other';
+  }
   cfOpen('Create '+esc(month)+'?','It goes live right away and becomes what everyone sees. '+(activeId()?'The current challenge moves into the archive, still on the site.':''),'Create it','goldb',function(){
     DL.set('challenges/'+id,rec);
     DL.set('settings/activeChallenge',id);
@@ -2090,6 +2900,7 @@ function answerCount(cid){
 }
 function answerCountPrompt(cid){ return responseList(cid).length; }
 function clearAllVotes(){
+  if(aType()==='activity'){ clearAllLogs(); return; }
   if(aType()==='prompt'){ clearAllResponses(); return; }
   var n=answerCount(aid());
   if(!n){ toast('There are no answers to clear.'); return; }
@@ -2097,6 +2908,16 @@ function clearAllVotes(){
     DL.remove(votesPath(aid()));
     PENDING={};
     toast('All answers cleared. The board is open again.','gold');
+  });
+}
+function clearAllLogs(){
+  var n=logList(aid()).length, a=aCh(), an=a?(a.eyebrow||a.month):'this challenge';
+  if(!n){ toast('There is nothing to clear.'); return; }
+  cfOpen('Clear every log on '+esc(an)+'?','This wipes all '+n+' session'+(n===1?'':'s')+', every photo, and everyone\'s points and streaks. The challenge itself stays. There is no undo.','Clear them all','danger',function(){
+    DL.remove(logsPath(aid()));
+    DL.remove(imgPath(aid()));
+    IMGCACHE={};
+    toast('All logs cleared.','gold');
   });
 }
 function clearAllResponses(){
@@ -2120,14 +2941,67 @@ function clearCardVotes(id){
     toast('Answers cleared on that card.');
   });
 }
+function saveActivitySetup(){
+  var g=parseInt($('setGoal').value,10);
+  var t=$('setTypes').value.replace(/\s*,\s*/g,',').replace(/^,|,$/g,'').trim();
+  if(isNaN(g)||g<1){ toast('Give the crew a goal in hours.'); return; }
+  if(!t){ toast('Keep at least one activity type.'); return; }
+  DL.set('challenges/'+aid()+'/goalHours',g);
+  DL.set('challenges/'+aid()+'/types',t);
+  toast('Setup saved.');
+}
+function renderSeasonTest(){
+  var wrap=$('seasonTest');
+  if(!wrap) return;
+  var opts=[['halloween','\uD83C\uDF83 Halloween'],['thanks','\uD83C\uDF42 Thanksgiving'],['holiday','\u2744 Holiday'],['off','Plain']];
+  var h='', i;
+  for(i=0;i<opts.length;i++){
+    h+='<button class="stbtn'+(SEASON_PREVIEW===opts[i][0]?' on':'')+'" type="button" onclick="previewSeason(\''+opts[i][0]+'\')">'+opts[i][1]+'</button>';
+  }
+  if(SEASON_PREVIEW) h+='<button class="stbtn" type="button" onclick="previewSeason(\'\')">Stop previewing</button>';
+  wrap.innerHTML=h+(SEASON_PREVIEW?'<div class="previewing">Previewing on your screen only. The crew still sees '+esc(seasonLabel(seasonSetting()))+'.</div>':'');
+}
+function seasonLabel(v){
+  if(v==='auto'||!v) return 'whatever the calendar says';
+  if(v==='off') return 'no seasonal look';
+  return SEASONS[v]?SEASONS[v].label:v;
+}
+function saveSeason(v){
+  SEASON_PREVIEW='';
+  DL.set('settings/season',v);
+  setTimeout(applySeason,60);
+  toast(v==='auto'?'Following the calendar.':(v==='off'?'Seasonal look off.':'Theme pinned.'));
+}
 function renderSettingsBits(){
-  var prompt=(aType()==='prompt'), ach=aCh();
+  var ach=aCh(), prompt=(aType()!=='truths'), activity=(aType()==='activity');
   var aname=ach?(ach.eyebrow||ach.month||'this challenge'):'this challenge';
+  $('actSec').style.display=activity?'':'none';
+  $('actNote').style.display=activity?'':'none';
+  $('actWrap').style.display=activity?'':'none';
+  if(activity&&ach){
+    $('actNote').textContent='The bar across the top of '+aname+' fills toward this goal.';
+    if(document.activeElement!==$('setGoal')) $('setGoal').value=ach.goalHours||1500;
+    if(document.activeElement!==$('setTypes')) $('setTypes').value=(ach.types||'').split(',').join(', ');
+  }
+  var ss=$('setSeason');
+  if(ss&&document.activeElement!==ss) ss.value=seasonSetting();
+  renderSeasonTest();
   var inp=$('setEmail');
   if(document.activeElement!==inp) inp.value=crewEmail();
   $('revealSec').style.display=prompt?'none':'';
   $('revealNote').style.display=prompt?'none':'';
   $('revealBtnWrap').style.display=prompt?'none':'';
+  if(activity){
+    var ln=logList(aid()).length;
+    $('resetNote').textContent=ln
+      ? ('There '+(ln===1?'is':'are')+' '+ln+' logged session'+(ln===1?'':'s')+' on '+aname+'. Clearing wipes every log, photo, point and streak so the crew starts from zero.')
+      : ('Nothing logged on '+aname+' yet. Nothing to clear.');
+    $('resetBtnWrap').innerHTML=ln
+      ? '<button class="btn danger wide" onclick="clearAllVotes()">Clear all logs</button>'
+      : '<button class="btn ghost wide" style="opacity:.5;cursor:not-allowed" onclick="toast(\'There is nothing to clear.\')">Clear all logs</button>';
+    renderConnNote();
+    return;
+  }
   if(prompt){
     var rn=answerCountPrompt(aid());
     $('resetNote').textContent=rn
@@ -2170,10 +3044,40 @@ function renderAdminLive(){
   syncAdminTabs();
   renderRosterOptions();
   renderChAdmin();
-  if(aType()==='prompt') renderManageResponses();
+  if(aType()==='activity') renderManageLogs();
+  else if(aType()==='prompt') renderManageResponses();
   else renderManage();
   renderScoresTable();
   renderSettingsBits();
+}
+function renderManageLogs(){
+  var logs=logList(aid()), h='', i, l;
+  $('manageNote').textContent='Every session logged, newest first. This is a trust system, so this list is the receipt.';
+  if(!logs.length){
+    $('manageList').innerHTML='<div class="dnote" style="margin-top:14px;">Nothing logged yet.</div>';
+    return;
+  }
+  for(i=0;i<logs.length&&i<120;i++){
+    l=logs[i];
+    h+='<div class="mcard" style="padding:12px 14px;">';
+    h+='<div class="mchead">'+avatarHTML('mav',l.photo,l.name)+'<span class="mcname" style="font-size:14px;">'+esc(l.name)+'</span>';
+    h+='<span class="cmeta">'+prettyDay(l.day)+' &#183; '+esc(l.type)+' &#183; '+l.mins+' min'+(l.hasImg?' &#183; photo':'')+'</span>';
+    h+='<button class="iconbtn" title="Delete" onclick="adminDelLog(\''+l.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button></div>';
+    if(l.note) h+='<div class="dnote" style="margin-top:6px;">'+esc(l.note)+'</div>';
+    h+='</div>';
+  }
+  if(logs.length>120) h+='<div class="dnote" style="margin-top:10px;">Showing the newest 120 of '+logs.length+'.</div>';
+  $('manageList').innerHTML=h;
+}
+function adminDelLog(id){
+  var src=curLogs(aid()), l=src[id];
+  if(!l) return;
+  cfOpen('Delete this log?',esc(l.name||'Someone')+"'s "+l.mins+' min of '+esc(l.type||'activity')+' on '+prettyDay(l.day)+'. Their points and streak recalculate right away. There is no undo.','Delete it','danger',function(){
+    DL.remove(logsPath(aid())+'/'+id);
+    DL.remove(imgPath(aid())+'/'+id);
+    delete IMGCACHE[aid()+'/'+id];
+    toast('Log deleted.');
+  });
 }
 function renderManageResponses(){
   var list=responseList(aid()), h='', i, r;
@@ -2213,6 +3117,12 @@ function doHide(){
 
 /* ---------------- boot ---------------- */
 function boot(){
+  applySeason();
+  setInterval(function(){
+    if(SEASON_PREVIEW) return;
+    var want=activeSeason();
+    if(document.documentElement.getAttribute('data-season')!==want) applySeason();
+  },300000);
   loadName();
   updateMailBtn();
   if(!MY.name) openName(false);
@@ -2228,7 +3138,24 @@ function boot(){
       if($('cfOvl').classList.contains('show')) cfCancel();
       else if($('pinOvl').classList.contains('show')) pinClose();
       else if($('drawer').classList.contains('open')) closeAdmin();
+      return;
     }
+    /* With the PIN pad up, just type it. Works with the number row,
+       the numpad, backspace to correct, and paste. */
+    if(!$('pinOvl').classList.contains('show')) return;
+    if(ev.metaKey||ev.ctrlKey||ev.altKey) return;
+    var k=ev.key;
+    if(k>='0'&&k<='9'&&k.length===1){ ev.preventDefault(); pinKey(k); return; }
+    if(k==='Backspace'||k==='Delete'){ ev.preventDefault(); pinBack(); return; }
+  });
+  document.addEventListener('paste',function(ev){
+    if(!$('pinOvl').classList.contains('show')) return;
+    var txt='';
+    try{ txt=(ev.clipboardData||window.clipboardData).getData('text')||''; }catch(e){ return; }
+    var digits=txt.replace(/[^0-9]/g,''), i;
+    if(!digits) return;
+    ev.preventDefault();
+    for(i=0;i<digits.length&&PIN_BUF.length<6;i++) pinKey(digits.charAt(i));
   });
   window.addEventListener('storage',function(ev){
     if(!USE_FB&&ev&&ev.key===LS_DB_KEY){
