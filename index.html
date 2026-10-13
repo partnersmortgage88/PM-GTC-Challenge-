@@ -23,7 +23,7 @@
   --shadow:0 24px 60px rgba(0,0,0,.45);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:hidden}
 body{
   background:var(--bg0); color:var(--ink); font-family:var(--sans);
   font-size:15.5px; line-height:1.55; min-height:100vh; overflow-x:hidden;
@@ -63,7 +63,9 @@ input,textarea{font-family:var(--sans)}
 .userchip{display:flex;align-items:center;gap:9px;padding:5px 13px 5px 5px;border:1px solid var(--line2);border-radius:999px;background:rgba(255,255,255,.02);cursor:pointer;color:var(--ink);font-size:13px;transition:border-color .25s}
 .userchip:hover{border-color:var(--teal)}
 .avatar{width:27px;height:27px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:600;color:#fff;flex-shrink:0;overflow:hidden}
-.avatar img,.cav img,.pav img,.vav img,.mav img,.lbav img,.pcol .ppic img{width:100%;height:100%;object-fit:cover;object-position:50% 22%;display:block}
+/* One rule for every headshot on the site, whatever circle it sits in. */
+.avimg,.avatar img{width:100%;height:100%;object-fit:cover;object-position:50% 22%;display:block;max-width:none}
+.cav,.pav,.vav,.mav,.lbav,.lav,.gav,.fav,.apimg,.ppic,.avatar{overflow:hidden}
 /* roster picker */
 .psearch{position:relative;margin-bottom:12px}
 .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;max-height:46vh;overflow-y:auto;padding:3px 2px 6px;margin:0 -2px}
@@ -142,15 +144,15 @@ input,textarea{font-family:var(--sans)}
    only the accents move, so it never stops looking like our tools.
    ===================================================================== */
 :root[data-season="halloween"]{
-  --bg0:#090D11;--bg1:#101620;--panel:rgba(26,24,44,.5);--line:rgba(150,128,206,.1);--line2:rgba(150,128,206,.16);
+  --bg0:#090D11;--bg1:#101620;--panel:rgba(20,20,34,.86);--line:rgba(150,128,206,.1);--line2:rgba(150,128,206,.16);
   --gold:#F3862A;--gold2:#FFB166;--teal:#8F7BD6;--teal2:#AE9BEC;--grad:linear-gradient(135deg,#4A3272,#F3862A)
 }
 :root[data-season="thanks"]{
-  --bg0:#0E0B08;--bg1:#171009;--panel:rgba(48,32,18,.5);--line:rgba(232,163,61,.13);--line2:rgba(232,163,61,.2);
+  --bg0:#0E0B08;--bg1:#171009;--panel:rgba(30,22,14,.86);--line:rgba(232,163,61,.13);--line2:rgba(232,163,61,.2);
   --gold:#E8A33D;--gold2:#F6CB84;--teal:#C8794A;--teal2:#E09A6B;--grad:linear-gradient(135deg,#7A3E1D,#E8A33D)
 }
 :root[data-season="holiday"]{
-  --bg0:#060F0E;--bg1:#0A1816;--panel:rgba(14,38,33,.52);--line:rgba(220,196,140,.13);--line2:rgba(220,196,140,.19);
+  --bg0:#060F0E;--bg1:#0A1816;--panel:rgba(11,28,25,.86);--line:rgba(220,196,140,.13);--line2:rgba(220,196,140,.19);
   --gold:#E8C66B;--gold2:#F6E3AE;--teal:#3FAE78;--teal2:#6FD0A0;--grad:linear-gradient(135deg,#17563C,#B5342B)
 }
 :root[data-season="halloween"] .orb.o1{background:radial-gradient(circle,rgba(96,56,146,.3),transparent 62%)}
@@ -243,12 +245,13 @@ input,textarea{font-family:var(--sans)}
 .chip:hover{border-color:var(--teal);color:var(--ink)}
 .chip.on{border-color:var(--gold);background:rgba(255,172,39,.12);color:var(--gold2)}
 .minrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:6px}
-.minin{width:92px;text-align:center;font-family:var(--mono)}
+.f-in.minin{width:96px;flex:0 0 96px;text-align:center;font-family:var(--mono);padding-left:8px;padding-right:8px}
 .ptpreview{font-family:var(--mono);font-size:12px;color:var(--teal2);background:rgba(37,186,196,.08);border:1px solid rgba(37,186,196,.28);border-radius:999px;padding:6px 13px}
 .statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:12px;margin-bottom:22px}
 .statbox{border:1px solid var(--line2);border-radius:16px;background:var(--panel);padding:15px 16px}
 .statv{font-family:var(--mono);font-size:23px;color:var(--ink);line-height:1.1}
 .statv.gold{color:var(--gold2)}
+.statv.word{font-family:var(--sans);font-size:19px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
 .statv.teal{color:var(--teal2)}
 .statl{font-size:11.5px;color:var(--faint);margin-top:4px;letter-spacing:.02em}
 .twocol{display:grid;grid-template-columns:1.15fr .85fr;gap:20px;align-items:start}
@@ -298,12 +301,24 @@ input,textarea{font-family:var(--sans)}
 .lpt{font-family:var(--mono);font-size:16px;color:var(--teal2);text-align:right}
 .lpt small{display:block;font-size:10px;color:var(--faint)}
 .flame{font-size:11px;color:var(--gold2)}
-.donut{display:block;margin:0 auto}
+.piecard{border:1px solid var(--line2);border-radius:20px;background:var(--panel);padding:22px 24px}
+.piewrap{display:grid;grid-template-columns:minmax(180px,260px) 1fr;gap:34px;align-items:center;margin-top:6px}
+.pie{width:100%;max-width:260px;height:auto;display:block;margin:0 auto;filter:drop-shadow(0 14px 30px rgba(0,0,0,.35))}
+.pie path,.pie circle{transition:opacity .2s}
+.pieleg{min-width:0}
+.lghrs{font-family:var(--mono);font-size:11.5px;color:var(--faint);margin-right:12px}
+.pietotal{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+@media(max-width:640px){.piewrap{grid-template-columns:1fr;gap:18px}.pie{max-width:220px}}
+.feedcard{border:1px solid var(--line2);border-radius:20px;background:var(--panel);padding:6px 20px}
+.fnote{color:var(--faint)}
+.feedmore{display:block;width:100%;margin:6px 0 10px;border:1px dashed var(--line2);background:transparent;color:var(--muted);border-radius:12px;padding:10px;font-family:var(--sans);font-size:12.5px;cursor:pointer}
+.feedmore:hover{border-color:var(--teal);color:var(--ink)}
 .legend{margin-top:14px}
-.lgrow{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--muted);padding:3px 0}
-.lgdot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.lgrow{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--ink);padding:7px 0;border-bottom:1px solid var(--line)}
+.lgrow:last-of-type{border-bottom:0}
+.lgdot{width:12px;height:12px;border-radius:4px;flex-shrink:0}
 .lgnm{flex:1}
-.lgv{font-family:var(--mono);font-size:12px;color:var(--ink)}
+.lgv{font-family:var(--mono);font-size:13px;color:var(--gold2);min-width:38px;text-align:right}
 .feedrow{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--line)}
 .feedrow:last-child{border-bottom:0}
 .fav{width:28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:600;color:#fff;overflow:hidden;flex-shrink:0}
@@ -564,8 +579,22 @@ textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
 #confetti{position:fixed;inset:0;z-index:200;pointer-events:none}
 
 @media(max-width:640px){
-  .tb-sub{display:none}
-  .userchip .uname{max-width:84px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tb-sub,.tb-div{display:none}
+  .topbar{gap:8px}
+  .tb-right{gap:6px;min-width:0}
+  .wordmark{font-size:11px;letter-spacing:.1em}
+  #liveTxt{display:none}
+  .livechip{padding:8px}
+  .userchip{padding:4px 10px 4px 4px;min-width:0}
+  .userchip .uname{max-width:74px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .chsel{max-width:calc(100vw - 120px)}
+  .goalbig{font-size:22px}
+  .statgrid{grid-template-columns:repeat(2,1fr)}
+  .lbcard.big{padding:18px 14px 14px}
+  .lbhead{flex-wrap:wrap}
+  .myrank{order:3}
+  .ebpre{display:none}
+  .moon,.web{display:none}
   .card{padding:18px 15px 16px}
   .cname{font-size:21px}
   .voters{padding-left:0}
@@ -759,11 +788,13 @@ textarea.f-in{resize:vertical;min-height:66px;line-height:1.5}
     </div>
 
     <div class="dpanel" id="dpanel-settings">
+      <div id="emailBlock">
       <div class="dsec">Crew email</div>
       <div class="dnote">The big button on the front page opens a new email to this address.</div>
       <label class="f-label" for="setEmail">Good Times Crew inbox</label>
       <input class="f-in" id="setEmail" autocomplete="off" placeholder="goodtimescrew@partnersmortgage.com">
       <div class="mrow"><button class="btn wide" onclick="saveEmail()">Save email</button></div>
+      </div>
       <div class="dsec" id="actSec">Challenge setup</div>
       <div class="dnote" id="actNote"></div>
       <div id="actWrap">
@@ -1372,7 +1403,7 @@ function viewChallenge(id){
 
 /* ---------------- identity ---------------- */
 function avatarHTML(cls,photo,name){
-  if(photo) return '<span class="'+cls+'"><img src="'+esc(photo)+'" alt="'+esc(name||'')+'" loading="lazy" onerror="this.parentNode.innerHTML=\''+esc(initials(name||'?'))+'\'"></span>';
+  if(photo) return '<span class="'+cls+'"><img class="avimg" src="'+esc(photo)+'" alt="'+esc(name||'')+'" decoding="async" onerror="this.parentNode.innerHTML=\''+esc(initials(name||'?'))+'\'"></span>';
   return '<span class="'+cls+'">'+esc(initials(name||'?'))+'</span>';
 }
 function loadName(){
@@ -1394,13 +1425,16 @@ function savePerson(id,name,photo,quiet){
   paintUserChip();
   $('nameOvl').classList.remove('show');
   renderAll();
-  if(!quiet) toast(isNew?('Welcome, '+name.split(' ')[0]+'. Happy guessing.'):('Got it. You are '+name+' now.'));
+  if(!quiet){
+    var t=curType(), tail=t==='activity'?'Go log something.':(t==='prompt'?'Add your answer below.':'Happy guessing.');
+    toast(isNew?('Welcome, '+name.split(' ')[0]+'. '+tail):('Got it. You are '+name+' now.'));
+  }
 }
 function paintUserChip(){
   $('uName').textContent=MY.name?MY.name:"Who's playing?";
   var av=$('uAv');
   if(MY.photo){
-    av.innerHTML='<img src="'+esc(MY.photo)+'" alt="'+esc(MY.name)+'" onerror="this.parentNode.textContent=\''+esc(initials(MY.name))+'\'">';
+    av.innerHTML='<img class="avimg" src="'+esc(MY.photo)+'" alt="'+esc(MY.name)+'" onerror="this.parentNode.textContent=\''+esc(initials(MY.name))+'\'">';
   } else {
     av.textContent=MY.name?initials(MY.name):'?';
   }
@@ -1665,7 +1699,7 @@ function renderChrome(){
   var c=curCh(), list=challengeList(), i, p, h='';
   var prompt=(c&&(c.type==='prompt'||c.type==='activity'));
   if(c){
-    $('heroEyebrow').innerHTML='Good Times Crew &#183; '+esc(c.eyebrow||c.month||'Challenge');
+    $('heroEyebrow').innerHTML='<span class="ebpre">Good Times Crew &#183; </span>'+esc(c.eyebrow||c.month||'Challenge');
     $('seasonSlot').innerHTML=seasonChipHTML();
     $('heroTitle').innerHTML=titleHTML(c.title);
     $('heroSub').textContent=c.tagline||'';
@@ -1675,7 +1709,7 @@ function renderChrome(){
     h+='<select class="chsel" id="chSel" onchange="viewChallenge(this.value)">';
     for(i=0;i<list.length;i++){
       p=list[i];
-      h+='<option value="'+p.id+'"'+(p.id===curId()?' selected':'')+'>'+esc(p.eyebrow||p.month||p.id)+(p.id===activeId()?' (this month)':'')+'</option>';
+      h+='<option value="'+p.id+'"'+(p.id===curId()?' selected':'')+'>'+esc((p.eyebrow||p.month||p.id).replace(/\s+Challenge$/i,''))+(p.id===activeId()?' (live now)':'')+'</option>';
     }
     h+='</select>';
   }
@@ -1771,8 +1805,9 @@ function renderBoard(){
     tag='';
     var closedView=!isActiveView();
     if(own){ tag='<span class="minitag gold">Your card</span>'; }
-    else if(closedView){ tag=(vf.myPick!==null)?'<span class="minitag tealy">Your answer is in</span>':'<span class="minitag">Closed</span>'; }
     else if(revealed&&vf.myPick!==null){ tag=(vf.myPick===e.truth)?'<span class="minitag gold">&#127942; You nailed it</span>':'<span class="minitag">Missed it</span>'; }
+    else if(revealed){ tag='<span class="minitag">No answer</span>'; }
+    else if(closedView){ tag=(vf.myPick!==null)?'<span class="minitag tealy">Your answer is in</span>':'<span class="minitag">Closed</span>'; }
     else if(vf.myPick!==null){ tag='<span class="minitag tealy">Your answer is in</span>'; }
     else { tag='<span class="minitag gold">Needs your answer</span>'; }
     delay=Math.min(i*0.07,0.5);
@@ -2178,7 +2213,7 @@ function closeLightbox(){
    ACTIVITY CHALLENGE SCREENS
    ===================================================================== */
 var LOG_TYPE='', LOG_MINS=30, MONTH_VIEW='', PIE_MINE=false;
-var LOG_NOTE='', ACT_PAINTED=false, GOAL_PAINTED=false;
+var LOG_NOTE='', ACT_PAINTED=false, GOAL_PAINTED=false, LOG_BACK=0;
 /* A live update from anyone else repaints the page. Hold on to what the
    person is in the middle of typing so it survives the repaint. */
 function grabFormState(){
@@ -2217,11 +2252,9 @@ function renderActivity(){
   if(open) h+=logFormHTML(c);
   h+=statsHTML(me,all);
   h+=leaderHTML(c);
-  h+='<div class="twocol">';
   h+=pieHTML(all);
-  h+=feedHTML(all,open);
-  h+='</div>';
   h+=wallHTML(all);
+  h+=feedHTML(all,open);
   zone.innerHTML=h;
   if(open){ paintPreview(); restoreFormState(form); }
   var f=$('goalFill');
@@ -2244,16 +2277,21 @@ function goalHTML(c,all){
   return h;
 }
 function fmtNum(n){
-  var s=String(n), out='', i, c=0;
-  for(i=s.length-1;i>=0;i--){ out=s.charAt(i)+out; c++; if(c%3===0&&i>0) out=','+out; }
-  return out;
+  var parts=String(n).split('.'), whole=parts[0], neg='', out='', i, c=0;
+  if(whole.charAt(0)==='-'){ neg='-'; whole=whole.substring(1); }
+  for(i=whole.length-1;i>=0;i--){ out=whole.charAt(i)+out; c++; if(c%3===0&&i>0) out=','+out; }
+  return neg+out+(parts.length>1?'.'+parts[1]:'');
 }
 function logFormHTML(c){
   var types=activityTypes(curId()), i, h='';
   if(!LOG_TYPE) LOG_TYPE=types[0]||'Walk';
   h+='<div class="logcard">';
-  h+='<div class="qbig" style="font-size:clamp(20px,2.6vw,26px);">Log what you did <em>today.</em></div>';
+  h+='<div class="qbig" style="font-size:clamp(20px,2.6vw,26px);">Log what you did <em id="logHeadWhen">'+(LOG_BACK?'yesterday.':'today.')+'</em></div>';
   h+='<div class="qsub">Anything that gets you moving counts. 30 minutes is a point, 60 is two, and the day caps at four.</div>';
+  h+='<label class="f-label">When</label><div class="chips" id="whenChips">';
+  h+='<button class="chip'+(LOG_BACK===0?' on':'')+'" type="button" onclick="setLogBack(0)">Today</button>';
+  h+='<button class="chip'+(LOG_BACK===1?' on':'')+'" type="button" onclick="setLogBack(1)">Yesterday</button>';
+  h+='</div>';
   h+='<label class="f-label">Activity</label><div class="chips" id="typeChips">';
   for(i=0;i<types.length;i++){
     h+='<button class="chip'+(types[i]===LOG_TYPE?' on':'')+'" type="button" onclick="setLogType(\''+esc(types[i]).split("'").join("")+'\')">'+esc(types[i])+'</button>';
@@ -2280,6 +2318,15 @@ function ptPreviewText(m){
   if(m<MIN_ACTIVE) return 'Under 15 min, keep going';
   if(!p) return 'Counts as an active day';
   return p+' point'+(p===1?'':'s')+' toward today';
+}
+function setLogBack(n){
+  LOG_BACK=n;
+  markChips('whenChips',n?'Yesterday':'Today');
+  var t=$('logHeadWhen');
+  if(t) t.textContent=n?'yesterday.':'today.';
+}
+function logDay(){
+  return dayKey(Date.now()-LOG_BACK*86400000);
 }
 function setLogType(t){
   LOG_TYPE=t;
@@ -2317,7 +2364,7 @@ function statsHTML(me,all){
   h+='<div class="statbox"><div class="statv">'+ses+'</div><div class="statl">Sessions</div></div>';
   h+='<div class="statbox"><div class="statv">'+days+'</div><div class="statl">Active days</div></div>';
   h+='<div class="statbox"><div class="statv teal">'+st+'</div><div class="statl">'+(st?('Day run, '+toNextBonus(st)+' to a bonus'):'Start a run today')+'</div></div>';
-  h+='<div class="statbox"><div class="statv">'+(me&&me.topType?esc(me.topType):'&#8212;').replace('&#8212;','-')+'</div><div class="statl">Most logged</div></div>';
+  h+='<div class="statbox"><div class="statv word">'+(me&&me.topType?esc(me.topType):'-')+'</div><div class="statl">Most logged</div></div>';
   h+='</div>';
   return h;
 }
@@ -2361,7 +2408,7 @@ function leaderHTML(c){
       r=rows[i];
       h+='<div class="lrow'+(r.key===MY.key?' me':'')+'">';
       h+='<span class="lrk">'+(i+1)+'</span>'+avatarHTML('lav',r.photo,r.name);
-      h+='<span class="lnm"><b>'+esc(r.name)+'</b><span>'+fmtNum(Math.round(r.mins/60*10)/10)+' hrs &#183; '+r.activeDays+' day'+(r.activeDays===1?'':'s')+(r.streakBonus?' &#183; <span class="flame">+'+r.streakBonus+' run bonus</span>':'')+'</span></span>';
+      h+='<span class="lnm"><b>'+esc(r.name)+'</b><span>'+fmtNum(Math.round(r.mins/60*10)/10)+' hrs &#183; '+r.activeDays+' day'+(r.activeDays===1?'':'s')+(r.streakBonus?' &#183; <span class="flame">+'+r.streakBonus+' bonus</span>':'')+'</span></span>';
       h+='<span class="lpt">'+r.points+'<small>points</small></span>';
       h+='</div>';
     }
@@ -2382,27 +2429,38 @@ function pieHTML(all){
   for(k in st.types){ if(st.types.hasOwnProperty(k)){ keys.push({name:k,mins:st.types[k]}); total+=st.types[k]; } }
   keys.sort(function(a,b){ return b.mins-a.mins; });
   var colors=['#25BAC4','#FFAC27','#3ECF8E','#9B8CFF','#FF7A6B','#5FD3E0','#FFD089','#7FE3B4','#C0B4FF','#FFA79B'];
-  var h='<div class="piecard"><div class="seclabel" style="margin:0 0 12px;"><span class="t">The mix</span><span class="rule"></span></div>';
+  var h='<div class="seclabel"><span class="t">Activity breakdown</span><span class="rule"></span></div>';
+  h+='<div class="piecard">';
   h+='<div class="mtabs"><button class="mtab'+(PIE_MINE?'':' on')+'" onclick="setPie(false)">Whole crew</button><button class="mtab'+(PIE_MINE?' on':'')+'" onclick="setPie(true)">Just me</button></div>';
   if(!total){
-    h+='<div class="dnote">No minutes logged yet.</div></div>';
+    h+='<div class="piewrap"><svg class="pie" viewBox="0 0 200 200"><circle cx="100" cy="100" r="92" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.08)" stroke-width="1.5" stroke-dasharray="4 5"></circle></svg>';
+    h+='<div class="pieleg"><div class="dnote">'+(PIE_MINE?'Log something and your own mix shows up here.':'Nothing logged yet. The first activity fills the whole pie.')+'</div></div></div></div>';
     return h;
   }
-  var r=54, cir=2*Math.PI*r, off=0, i, pct, seg='';
+  /* solid wedges, drawn as SVG paths so every browser renders them the same */
+  var cx=100, cy=100, r=92, a0=-Math.PI/2, svg='', i, frac, a1, x0, y0, x1, y1, large;
   for(i=0;i<keys.length;i++){
-    pct=keys[i].mins/total;
-    seg+='<circle cx="70" cy="70" r="'+r+'" fill="none" stroke="'+colors[i%colors.length]+'" stroke-width="22" stroke-dasharray="'+(pct*cir).toFixed(2)+' '+(cir-pct*cir).toFixed(2)+'" stroke-dashoffset="'+(-off*cir).toFixed(2)+'" transform="rotate(-90 70 70)"></circle>';
-    off+=pct;
+    frac=keys[i].mins/total;
+    if(frac>=0.9999){
+      svg+='<circle cx="100" cy="100" r="92" fill="'+colors[i%colors.length]+'"></circle>';
+      break;
+    }
+    a1=a0+frac*Math.PI*2;
+    x0=cx+r*Math.cos(a0); y0=cy+r*Math.sin(a0);
+    x1=cx+r*Math.cos(a1); y1=cy+r*Math.sin(a1);
+    large=(a1-a0)>Math.PI?1:0;
+    svg+='<path d="M'+cx+' '+cy+' L'+x0.toFixed(2)+' '+y0.toFixed(2)+' A'+r+' '+r+' 0 '+large+' 1 '+x1.toFixed(2)+' '+y1.toFixed(2)+' Z" fill="'+colors[i%colors.length]+'" stroke="var(--bg0)" stroke-width="1.6" stroke-linejoin="round"></path>';
+    a0=a1;
   }
-  h+='<svg class="donut" viewBox="0 0 140 140" width="150" height="150">'+seg;
-  h+='<text x="70" y="66" text-anchor="middle" fill="#EEF5F4" font-family="ui-monospace,monospace" font-size="17">'+Math.round(total/60)+'</text>';
-  h+='<text x="70" y="82" text-anchor="middle" fill="#95A9A8" font-family="ui-monospace,monospace" font-size="9">HOURS</text></svg>';
-  h+='<div class="legend">';
+  h+='<div class="piewrap"><svg class="pie" viewBox="0 0 200 200" role="img" aria-label="Activity breakdown">'+svg+'</svg>';
+  h+='<div class="pieleg">';
   for(i=0;i<keys.length;i++){
-    pct=Math.round(keys[i].mins/total*100);
-    h+='<div class="lgrow"><span class="lgdot" style="background:'+colors[i%colors.length]+'"></span><span class="lgnm">'+esc(keys[i].name)+'</span><span class="lgv">'+pct+'%</span></div>';
+    h+='<div class="lgrow"><span class="lgdot" style="background:'+colors[i%colors.length]+'"></span><span class="lgnm">'+esc(keys[i].name)+'</span>';
+    h+='<span class="lghrs">'+fmtNum(Math.round(keys[i].mins/60*10)/10)+' hrs</span>';
+    h+='<span class="lgv">'+Math.round(keys[i].mins/total*100)+'%</span></div>';
   }
-  h+='</div></div>';
+  h+='<div class="pietotal">'+fmtNum(Math.round(total/60*10)/10)+' hours '+(PIE_MINE?'from you':'across the crew')+'</div>';
+  h+='</div></div></div>';
   return h;
 }
 function setPie(m){ PIE_MINE=m; renderActivity(); }
@@ -2429,39 +2487,49 @@ function wallHTML(all){
   h+='</div>';
   return h;
 }
+var FEED_ALL=false;
 function feedHTML(all,open){
-  var logs=all.logs.slice(0,25), i, l, h='';
+  var max=FEED_ALL?all.logs.length:8, logs=all.logs.slice(0,max), i, l, h='';
   h+='<div class="seclabel"><span class="t">Latest</span><span class="rule"></span></div>';
   if(!logs.length){ return h+'<div class="dnote">Nothing logged yet.</div>'; }
-  h+='<div class="qcard" style="padding:14px 18px;">';
+  h+='<div class="feedcard">';
   for(i=0;i<logs.length;i++){
     l=logs[i];
     h+='<div class="feedrow">'+avatarHTML('fav',l.photo,l.name);
-    h+='<span class="ftx"><b>'+esc(l.name)+'</b> logged '+l.mins+' min of '+esc(l.type)+(l.note?(' &#183; '+esc(l.note)):'')+'</span>';
+    h+='<span class="ftx"><b>'+esc(l.name)+'</b> logged '+l.mins+' min of '+esc(l.type)+(l.note?(' <span class="fnote">&#183; '+esc(l.note)+'</span>'):'')+'</span>';
     h+='<span class="fwhen">'+prettyDay(l.day)+'</span>';
     if(open&&l.key===MY.key) h+='<button class="fdel" onclick="delLog(\''+l.id+'\')">Remove</button>';
     h+='</div>';
   }
+  if(all.logs.length>8){
+    h+='<button class="feedmore" onclick="toggleFeed()">'+(FEED_ALL?'Show less':'Show all '+all.logs.length)+'</button>';
+  }
   h+='</div>';
   return h;
 }
+function toggleFeed(){ FEED_ALL=!FEED_ALL; renderActivity(); }
 function submitLog(){
   if(!MY.name){ openName(false); return; }
   if(!isActiveView()){ toast('That challenge is closed.'); return; }
   var mins=LOG_MINS;
   if(!mins||mins<1){ toast('How many minutes?'); return; }
   if(mins>600){ toast('Over ten hours? Log it in pieces.'); return; }
+  var cc=curCh(), dk=logDay();
+  if(cc&&cc.start&&dk<cc.start){ toast('That day is before the challenge started.'); return; }
+  if(cc&&cc.end&&dk>cc.end){ toast('The challenge has wrapped up.'); return; }
   var note=($('logNote')?$('logNote').value:LOG_NOTE).replace(/\s+/g,' ').trim();
   var id='l'+Date.now()+'_'+Math.random().toString(36).substring(2,6);
   var img=DRAFT_IMG;
   DL.set(logsPath()+'/'+id,{who:MY.key,personId:MY.id,name:MY.name,photo:MY.photo,
-    type:LOG_TYPE,mins:mins,note:note,day:dayKey(Date.now()),at:Date.now(),hasImg:!!img});
+    type:LOG_TYPE,mins:mins,note:note,day:logDay(),at:Date.now(),hasImg:!!img});
   if(img){
     DL.set(imgPath()+'/'+id,img);
     IMGCACHE[curId()+'/'+id]=img;
   }
   DRAFT_IMG=null;
   LOG_NOTE='';
+  LOG_BACK=0;
+  setLogBack(0);
   if($('logNote')) $('logNote').value='';
   var p=Math.min(DAY_CAP,Math.floor(mins/PT_PER_MIN));
   toast(p?('Logged. '+p+' point'+(p===1?'':'s')+' banked.'):'Logged. That keeps your day alive.','gold');
@@ -2686,7 +2754,7 @@ function renderAdminPicker(){
   $('adminCh').innerHTML=h;
   var cc=aCh();
   $('adminChNote').textContent=cc
-    ? ((cc.type==='prompt'?'A question challenge. ':'One truth, three lies. ')+(cc.id===act?'This is what everyone sees right now.':'Closed to players. Editing here changes the archive only.'))
+    ? ((cc.type==='prompt'?'A question challenge. ':(cc.type==='activity'?'An activity challenge with points. ':'One truth, three lies. '))+(cc.id===act?'This is what everyone sees right now.':'Closed to players. Editing here changes the archive only.'))
     : 'No challenge selected.';
 }
 function syncAdminTabs(){
@@ -2974,6 +3042,7 @@ function saveSeason(v){
 }
 function renderSettingsBits(){
   var ach=aCh(), prompt=(aType()!=='truths'), activity=(aType()==='activity');
+  if($('emailBlock')) $('emailBlock').style.display=(aType()==='truths')?'':'none';
   var aname=ach?(ach.eyebrow||ach.month||'this challenge'):'this challenge';
   $('actSec').style.display=activity?'':'none';
   $('actNote').style.display=activity?'':'none';
