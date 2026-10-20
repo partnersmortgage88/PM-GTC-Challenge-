@@ -244,6 +244,13 @@ input,textarea{font-family:var(--sans)}
 .chip{border:1px solid var(--line2);background:var(--bg1);color:var(--muted);border-radius:999px;padding:8px 15px;font-size:12.5px;font-family:var(--sans);cursor:pointer;transition:border-color .18s,color .18s,background .18s}
 .chip:hover{border-color:var(--teal);color:var(--ink)}
 .chip.on{border-color:var(--gold);background:rgba(255,172,39,.12);color:var(--gold2)}
+.whenrow{align-items:center}
+.datepick{position:relative;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line2);background:var(--bg1);color:var(--muted);border-radius:999px;padding:3px 6px 3px 13px;cursor:pointer;transition:border-color .18s,color .18s,background .18s}
+.datepick:hover{border-color:var(--teal);color:var(--ink)}
+.datepick.on{border-color:var(--gold);background:rgba(255,172,39,.12);color:var(--gold2)}
+.datepick svg{width:15px;height:15px;flex-shrink:0}
+.datepick input{background:transparent;border:0;outline:none;color:inherit;font-family:var(--sans);font-size:12.5px;padding:5px 4px;color-scheme:dark;cursor:pointer;min-width:0}
+.datepick input::-webkit-calendar-picker-indicator{position:absolute;inset:0;width:auto;height:auto;margin:0;opacity:0;cursor:pointer}
 .minrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:6px}
 .f-in.minin{width:96px;flex:0 0 96px;text-align:center;font-family:var(--mono);padding-left:8px;padding-right:8px}
 .ptpreview{font-family:var(--mono);font-size:12px;color:var(--teal2);background:rgba(37,186,196,.08);border:1px solid rgba(37,186,196,.28);border-radius:999px;padding:6px 13px}
@@ -2213,7 +2220,7 @@ function closeLightbox(){
    ACTIVITY CHALLENGE SCREENS
    ===================================================================== */
 var LOG_TYPE='', LOG_MINS=30, MONTH_VIEW='', PIE_MINE=false;
-var LOG_NOTE='', ACT_PAINTED=false, GOAL_PAINTED=false, LOG_BACK=0;
+var LOG_NOTE='', ACT_PAINTED=false, GOAL_PAINTED=false, LOG_DAY='';
 /* A live update from anyone else repaints the page. Hold on to what the
    person is in the middle of typing so it survives the repaint. */
 function grabFormState(){
@@ -2286,11 +2293,16 @@ function logFormHTML(c){
   var types=activityTypes(curId()), i, h='';
   if(!LOG_TYPE) LOG_TYPE=types[0]||'Walk';
   h+='<div class="logcard">';
-  h+='<div class="qbig" style="font-size:clamp(20px,2.6vw,26px);">Log what you did <em id="logHeadWhen">'+(LOG_BACK?'yesterday.':'today.')+'</em></div>';
+  h+='<div class="qbig" style="font-size:clamp(20px,2.6vw,26px);">Log what you did <em id="logHeadWhen">'+whenLabel(logDay())+'</em></div>';
   h+='<div class="qsub">Anything that gets you moving counts. 30 minutes is a point, 60 is two, and the day caps at four.</div>';
-  h+='<label class="f-label">When</label><div class="chips" id="whenChips">';
-  h+='<button class="chip'+(LOG_BACK===0?' on':'')+'" type="button" onclick="setLogBack(0)">Today</button>';
-  h+='<button class="chip'+(LOG_BACK===1?' on':'')+'" type="button" onclick="setLogBack(1)">Yesterday</button>';
+  var lim=dayLimits(), cur=logDay();
+  h+='<label class="f-label">When</label><div class="chips whenrow" id="whenChips">';
+  h+='<button class="chip'+(cur===todayKey()?' on':'')+'" type="button" onclick="setLogDay(\'\')">Today</button>';
+  h+='<button class="chip'+(cur===shiftDay(todayKey(),-1)?' on':'')+'" type="button" onclick="setLogDay(shiftDay(todayKey(),-1))">Yesterday</button>';
+  h+='<label class="datepick'+((cur!==todayKey()&&cur!==shiftDay(todayKey(),-1))?' on':'')+'" id="datePickWrap">';
+  h+='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="3"></rect><path d="M3 9.5h18M8 2.5v4M16 2.5v4"></path></svg>';
+  h+='<input type="date" id="logDate" value="'+cur+'" min="'+lim.min+'" max="'+lim.max+'" onchange="pickLogDate(this.value)" onclick="openPicker(this)" aria-label="Pick the date">';
+  h+='</label>';
   h+='</div>';
   h+='<label class="f-label">Activity</label><div class="chips" id="typeChips">';
   for(i=0;i<types.length;i++){
@@ -2315,19 +2327,67 @@ function logFormHTML(c){
 }
 function ptPreviewText(m){
   var p=Math.min(DAY_CAP,Math.floor(m/PT_PER_MIN));
+  var d=logDay(), which=(d===todayKey())?'today':(d===shiftDay(todayKey(),-1)?'yesterday':prettyDay(d));
   if(m<MIN_ACTIVE) return 'Under 15 min, keep going';
   if(!p) return 'Counts as an active day';
-  return p+' point'+(p===1?'':'s')+' toward today';
+  return p+' point'+(p===1?'':'s')+' toward '+which;
 }
-function setLogBack(n){
-  LOG_BACK=n;
-  markChips('whenChips',n?'Yesterday':'Today');
-  var t=$('logHeadWhen');
-  if(t) t.textContent=n?'yesterday.':'today.';
+/* Any day from the start of the challenge up to today can be logged.
+   Today and Yesterday stay as one tap shortcuts, the calendar does the rest. */
+function todayKey(){ return dayKey(Date.now()); }
+function shiftDay(day,n){
+  var p=day.split('-'), d=new Date(parseInt(p[0],10),parseInt(p[1],10)-1,parseInt(p[2],10)+n);
+  return dayKey(d.getTime());
+}
+function dayLimits(){
+  var c=curCh(), t=todayKey(), min=(c&&c.start)?c.start:shiftDay(t,-60), max=t;
+  if(c&&c.end&&c.end<max) max=c.end;
+  return {min:min,max:max};
 }
 function logDay(){
-  return dayKey(Date.now()-LOG_BACK*86400000);
+  var lim=dayLimits(), d=LOG_DAY||todayKey();
+  if(d>lim.max) d=lim.max;
+  if(d<lim.min) d=lim.min;
+  return d;
 }
+function whenLabel(day){
+  if(day===todayKey()) return 'today.';
+  if(day===shiftDay(todayKey(),-1)) return 'yesterday.';
+  var p=day.split('-'), names=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var dt=new Date(parseInt(p[0],10),parseInt(p[1],10)-1,parseInt(p[2],10));
+  return 'on '+names[dt.getDay()]+', '+prettyDay(day)+'.';
+}
+function setLogDay(day){
+  LOG_DAY=(day===todayKey())?'':day;
+  paintWhen();
+}
+function pickLogDate(v){
+  if(!v) return;
+  var lim=dayLimits();
+  if(v>lim.max){ toast('You can only log days that have already happened.'); paintWhen(); return; }
+  if(v<lim.min){ toast('That is before the challenge started.'); paintWhen(); return; }
+  setLogDay(v);
+}
+function paintWhen(){
+  var cur=logDay(), t=todayKey(), y=shiftDay(t,-1), wrap=$('whenChips');
+  if(wrap){
+    var chips=wrap.querySelectorAll('.chip'), i;
+    for(i=0;i<chips.length;i++){
+      var on=(chips[i].textContent==='Today'&&cur===t)||(chips[i].textContent==='Yesterday'&&cur===y);
+      chips[i].className='chip'+(on?' on':'');
+    }
+  }
+  var dp=$('datePickWrap');
+  if(dp) dp.className='datepick'+((cur!==t&&cur!==y)?' on':'');
+  var inp=$('logDate');
+  if(inp&&inp.value!==cur) inp.value=cur;
+  var h=$('logHeadWhen');
+  if(h) h.textContent=whenLabel(cur);
+  var pp=$('ptPrev');
+  if(pp) pp.textContent=ptPreviewText(LOG_MINS);
+}
+function setLogBack(n){ setLogDay(shiftDay(todayKey(),-n)); }
+function openPicker(el){ try{ if(el&&el.showPicker) el.showPicker(); }catch(e){} }
 function setLogType(t){
   LOG_TYPE=t;
   markChips('typeChips',t);
@@ -2515,6 +2575,7 @@ function submitLog(){
   if(!mins||mins<1){ toast('How many minutes?'); return; }
   if(mins>600){ toast('Over ten hours? Log it in pieces.'); return; }
   var cc=curCh(), dk=logDay();
+  if(dk>todayKey()){ toast('You can only log days that have already happened.'); return; }
   if(cc&&cc.start&&dk<cc.start){ toast('That day is before the challenge started.'); return; }
   if(cc&&cc.end&&dk>cc.end){ toast('The challenge has wrapped up.'); return; }
   var note=($('logNote')?$('logNote').value:LOG_NOTE).replace(/\s+/g,' ').trim();
@@ -2528,11 +2589,12 @@ function submitLog(){
   }
   DRAFT_IMG=null;
   LOG_NOTE='';
-  LOG_BACK=0;
-  setLogBack(0);
+  LOG_DAY='';
+  paintWhen();
   if($('logNote')) $('logNote').value='';
   var p=Math.min(DAY_CAP,Math.floor(mins/PT_PER_MIN));
-  toast(p?('Logged. '+p+' point'+(p===1?'':'s')+' banked.'):'Logged. That keeps your day alive.','gold');
+  var whenTxt=(dk===todayKey())?'':(' for '+prettyDay(dk));
+  toast(p?('Logged'+whenTxt+'. '+p+' point'+(p===1?'':'s')+' banked.'):('Logged'+whenTxt+'. That keeps the day alive.'),'gold');
 }
 function delLog(id){
   var src=curLogs(), l=src[id];
